@@ -1,13 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import { MenuItem, TextField } from '@material-ui/core'
 import axios from 'axios'
 import React from 'react'
-import { FilterProps, FilterValue, IdType, Row } from 'react-table'
+import { FilterValue, IdType, Row } from 'react-table'
 
 import LoadingDataAnimation from './components/LoadingDataAnimation'
 import { Table } from './Table'
-import { PersonData } from './utils'
 
 function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
   return rows.filter((row) => {
@@ -21,36 +19,6 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number'
-
-function SelectColumnFilter({
-  column: { filterValue, render, setFilter, preFilteredRows, id },
-}: FilterProps<PersonData>) {
-  const options = React.useMemo(() => {
-    const options = new Set<any>()
-    preFilteredRows.forEach((row) => {
-      options.add(row.values[id])
-    })
-    return [...Array.from(options.values())]
-  }, [id, preFilteredRows])
-
-  return (
-    <TextField
-      select
-      label={render('Header')}
-      value={filterValue || ''}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined)
-      }}
-    >
-      <li value={''}>All</li>
-      {options.map((option, i) => (
-        <MenuItem key={i} value={option}>
-          {option}
-        </MenuItem>
-      ))}
-    </TextField>
-  )
-}
 
 const App: React.FC = () => {
   const [apiResult, setApiResult] = React.useState<any[]>([])

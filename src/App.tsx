@@ -1,16 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import { CssBaseline, MenuItem, TextField } from '@material-ui/core'
+import { MenuItem, TextField } from '@material-ui/core'
 import axios from 'axios'
 import React from 'react'
-import { CellProps, FilterProps, FilterValue, IdType, Row, TableInstance } from 'react-table'
+import { FilterProps, FilterValue, IdType, Row } from 'react-table'
 
+import LoadingDataAnimation from './components/LoadingDataAnimation'
 import { Table } from './Table'
-import { PersonData, makeData } from './utils'
-
-// This is a custom aggregator that
-// takes in an array of values and
-// returns the rounded median
+import { PersonData } from './utils'
 
 function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
   return rows.filter((row) => {
@@ -72,7 +69,7 @@ const App: React.FC = () => {
         setLoading(false)
       })
   }
-  // const [apiResult] = React.useState<PersonData[]>(() => makeData(10000));
+
   const apiResultColumns = React.useMemo(
     () =>
       apiResult[0]
@@ -101,22 +98,18 @@ const App: React.FC = () => {
     [apiResult]
   )
 
-  // const columns: any = React.useMemo(() => apiResultColumns, [
-  //   apiResultColumns
-  // ]);
+  const columns: any = React.useMemo(() => apiResultColumns, [apiResultColumns])
 
-  // const [apiResult] = React.useState<PersonData[]>(() => makeData(10000));
-  // const [data] = React.useMemo(() => [...apiResult], [apiResult]);
+  // const [data] = React.useMemo(() => [...apiResult], [apiResult])
   React.useEffect(() => {
-    fetchData('https://jsonplaceholder.typicode.com/todos')
+    fetchData('https://fakestoreapi.com/products')
+    // fetchData('https://jsonplaceholder.typicode.com/todos')
   }, [])
-
-  // console.log(columns);
-  // console.log(data);
+  if (loading) return <LoadingDataAnimation />
+  if (error) return <div>Loading data error...</div>
   return (
     <div>
-      <CssBaseline />
-      <Table name={'testTable'} columns={apiResultColumns} data={apiResult} />
+      <Table name={'testTable'} columns={columns} data={apiResult} />
     </div>
   )
 }

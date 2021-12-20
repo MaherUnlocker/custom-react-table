@@ -49,6 +49,7 @@ const App: React.FC = () => {
                   Header: key,
                   accessor: key,
                   disableFilters: true,
+                  // eslint-disable-next-line
                   Cell: (value: any) => {
                     return <img src={value.cell.value} className='h-25 w-25' alt='' />
                   },

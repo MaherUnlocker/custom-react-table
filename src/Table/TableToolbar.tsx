@@ -5,12 +5,13 @@ import DeleteIcon from '@material-ui/icons/DeleteOutline'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn'
 import classnames from 'classnames'
-import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react'
+import { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react'
 import { TableInstance } from 'react-table'
 
 import { TableMouseEventHandler } from '../../types/react-table-config'
 import { ColumnHidePage } from './ColumnHidePage'
 import { FilterPage } from './FilterPage'
+import GlobalFilter from './filters/Global-Filter'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -172,6 +173,12 @@ export function TableToolbar<T extends Record<string, unknown>>({
   // toolbar with add, edit, delete, filter/search column select.
   return (
     <Toolbar className={classes.toolbar}>
+      <GlobalFilter
+        preGlobalFilteredRows={instance.preGlobalFilteredRows}
+        setGlobalFilter={instance.setGlobalFilter}
+        customCssClass='test'
+      />
+
       <div className={classes.leftButtons}>
         {onAdd && (
           <InstanceSmallIconActionButton<T>

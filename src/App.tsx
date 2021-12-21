@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import axios from 'axios'
-import React from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FilterValue, IdType, Row } from 'react-table'
 
 import LoadingDataAnimation from './components/LoadingDataAnimation'
@@ -21,9 +21,9 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
 filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number'
 
 const App: React.FC = () => {
-  const [apiResult, setApiResult] = React.useState<any[]>([])
-  const [loading, setLoading] = React.useState<boolean>(false)
-  const [error, setError] = React.useState<null | any>(null)
+  const [apiResult, setApiResult] = useState<any[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<null | any>(null)
   async function fetchData(url: any) {
     await axios
       .get(url)
@@ -38,7 +38,7 @@ const App: React.FC = () => {
       })
   }
 
-  const apiResultColumns = React.useMemo(
+  const apiResultColumns = useMemo(
     () =>
       apiResult[0]
         ? Object.keys(apiResult[0])
@@ -67,18 +67,19 @@ const App: React.FC = () => {
     [apiResult]
   )
 
-  const columns: any = React.useMemo(() => apiResultColumns, [apiResultColumns])
+  const columns: any = useMemo(() => apiResultColumns, [apiResultColumns])
 
-  // const [data] = React.useMemo(() => [...apiResult], [apiResult])
-  React.useEffect(() => {
+ 
+
+  useEffect(() => {
     fetchData('https://fakestoreapi.com/products')
-    // fetchData('https://jsonplaceholder.typicode.com/todos')
+    //fetchData('https://jsonplaceholder.typicode.com/todos')
   }, [])
   if (loading) return <LoadingDataAnimation />
   if (error) return <div>Loading data error...</div>
   return (
     <div>
-      <Table name={'testTable'} columns={columns} data={apiResult} />
+      <Table name={'testTable'} columns={columns} data={apiResult}  />
     </div>
   )
 }

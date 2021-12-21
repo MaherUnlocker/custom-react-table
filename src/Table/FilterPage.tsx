@@ -1,7 +1,6 @@
-import React, { FormEvent, ReactElement, useCallback } from 'react'
-import { TableInstance } from 'react-table'
-
 import { Popover } from '@material-ui/core'
+import { FormEvent, ReactElement, useCallback } from 'react'
+import { TableInstance } from 'react-table'
 
 type FilterPageProps<T extends Record<string, unknown>> = {
   instance: TableInstance<T>
@@ -40,6 +39,7 @@ export function FilterPage<T extends Record<string, unknown>>({
             </button>
             <div>
               {allColumns
+
                 .filter((it) => it.canFilter)
                 .map((column) => (
                   <div key={column.id}>{column.render('Filter')}</div>

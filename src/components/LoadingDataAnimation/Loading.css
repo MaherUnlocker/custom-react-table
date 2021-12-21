@@ -25,4 +25,5 @@
   flex-direction: row;
   margin-top: 20%;
   justify-content: center;
+  z-index: 1050;
 }

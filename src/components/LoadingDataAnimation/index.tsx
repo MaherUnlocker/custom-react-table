@@ -1,7 +1,5 @@
 import './Loading.css'
 
-import React from 'react'
-
 export default function LoadingDataAnimation(): JSX.Element {
   return (
     <div className='centeranimation'>

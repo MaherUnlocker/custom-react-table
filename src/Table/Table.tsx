@@ -19,6 +19,7 @@ import {
   useExpanded,
   useFilters,
   useFlexLayout,
+  useGlobalFilter,
   useGroupBy,
   usePagination,
   useResizeColumns,
@@ -106,7 +107,9 @@ const getStyles = (props: any, disableResizing = false, align = 'left') => [
 
 const selectionHook = (hooks: Hooks<any>) => {
   hooks.allColumns.push((columns) => [
+    ...columns,
     // Let's make a column for selection
+
     {
       id: '_selector',
       disableResizing: true,
@@ -124,7 +127,6 @@ const selectionHook = (hooks: Hooks<any>) => {
       // to the render a checkbox
       Cell: ({ row }: CellProps<any>) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
     },
-    ...columns,
   ])
   hooks.useInstanceBeforeDimensions.push(({ headerGroups }) => {
     // fix the parent group of the selection button to not be resizable
@@ -132,6 +134,74 @@ const selectionHook = (hooks: Hooks<any>) => {
     selectionGroupHeader.canResize = false
   })
 }
+const customHooks = (hooks: Hooks<any>) => {
+  hooks.allColumns.push((columns) => [
+    ...columns,
+    // Let's make a column for selection
+
+    {
+      id: 'Edit',
+      Header: () => {
+        return (
+          <div className='dropdown'>
+            <img
+              src={'SettingIcon'}
+              id='dropdownMenuButton1'
+              data-bs-toggle='dropdown'
+              alt='setting'
+              className=' dropdown-toggle'
+            />
+            <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
+              <div className='d-flex flex-column'>
+                {columns.map((column: any) => {
+                  return (
+                    <div key={column.id} className=' pretty p-default p-curve p-fill my-2'>
+                      <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
+                      <div className='state p-primary '>
+                        <label>{column.id}</label>
+                      </div>
+                    </div>
+                  )
+                })}
+                <br />
+              </div>
+            </ul>
+          </div>
+        )
+      },
+      Cell: () => <div>maher</div>,
+    },
+  ])
+}
+
+// const DropDownSetting = () => {
+//   return (
+//     <div className='dropdown'>
+//       <img
+//         src={'SettingIcon'}
+//         id='dropdownMenuButton1'
+//         data-bs-toggle='dropdown'
+//         alt='setting'
+//         className=' dropdown-toggle'
+//       />
+//       <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
+//         <div className='d-flex flex-column'>
+//           {instance.allColumns.map((column: any) => {
+//             return (
+//               <div key={column.id} className=' pretty p-default p-curve p-fill my-2'>
+//                 <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
+//                 <div className='state p-primary '>
+//                   <label>{column.id}</label>
+//                 </div>
+//               </div>
+//             )
+//           })}
+//           <br />
+//         </div>
+//       </ul>
+//     </div>
+//   )
+// }
 
 const headerProps = <T extends Record<string, unknown>>(props: any, { column }: Meta<T, { column: HeaderGroup<T> }>) =>
   getStyles(props, column && column.disableResizing, column && column.align)
@@ -152,6 +222,7 @@ const defaultColumn = {
 const hooks = [
   useColumnOrder,
   useFilters,
+  useGlobalFilter,
   useGroupBy,
   useSortBy,
   useExpanded,
@@ -160,6 +231,7 @@ const hooks = [
   useResizeColumns,
   useRowSelect,
   selectionHook,
+  customHooks,
 ]
 
 const filterTypes = {
@@ -172,6 +244,7 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
   const classes = useStyles()
 
   const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {})
+
   const instance = useTable<T>(
     {
       ...props,
@@ -182,6 +255,8 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
     },
     ...hooks
   )
+
+  console.log({ instance })
 
   const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state } = instance
   const debouncedState = useDebounce(state, 500)
@@ -203,10 +278,11 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
   }
 
   const { role: tableRole, ...tableProps } = getTableProps()
+
   return (
-    <>
+    <React.Fragment>
       <TableToolbar instance={instance} {...{ onAdd, onDelete, onEdit }} />
-      <FilterChipBar<T> instance={instance} />
+      <FilterChipBar instance={instance} />
       <TableTable {...tableProps}>
         <TableHead>
           {headerGroups.map((headerGroup) => {
@@ -307,6 +383,6 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
       </TableTable>
       <TablePagination<T> instance={instance} />
       <TableDebug enabled instance={instance} />
-    </>
+    </React.Fragment>
   )
 }

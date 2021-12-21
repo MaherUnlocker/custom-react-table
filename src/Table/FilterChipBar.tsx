@@ -1,6 +1,8 @@
 import { Chip, createStyles, makeStyles } from '@material-ui/core'
-import React, { ReactElement, useCallback } from 'react'
-import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table'
+import { ReactElement, useCallback } from 'react'
+import { ColumnInstance, FilterValue, IdType, TableInstance, UseGlobalFiltersInstanceProps } from 'react-table'
+
+import GlobalFilter from './filters/Global-Filter'
 
 const useStyles = makeStyles(
   createStyles({
@@ -45,8 +47,12 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   const {
     allColumns,
     setFilter,
+    setGlobalFilter,
+    preGlobalFilteredRows,
     state: { filters },
   } = instance
+  console.log(instance)
+
   const handleDelete = useCallback(
     (id: string | number) => {
       setFilter(id as IdType<T>, undefined)
@@ -57,9 +63,15 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   return Object.keys(filters).length > 0 ? (
     <div className={classes.chipZone}>
       <span className={classes.filtersActiveLabel}>Active filters:</span>
+      <GlobalFilter
+        preGlobalFilteredRows={preGlobalFilteredRows}
+        setGlobalFilter={setGlobalFilter}
+        customCssClass='test'
+      />
       {filters &&
         allColumns.map((column) => {
           const filter = filters.find((f) => f.id === column.id)
+
           const value = filter && filter.value
           return (
             value && (

@@ -1,3 +1,5 @@
+
+
 import { Button, IconButton, Theme, Toolbar, Tooltip, createStyles, makeStyles } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import CreateIcon from '@material-ui/icons/CreateOutlined'
@@ -180,44 +182,6 @@ export function TableToolbar<T extends Record<string, unknown>>({
         style={{ width: '80%' }}
       />
 
-      <div className={classes.leftButtons}>
-        {onAdd && (
-          <InstanceSmallIconActionButton<T>
-            instance={instance}
-            icon={<AddIcon />}
-            onClick={onAdd}
-            label='Add'
-            enabled={({ state }: TableInstance<T>) =>
-              !state.selectedRowIds || Object.keys(state.selectedRowIds).length === 0
-            }
-            variant='left'
-          />
-        )}
-        {onEdit && (
-          <InstanceSmallIconActionButton<T>
-            instance={instance}
-            icon={<CreateIcon />}
-            onClick={onEdit}
-            label='Edit'
-            enabled={({ state }: TableInstance<T>) =>
-              state.selectedRowIds && Object.keys(state.selectedRowIds).length === 1
-            }
-            variant='left'
-          />
-        )}
-        {onDelete && (
-          <InstanceSmallIconActionButton<T>
-            instance={instance}
-            icon={<DeleteIcon />}
-            onClick={onDelete}
-            label='Delete'
-            enabled={({ state }: TableInstance<T>) =>
-              state.selectedRowIds && Object.keys(state.selectedRowIds).length > 0
-            }
-            variant='left'
-          />
-        )}
-      </div>
       <div className={classes.rightButtons}>
         <ColumnHidePage<T> instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
         <FilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />

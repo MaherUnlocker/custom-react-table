@@ -1,5 +1,14 @@
 # React Table Example
 
+this is a modified react table example.
+-->adding dynamic table with api data 
+-->add custom hooks
+-->add global filter 
+
+
+
+
+
 Demo of React Table V7 using TypeScript as well as Material UI
 
 - [Open this example in a new CodeSandbox](https://codesandbox.io/s/github/ggascoigne/react-table-example)
@@ -21,6 +30,3 @@ Other features:
   * use `useLocalStorage` and `useDebounce`, both from https://usehooks.com  to persist table settings.
   
 
-## Inspiration
-
-Several parts of this demo are pulled from examples that are available at https://github.com/tannerlinsley/react-table/tree/master/examples that are copyright Tanner Linsley

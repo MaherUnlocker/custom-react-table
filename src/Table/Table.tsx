@@ -32,6 +32,7 @@ import { camelToWords, useDebounce, useLocalStorage } from '../utils'
 import { FilterChipBar } from './FilterChipBar'
 import { fuzzyTextFilter, numericTextFilter } from './filters'
 import { ResizeHandle } from './ResizeHandle'
+import SettingIcon from './SettingIcon'
 import { TableDebug } from './TableDebug'
 import { TablePagination } from './TablePagination'
 import {
@@ -144,13 +145,10 @@ const customHooks = (hooks: Hooks<any>) => {
       Header: () => {
         return (
           <div className='dropdown'>
-            <img
-              src={'SettingIcon'}
-              id='dropdownMenuButton1'
-              data-bs-toggle='dropdown'
-              alt='setting'
-              className=' dropdown-toggle'
-            />
+            <div id='dropdownMenuButton1' data-bs-toggle='dropdown' className=' dropdown-toggle'>
+              <SettingIcon />
+            </div>
+
             <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
               <div className='d-flex flex-column'>
                 {columns.map((column: any) => {
@@ -255,8 +253,6 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
     },
     ...hooks
   )
-
-  console.log({ instance })
 
   const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state } = instance
   const debouncedState = useDebounce(state, 500)

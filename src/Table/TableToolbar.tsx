@@ -18,6 +18,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     toolbar: {
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
     leftButtons: {},
     rightButtons: {},
@@ -176,7 +177,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
       <GlobalFilter
         preGlobalFilteredRows={instance.preGlobalFilteredRows}
         setGlobalFilter={instance.setGlobalFilter}
-        customCssClass='test'
+        style={{ width: '80%' }}
       />
 
       <div className={classes.leftButtons}>

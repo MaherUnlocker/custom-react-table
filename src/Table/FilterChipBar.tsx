@@ -51,7 +51,6 @@ export function FilterChipBar<T extends Record<string, unknown>>({
     preGlobalFilteredRows,
     state: { filters },
   } = instance
-  console.log(instance)
 
   const handleDelete = useCallback(
     (id: string | number) => {
@@ -63,11 +62,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   return Object.keys(filters).length > 0 ? (
     <div className={classes.chipZone}>
       <span className={classes.filtersActiveLabel}>Active filters:</span>
-      <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        setGlobalFilter={setGlobalFilter}
-        customCssClass='test'
-      />
+
       {filters &&
         allColumns.map((column) => {
           const filter = filters.find((f) => f.id === column.id)

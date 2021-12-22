@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useAsyncDebounce } from 'react-table'
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default function GlobalFilter({
-  preGlobalFilteredRows,
-  setGlobalFilter,
-  customCssClass, //add your custom css class to edit serach input
-}: any) {
+type GlobalFilterProps = {
+  preGlobalFilteredRows: any
+  setGlobalFilter: any
+  style: React.CSSProperties
+}
+export default function GlobalFilter({ preGlobalFilteredRows, setGlobalFilter, style }: GlobalFilterProps) {
   const count = preGlobalFilteredRows.length
   const [value, setValue] = useState<string>('')
   const onChange = useAsyncDebounce((value) => {
@@ -14,7 +15,7 @@ export default function GlobalFilter({
 
   return (
     <input
-      className={`form-control ${customCssClass}`}
+      style={style}
       value={value || ''}
       onChange={(e) => {
         setValue(e.target.value)

@@ -81,9 +81,7 @@ export function FilterPage<T extends Record<string, unknown>>({
       >
         <div className={classes.columnsPopOver}>
           <form onSubmit={onSubmit}>
-            <button color='red' onClick={resetFilters}>
-              Reset
-            </button>
+            <button onClick={resetFilters}>Reset</button>
             <div>
               {allColumns
 

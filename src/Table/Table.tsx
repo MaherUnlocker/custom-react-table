@@ -2,7 +2,7 @@ import { TableSortLabel, TextField, Tooltip } from '@material-ui/core'
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
 import cx from 'classnames'
-import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react'
+import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect, useState } from 'react'
 import {
   Cell,
   CellProps,
@@ -153,7 +153,7 @@ const customHooks = (hooks: Hooks<any>) => {
               <div className='d-flex flex-column'>
                 {columns.map((column: any) => {
                   return (
-                    <div key={column.id} className=' pretty p-default p-curve p-fill my-2'>
+                    <div key={column.id} className=' pretty p-default p-curve p-fill my-2 d-flex align-items-center'>
                       <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
                       <div className='state p-primary '>
                         <label>{column.id}</label>
@@ -167,39 +167,10 @@ const customHooks = (hooks: Hooks<any>) => {
           </div>
         )
       },
-      Cell: () => <div>maher</div>,
+      Cell: () => <div></div>,
     },
   ])
 }
-
-// const DropDownSetting = () => {
-//   return (
-//     <div className='dropdown'>
-//       <img
-//         src={'SettingIcon'}
-//         id='dropdownMenuButton1'
-//         data-bs-toggle='dropdown'
-//         alt='setting'
-//         className=' dropdown-toggle'
-//       />
-//       <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
-//         <div className='d-flex flex-column'>
-//           {instance.allColumns.map((column: any) => {
-//             return (
-//               <div key={column.id} className=' pretty p-default p-curve p-fill my-2'>
-//                 <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
-//                 <div className='state p-primary '>
-//                   <label>{column.id}</label>
-//                 </div>
-//               </div>
-//             )
-//           })}
-//           <br />
-//         </div>
-//       </ul>
-//     </div>
-//   )
-// }
 
 const headerProps = <T extends Record<string, unknown>>(props: any, { column }: Meta<T, { column: HeaderGroup<T> }>) =>
   getStyles(props, column && column.disableResizing, column && column.align)

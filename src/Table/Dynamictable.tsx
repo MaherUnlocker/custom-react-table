@@ -19,12 +19,20 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number'
-type DynamictableProps = { url: string }
 
-export default function Dynamictable({ url }: DynamictableProps) {
+type DynamictableProps = {
+  url: string
+  canGroupBy?: boolean
+  canSort?: boolean
+  canResize?: boolean
+  actionColumn?: React.ReactNode
+}
+
+export default function Dynamictable({ url, actionColumn, canGroupBy, canSort, canResize }: DynamictableProps) {
   const [apiResult, setApiResult] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<null | any>(null)
+
   async function fetchData(url: any) {
     await axios
       .get(url)
@@ -73,11 +81,18 @@ export default function Dynamictable({ url }: DynamictableProps) {
   useEffect(() => {
     fetchData(url)
   }, [url])
+
   if (loading) return <LoadingDataAnimation />
-  if (error) return <div>Loading data error...</div>
+
   return (
-    <div>
-      <Table name={'myTable'} columns={columns} data={apiResult} />
-    </div>
+    <Table
+      name={'myTable'}
+      columns={columns}
+      data={apiResult}
+      canGroupBy={canGroupBy}
+      canSort={canSort}
+      canResize={canResize}
+      actionColumn={actionColumn}
+    />
   )
 }

@@ -56,11 +56,15 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
   onDelete?: (instance: TableInstance<T>) => MouseEventHandler
   onEdit?: (instance: TableInstance<T>) => MouseEventHandler
   onClick?: (row: Row<T>) => void
+  canGroupBy?: boolean
+  canSort?: boolean
+  canResize?: boolean
+  actionColumn?: React.ReactNode
 }
 
-const DefaultHeader: React.FC<HeaderProps<any>> = ({ column }) => (
-  <>{column.id.startsWith('_') ? null : camelToWords(column.id)}</>
-)
+function DefaultHeader({ column }: HeaderProps<any>) {
+  return <React.Fragment>{column.id.startsWith('_') ? null : camelToWords(column.id)}</React.Fragment>
+}
 
 // yes this is recursive, but the depth never exceeds three so it seems safe enough
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<ColumnInstance<T>>): ColumnInstance<T> =>
@@ -134,42 +138,6 @@ const selectionHook = (hooks: Hooks<any>) => {
     selectionGroupHeader.canResize = false
   })
 }
-const customHooks = (hooks: Hooks<any>) => {
-  hooks.allColumns.push((columns) => [
-    ...columns,
-    // Let's make a column for selection
-
-    {
-      id: 'Edit',
-      Header: () => {
-        return (
-          <div className='dropdown'>
-            <div id='dropdownMenuButton1' data-bs-toggle='dropdown' className=' dropdown-toggle'>
-              <SettingIcon />
-            </div>
-
-            <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
-              <div className='d-flex flex-column'>
-                {columns.map((column: any) => {
-                  return (
-                    <div key={column.id} className=' pretty p-default p-curve p-fill my-2 d-flex align-items-center'>
-                      <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
-                      <div className='state p-primary '>
-                        <label>{column.id}</label>
-                      </div>
-                    </div>
-                  )
-                })}
-                <br />
-              </div>
-            </ul>
-          </div>
-        )
-      },
-      Cell: () => <div></div>,
-    },
-  ])
-}
 
 const headerProps = <T extends Record<string, unknown>>(props: any, { column }: Meta<T, { column: HeaderGroup<T> }>) =>
   getStyles(props, column && column.disableResizing, column && column.align)
@@ -187,31 +155,79 @@ const defaultColumn = {
   maxWidth: 200, // maxWidth is only used as a limit for resizing
 }
 
-const hooks = [
-  useColumnOrder,
-  useFilters,
-  useGlobalFilter,
-  useGroupBy,
-  useSortBy,
-  useExpanded,
-  useFlexLayout,
-  usePagination,
-  useResizeColumns,
-  useRowSelect,
-  selectionHook,
-  customHooks,
-]
-
 const filterTypes = {
   fuzzyText: fuzzyTextFilter,
   numeric: numericTextFilter,
 }
 
-export function Table<T extends Record<string, unknown>>(props: PropsWithChildren<TableProperties<T>>): ReactElement {
-  const { name, columns, onAdd, onDelete, onEdit, onClick } = props
+export function Table<T extends Record<string, unknown>>({
+  name,
+  columns,
+  onAdd,
+  onDelete,
+  onEdit,
+  onClick,
+  canGroupBy,
+  canSort,
+  canResize,
+  actionColumn,
+  ...props
+}: PropsWithChildren<TableProperties<T>>): ReactElement {
   const classes = useStyles()
 
   const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {})
+
+  const customHooks = (hooks: Hooks<any>) => {
+    hooks.allColumns.push((columns) => [
+      ...columns,
+      {
+        id: 'Edit',
+        Header: () => {
+          return (
+            <div className='dropdown'>
+              <div id='dropdownMenuButton1' data-bs-toggle='dropdown' className=' dropdown-toggle'>
+                <SettingIcon />
+              </div>
+
+              <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
+                <div className='d-flex flex-column'>
+                  {columns.map((column: any) => {
+                    return (
+                      <div key={column.id} className=' pretty p-default p-curve p-fill my-2 d-flex align-items-center'>
+                        <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
+                        <div className='state p-primary '>
+                          <label>{column.id}</label>
+                        </div>
+                      </div>
+                    )
+                  })}
+                  <br />
+                </div>
+              </ul>
+            </div>
+          )
+        },
+        Cell: function () {
+          return actionColumn
+        },
+      },
+    ])
+  }
+
+  const hooks = [
+    useColumnOrder,
+    useFilters,
+    useGlobalFilter,
+    useGroupBy,
+    useSortBy,
+    useExpanded,
+    useFlexLayout,
+    usePagination,
+    useResizeColumns,
+    useRowSelect,
+    selectionHook,
+    customHooks,
+  ]
 
   const instance = useTable<T>(
     {
@@ -229,14 +245,13 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
 
   useEffect(() => {
     const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState
-    const val = {
+    setInitialState({
       sortBy,
       filters,
       pageSize,
       columnResizing,
       hiddenColumns,
-    }
-    setInitialState(val)
+    })
   }, [setInitialState, debouncedState])
 
   const cellClickHandler = (cell: Cell<T>) => () => {
@@ -270,18 +285,20 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
 
                   return (
                     <TableHeadCell key={headerKey} {...getHeaderProps}>
-                      {column.canGroupBy && (
-                        <Tooltip title={groupTitle}>
-                          <TableSortLabel
-                            active
-                            direction={column.isGrouped ? 'desc' : 'asc'}
-                            IconComponent={KeyboardArrowRight}
-                            {...columnGroupByProps}
-                            className={classes.headerIcon}
-                          />
-                        </Tooltip>
-                      )}
-                      {column.canSort ? (
+                      {canGroupBy
+                        ? column.canGroupBy && (
+                            <Tooltip title={groupTitle}>
+                              <TableSortLabel
+                                active
+                                // direction={column.isGrouped ? 'desc' : 'asc'}
+                                IconComponent={KeyboardArrowRight}
+                                {...columnGroupByProps}
+                                className={classes.headerIcon}
+                              />
+                            </Tooltip>
+                          )
+                        : null}
+                      {column.canSort && canSort ? (
                         <Tooltip title={sortTitle}>
                           <TableSortLabel
                             active={column.isSorted}
@@ -297,7 +314,7 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
                         <TableLabel style={style}>{column.render('Header')}</TableLabel>
                       )}
                       {/*<div>{column.canFilter ? column.render('Filter') : null}</div>*/}
-                      {column.canResize && <ResizeHandle column={column} />}
+                      {canResize ? column.canResize && <ResizeHandle column={column} /> : null}
                     </TableHeadCell>
                   )
                 })}
@@ -348,7 +365,6 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
         </TableBody>
       </TableTable>
       <TablePagination<T> instance={instance} />
-      <TableDebug enabled instance={instance} />
     </React.Fragment>
   )
 }

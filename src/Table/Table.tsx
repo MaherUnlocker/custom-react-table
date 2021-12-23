@@ -33,7 +33,6 @@ import { FilterChipBar } from './FilterChipBar'
 import { fuzzyTextFilter, numericTextFilter } from './filters'
 import { ResizeHandle } from './ResizeHandle'
 import SettingIcon from './SettingIcon'
-import { TableDebug } from './TableDebug'
 import { TablePagination } from './TablePagination'
 import {
   HeaderCheckbox,

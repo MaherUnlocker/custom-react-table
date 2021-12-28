@@ -2,7 +2,7 @@ import cx from 'classnames'
 import React, { ReactElement } from 'react'
 import { ColumnInstance } from 'react-table'
 
-import { useStyles } from './TableStyles'
+import { useStyles } from './TableStyle'
 
 export const ResizeHandle = <T extends Record<string, unknown>>({
   column,

@@ -1,33 +1,19 @@
-import React from 'react'
+import React from 'react';
 
-import Dynamictable from '../src/Table/Dynamictable'
+import Dynamictable from '../src/Table/Dynamictable';
 
 export default function App() {
-  function ActionColumn() {
-    return (
-      <React.Fragment>
-        <button
-          className='btn btn-secondary dropdown-toggle'
-          type='button'
-          id='dropdownMenuButton'
-          data-toggle='dropdown'
-          aria-expanded='false'
-        >
-          iyed
-        </button>
-      </React.Fragment>
-    )
-  }
-
   return (
-    <div>
-      <Dynamictable
-        url='https://jsonplaceholder.typicode.com/comments'
-        actionColumn={<ActionColumn />}
-        canGroupBy={false}
-        canSort={true}
-        canResize={true}
-      />
-    </div>
-  )
+    <Dynamictable
+      //put your backed api url
+      url='http://localhost:3004/products'
+      //optionnal props
+      actionColumn={<div>put your component</div>}
+      canGroupBy
+      canSort
+      canResize
+      canSelect
+      canExpand
+    />
+  );
 }

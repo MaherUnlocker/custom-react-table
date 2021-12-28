@@ -46,7 +46,7 @@ import {
   TableRow,
   TableTable,
   useStyles,
-} from './TableStyles'
+} from './TableStyle'
 import { TableToolbar } from './TableToolbar'
 import { TooltipCellRenderer } from './TooltipCell'
 

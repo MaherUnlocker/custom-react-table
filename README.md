@@ -1,6 +1,6 @@
 # React Table Example
 
-this is a modified react table example.
+This is a modified react table example.
 -->adding dynamic table with api data 
 -->add custom hooks
 -->add global filter 

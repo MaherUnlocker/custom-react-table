@@ -1,10 +1,11 @@
-import { Popover, createStyles, makeStyles } from '@material-ui/core'
-import { FormEvent, ReactElement, useCallback } from 'react'
-import { TableInstance } from 'react-table'
+import { Popover, createStyles, makeStyles } from '@material-ui/core';
+import { FormEvent, ReactElement, useCallback } from 'react';
+import { TableInstance } from 'react-table';
 const useStyles = makeStyles(
   createStyles({
     columnsPopOver: {
       padding: 24,
+      display: 'flex',
     },
     filtersResetButton: {
       position: 'absolute',
@@ -27,20 +28,20 @@ const useStyles = makeStyles(
     },
     cell: {
       width: '100%',
-      display: 'inline-flex',
+      display: 'flex',
       flexDirection: 'column',
     },
     hidden: {
       display: 'none',
     },
   })
-)
+);
 type FilterPageProps<T extends Record<string, unknown>> = {
-  instance: TableInstance<T>
-  anchorEl?: Element
-  onClose: () => void
-  show: boolean
-}
+  instance: TableInstance<T>;
+  anchorEl?: Element;
+  onClose: () => void;
+  show: boolean;
+};
 
 export function FilterPage<T extends Record<string, unknown>>({
   instance,
@@ -48,20 +49,20 @@ export function FilterPage<T extends Record<string, unknown>>({
   onClose,
   show,
 }: FilterPageProps<T>): ReactElement {
-  const classes = useStyles({})
-  const { allColumns, setAllFilters } = instance
+  const classes = useStyles({});
+  const { allColumns, setAllFilters } = instance;
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      onClose()
+      e.preventDefault();
+      onClose();
     },
     [onClose]
-  )
+  );
 
   const resetFilters = useCallback(() => {
-    setAllFilters([])
-  }, [setAllFilters])
+    setAllFilters([]);
+  }, [setAllFilters]);
 
   return (
     <div>
@@ -79,20 +80,22 @@ export function FilterPage<T extends Record<string, unknown>>({
           horizontal: 'right',
         }}
       >
-        <div className={classes.columnsPopOver}>
-          <form onSubmit={onSubmit}>
+        <div className={(classes.columnsPopOver, classes.grid, classes.cell)}>
+          <form onSubmit={onSubmit} className={classes.cell}>
             <button onClick={resetFilters}>Reset</button>
             <div>
               {allColumns
 
                 .filter((it) => it.canFilter)
                 .map((column) => (
-                  <div key={column.id}>{column.render('Filter')}</div>
+                  <div key={column.id} className='d-flex mt-2'>
+                    {column.render('Filter')}
+                  </div>
                 ))}
             </div>
           </form>
         </div>
       </Popover>
     </div>
-  )
+  );
 }

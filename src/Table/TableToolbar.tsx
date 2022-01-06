@@ -172,43 +172,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
   }, []);
 
   // toolbar with  filter/search column select.
-  function ToolbarWrapper() {
-    return (
-      <Toolbar className={classes.toolbar}>
-        {showGlobalFilter ? (
-          <GlobalFilter
-            preGlobalFilteredRows={instance.preGlobalFilteredRows}
-            setGlobalFilter={instance.setGlobalFilter}
-            style={{ width: '80%' }}
-          />
-        ) : null}
 
-        <div className={classes.rightButtons}>
-          <ColumnHidePage<T> instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
-
-          <FilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
-          {showColomnIcon
-            ? hideableColumns.length > 1 && (
-                <SmallIconActionButton
-                  icon={<ViewColumnsIcon />}
-                  onClick={handleColumnsClick}
-                  label='Show / hide columns'
-                  variant='right'
-                />
-              )
-            : null}
-          {showFilterbyColomn ? (
-            <SmallIconActionButton
-              icon={<FilterListIcon />}
-              onClick={handleFilterClick}
-              label='Filter by columns'
-              variant='right'
-            />
-          ) : null}
-        </div>
-      </Toolbar>
-    );
-  }
   return (
     <Toolbar className={!showGlobalFilter && !showFilterbyColomn && !showColomnIcon ? 'd-none' : classes.toolbar}>
       {showGlobalFilter ? (
@@ -236,6 +200,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
         {showFilterbyColomn ? (
           <SmallIconActionButton
             icon={<FilterListIcon />}
+            // icon={<span>add filter</span>} //{<FilterListIcon />}
             onClick={handleFilterClick}
             label='Filter by columns'
             variant='right'

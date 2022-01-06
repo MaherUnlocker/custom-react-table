@@ -67,7 +67,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     tableCell: {
       padding: '8px 16px',
       fontSize: '0.875rem',
-      textAlign: 'left',
+      textAlign: 'center',
       fontWeight: 300,
       lineHeight: 1.3,
       verticalAlign: 'inherit',

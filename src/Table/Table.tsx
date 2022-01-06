@@ -184,7 +184,12 @@ export function Table<T extends Record<string, unknown>>({
     hooks.allColumns.push((columns) => [
       ...columns,
       {
-        id: 'Edit',
+        id: 'hidecolumns',
+        disableResizing: true,
+        disableGroupBy: true,
+        minWidth: 60,
+         width: 60,
+        maxWidth: 100,
         Header: () => {
           return (
             <div className='dropdown'>

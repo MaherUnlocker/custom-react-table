@@ -3,6 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Dynamictable from '../src/Table/Dynamictable';
+import SelectAccountDropdown from './Table/SelectAccountDropdown';
 
 export default function App() {
   return (
@@ -12,7 +13,7 @@ export default function App() {
         url='https://fakestoreapi.com/products'
         // url='http://localhost:3004/products'
         //optionnal props
-        actionColumn={<div>put your component</div>}
+        actionColumn={<SelectAccountDropdown />}
         canGroupBy
         canSort
         canResize

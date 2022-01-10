@@ -1,8 +1,6 @@
-import { Chip, createStyles, makeStyles } from '@material-ui/core'
-import { ReactElement, useCallback } from 'react'
-import { ColumnInstance, FilterValue, IdType, TableInstance, UseGlobalFiltersInstanceProps } from 'react-table'
-
-import GlobalFilter from './filters/Global-Filter'
+import { Chip, createStyles, makeStyles } from '@material-ui/core';
+import { ReactElement, useCallback } from 'react';
+import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
 
 const useStyles = makeStyles(
   createStyles({
@@ -24,40 +22,39 @@ const useStyles = makeStyles(
       color: '#222',
     },
   })
-)
+);
 
 type FilterChipBarProps<T extends Record<string, unknown>> = {
-  instance: TableInstance<T>
-}
+  instance: TableInstance<T>;
+};
 
 const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
   switch (column.filter) {
     case 'between':
-      const min = filterValue[0]
-      const max = filterValue[1]
-      return min ? (max ? `${min}-${max}` : `>=${min}`) : `<=${max}`
+      const min = filterValue[0];
+      const max = filterValue[1];
+      return min ? (max ? `${min}-${max}` : `>=${min}`) : `<=${max}`;
   }
-  return filterValue
-}
+  return filterValue;
+};
 
 export function FilterChipBar<T extends Record<string, unknown>>({
   instance,
 }: FilterChipBarProps<T>): ReactElement | null {
-  const classes = useStyles({})
+  const classes = useStyles({});
   const {
     allColumns,
     setFilter,
-    setGlobalFilter,
-    preGlobalFilteredRows,
+
     state: { filters },
-  } = instance
+  } = instance;
 
   const handleDelete = useCallback(
     (id: string | number) => {
-      setFilter(id as IdType<T>, undefined)
+      setFilter(id as IdType<T>, undefined);
     },
     [setFilter]
-  )
+  );
 
   return Object.keys(filters).length > 0 ? (
     <div className={classes.chipZone}>
@@ -65,9 +62,9 @@ export function FilterChipBar<T extends Record<string, unknown>>({
 
       {filters &&
         allColumns.map((column) => {
-          const filter = filters.find((f) => f.id === column.id)
+          const filter = filters.find((f) => f.id === column.id);
 
-          const value = filter && filter.value
+          const value = filter && filter.value;
           return (
             value && (
               <Chip
@@ -83,8 +80,8 @@ export function FilterChipBar<T extends Record<string, unknown>>({
                 variant='outlined'
               />
             )
-          )
+          );
         })}
     </div>
-  ) : null
+  ) : null;
 }

@@ -35,7 +35,7 @@ type DynamictableProps = {
   actionColumn?: React.ReactNode;
 };
 
-export default function Dynamictable({
+export default function DynamicTable({
   url,
   actionColumn,
   canGroupBy,
@@ -48,7 +48,7 @@ export default function Dynamictable({
   showColomnIcon,
 }: DynamictableProps) {
   const [apiResult, setApiResult] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<null | any>(null);
 
   async function fetchData(url: string) {
@@ -134,7 +134,7 @@ export default function Dynamictable({
 
   return (
     <React.Fragment>
-      <div className='table-responsive'>
+      <div className='table-responsive card'>
         <Table
           name={'myTable'}
           columns={columns}

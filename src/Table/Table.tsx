@@ -1,6 +1,6 @@
-import { TableSortLabel, TextField, Tooltip } from '@material-ui/core';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import { TableSortLabel, TextField, Tooltip } from '@mui/material';
 import cx from 'classnames';
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect, useState } from 'react';
 import {
@@ -188,7 +188,7 @@ export function Table<T extends Record<string, unknown>>({
         disableResizing: true,
         disableGroupBy: true,
         minWidth: 60,
-         width: 60,
+        width: 60,
         maxWidth: 100,
         Header: () => {
           return (

@@ -1,4 +1,5 @@
-import { Popover, createStyles, makeStyles } from '@material-ui/core';
+import { Popover } from '@mui/material';
+import { createStyles, makeStyles } from '@mui/styles';
 import { FormEvent, ReactElement, useCallback } from 'react';
 import { TableInstance } from 'react-table';
 const useStyles = makeStyles(

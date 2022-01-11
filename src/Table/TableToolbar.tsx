@@ -1,6 +1,7 @@
-import { Button, IconButton, Theme, Toolbar, Tooltip, createStyles, makeStyles } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
+import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
+import { createStyles, makeStyles } from '@mui/styles';
 import classnames from 'classnames';
 import { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
 import { TableInstance } from 'react-table';
@@ -92,6 +93,7 @@ export const InstanceSmallIconActionButton = <T extends Record<string, unknown>>
           })}
           onClick={onClick(instance)}
           disabled={!enabled(instance)}
+          size='large'
         >
           {icon}
         </IconButton>
@@ -118,6 +120,7 @@ export const SmallIconActionButton = ({
           })}
           onClick={onClick}
           disabled={!enabled}
+          size='large'
         >
           {icon}
         </IconButton>

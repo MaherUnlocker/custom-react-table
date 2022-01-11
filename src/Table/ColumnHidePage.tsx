@@ -1,4 +1,5 @@
-import { Checkbox, FormControlLabel, Popover, Typography, createStyles, makeStyles } from '@material-ui/core';
+import { Checkbox, FormControlLabel, Popover, Typography } from '@mui/material';
+import { createStyles, makeStyles } from '@mui/styles';
 import React, { ReactElement } from 'react';
 import { TableInstance } from 'react-table';
 const useStyles = makeStyles(
@@ -83,7 +84,8 @@ export function ColumnHidePage<T extends Record<string, unknown>>({
               <FormControlLabel
                 key={column.id}
                 control={<Checkbox value={`${column.id}`} disabled={column.isVisible && onlyOneOptionLeft} />}
-                label={column.render('Header')}
+                label={column.id}
+                // label={column.render('Header')}
                 checked={column.isVisible}
                 onChange={() => toggleHideColumn(column.id, column.isVisible)}
               />

@@ -7,6 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FilterValue, IdType, Row } from 'react-table';
 
 import LoadingDataAnimation from '../components/LoadingDataAnimation';
+import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
 import { Table } from './Table';
 
 function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
@@ -65,7 +66,7 @@ export default function DynamicTable({
       });
   }
 
-  let apiResultColumns = useMemo(
+  const apiResultColumns = useMemo(
     () =>
       apiResult[0]
         ? Object.keys(apiResult[0])
@@ -131,6 +132,7 @@ export default function DynamicTable({
   }, [url]);
 
   if (loading) return <LoadingDataAnimation />;
+  if (error) return <LoadingErrorAnimation />;
 
   return (
     <React.Fragment>

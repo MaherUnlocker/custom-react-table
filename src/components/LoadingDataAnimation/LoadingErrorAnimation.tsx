@@ -1,5 +1,7 @@
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
 export interface State extends SnackbarOrigin {
@@ -8,9 +10,9 @@ export interface State extends SnackbarOrigin {
 
 export default function LoadingErrorAnimation() {
   const [state, setState] = React.useState<State>({
-    open: false,
-    vertical: 'top',
-    horizontal: 'center',
+    open: true,
+    vertical: 'bottom',
+    horizontal: 'right',
   });
   const { vertical, horizontal, open } = state;
 
@@ -22,69 +24,19 @@ export default function LoadingErrorAnimation() {
     setState({ ...state, open: false });
   };
 
-  const buttons = (
-    <React.Fragment>
-      <Button
-        onClick={handleClick({
-          vertical: 'top',
-          horizontal: 'center',
-        })}
-      >
-        Top-Center
-      </Button>
-      <Button
-        onClick={handleClick({
-          vertical: 'top',
-          horizontal: 'right',
-        })}
-      >
-        Top-Right
-      </Button>
-      <Button
-        onClick={handleClick({
-          vertical: 'bottom',
-          horizontal: 'right',
-        })}
-      >
-        Bottom-Right
-      </Button>
-      <Button
-        onClick={handleClick({
-          vertical: 'bottom',
-          horizontal: 'center',
-        })}
-      >
-        Bottom-Center
-      </Button>
-      <Button
-        onClick={handleClick({
-          vertical: 'bottom',
-          horizontal: 'left',
-        })}
-      >
-        Bottom-Left
-      </Button>
-      <Button
-        onClick={handleClick({
-          vertical: 'top',
-          horizontal: 'left',
-        })}
-      >
-        Top-Left
-      </Button>
-    </React.Fragment>
-  );
-
   return (
-    <div>
-      {buttons}
-      <Snackbar
+    <div className='d-flex align-items-center justify-content-center' style={{ padding: '20%' }}>
+      <Alert variant='filled' severity='error'>
+        Error loading data
+      </Alert>
+
+      {/* <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
         onClose={handleClose}
-        message='I love snacks'
+        message='Error loading data'
         key={vertical + horizontal}
-      />
+      /> */}
     </div>
   );
 }

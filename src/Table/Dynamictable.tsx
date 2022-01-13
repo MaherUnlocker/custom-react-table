@@ -2,6 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './index.css';
 
+import { Paper } from '@mui/material';
+import { Box } from '@mui/system';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FilterValue, IdType, Row } from 'react-table';
@@ -136,21 +138,23 @@ export default function DynamicTable({
 
   return (
     <React.Fragment>
-      <div className='table-responsive card'>
-        <Table
-          name={'myTable'}
-          columns={columns}
-          data={apiResult}
-          canGroupBy={canGroupBy}
-          canSort={canSort}
-          canSelect={canSelect}
-          canResize={canResize}
-          actionColumn={actionColumn}
-          showGlobalFilter={showGlobalFilter}
-          showFilterbyColomn={showFilterbyColomn}
-          showColomnIcon={showColomnIcon}
-        />
-      </div>
+      <Paper elevation={2}>
+        <div className='table-responsive '>
+          <Table
+            name={'myTable'}
+            columns={columns}
+            data={apiResult}
+            canGroupBy={canGroupBy}
+            canSort={canSort}
+            canSelect={canSelect}
+            canResize={canResize}
+            actionColumn={actionColumn}
+            showGlobalFilter={showGlobalFilter}
+            showFilterbyColomn={showFilterbyColomn}
+            showColomnIcon={showColomnIcon}
+          />
+        </div>
+      </Paper>
     </React.Fragment>
   );
 }

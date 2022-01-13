@@ -1,6 +1,6 @@
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
-import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
+import { Button, IconButton, Link, Theme, Toolbar, Tooltip } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 import classnames from 'classnames';
 import { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
@@ -8,8 +8,10 @@ import { TableInstance } from 'react-table';
 
 import { TableMouseEventHandler } from '../../types/react-table-config';
 import { ColumnHidePage } from './ColumnHidePage';
-import { FilterPage } from './FilterPage';
-import GlobalFilter from './filters/Global-Filter';
+import { FilterPage } from './FilterPage2';
+import { FilterPopup } from './FilterPage3';
+import GlobalFilter from './filters/GlobalFilter';
+import { ShowHideFilterPage } from './ShowHideFilter';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -182,14 +184,31 @@ export function TableToolbar<T extends Record<string, unknown>>({
         <GlobalFilter
           preGlobalFilteredRows={instance.preGlobalFilteredRows}
           setGlobalFilter={instance.setGlobalFilter}
-          style={{ width: '80%' }}
+          style={{ width: '30%' }}
         />
       ) : null}
 
-      <div className={classes.rightButtons}>
+      <div>
+        {/* <div className={classes.rightButtons}> */}
         <ColumnHidePage<T> instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
 
-        <FilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
+        <FilterPage<T> instance={instance} onClose={handleClose} />
+        <ShowHideFilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
+
+        {showFilterbyColomn ? (
+          <Link component='button' variant='body2' onClick={handleFilterClick}>
+            Ajouter filter
+          </Link>
+        ) : null}
+        {/* {showFilterbyColomn ? (
+          <SmallIconActionButton
+            // icon={<div>+ Ajouter un filtre</div>} //{<FilterListIcon />}
+            icon={<span style={{ display: 'flex',alignItems:'center',height: '20px'} }>add filter</span>} //{<FilterListIcon />}
+            onClick={handleFilterClick}
+            label='Filter by columns'
+            variant='right'
+          />
+        ) : null} */}
         {showColomnIcon
           ? hideableColumns.length > 1 && (
               <SmallIconActionButton
@@ -200,15 +219,6 @@ export function TableToolbar<T extends Record<string, unknown>>({
               />
             )
           : null}
-        {showFilterbyColomn ? (
-          <SmallIconActionButton
-            icon={<FilterListIcon />}
-            // icon={<span>add filter</span>} //{<FilterListIcon />}
-            onClick={handleFilterClick}
-            label='Filter by columns'
-            variant='right'
-          />
-        ) : null}
       </div>
     </Toolbar>
   );

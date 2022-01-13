@@ -22,3 +22,9 @@
   flex: 1 1 auto;
   padding: 1rem 1rem;
 }
+
+thead {
+  background: var(--unnamed-color-f8f8fb) 0% 0% no-repeat padding-box;
+  background: #f8f8fb 0% 0% no-repeat padding-box;
+  opacity: 1;
+}

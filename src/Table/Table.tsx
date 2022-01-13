@@ -77,15 +77,24 @@ const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<Colum
 function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column }: FilterProps<T>) {
   const { id, filterValue, setFilter, render } = column;
   const [value, setValue] = React.useState(filterValue || '');
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
+
   // ensure that reset loads the new value
   useEffect(() => {
     setValue(filterValue || '');
   }, [filterValue]);
 
+  function handleKeyDown(e: any) {
+    if (e.key === 'Enter') {
+      setFilter(value);
+    }
+  }
+
   const isFirstColumn = findFirstColumn(columns) === column;
+
   return (
     <TextField
       name={id}
@@ -95,9 +104,11 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
       autoFocus={isFirstColumn}
       variant='standard'
       onChange={handleChange}
+      type='text'
       onBlur={(e) => {
         setFilter(e.target.value || undefined);
       }}
+      onKeyDown={handleKeyDown}
     />
   );
 }
@@ -106,8 +117,8 @@ const getStyles = (props: any, disableResizing = false, align = 'left') => [
   props,
   {
     style: {
-      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-      alignItems: 'flex-start',
+      justifyContent: 'center',
+      alignItems: 'center',
       display: 'flex',
     },
   },
@@ -125,8 +136,8 @@ const defaultColumn = {
   Header: DefaultHeader,
   // When using the useFlexLayout:
   minWidth: 30, // minWidth is only used as a limit for resizing
-  width: 150, // width is used for both the flex-basis and flex-grow
-  maxWidth: 200, // maxWidth is only used as a limit for resizing
+  // width: 150, // width is used for both the flex-basis and flex-grow
+  maxWidth: 300, // maxWidth is only used as a limit for resizing
 };
 
 const filterTypes = {
@@ -295,7 +306,7 @@ export function Table<T extends Record<string, unknown>>({
               <TableHeadRow key={headerGroupKey} {...getHeaderGroupProps}>
                 {headerGroup.headers.map((column) => {
                   const style = {
-                    textAlign: column.align ? column.align : 'left ',
+                    textAlign: column.align ? column.align : 'center ',
                   } as CSSProperties;
                   const { key: headerKey, role: headerRole, ...getHeaderProps } = column.getHeaderProps(headerProps);
                   const { title: groupTitle = '', ...columnGroupByProps } = column.getGroupByToggleProps();

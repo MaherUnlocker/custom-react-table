@@ -46,9 +46,13 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   const {
     allColumns,
     setFilter,
-
+    setAllFilters,
     state: { filters },
   } = instance;
+
+  const resetFilters = useCallback(() => {
+    setAllFilters([]);
+  }, [setAllFilters]);
 
   const handleDelete = useCallback(
     (id: string | number) => {
@@ -59,7 +63,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
 
   return Object.keys(filters).length > 0 ? (
     <div className={classes.chipZone}>
-      <span className={classes.filtersActiveLabel}>Active filters:</span>
+      {/* <span className={classes.filtersActiveLabel}>Active filters:</span> */}
 
       {filters &&
         allColumns.map((column) => {
@@ -83,6 +87,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
             )
           );
         })}
+      <button onClick={resetFilters}>Reset</button>
     </div>
   ) : null;
 }

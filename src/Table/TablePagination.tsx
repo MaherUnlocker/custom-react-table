@@ -34,6 +34,7 @@ const useStyles = makeStyles({
     flexShrink: 0,
     marginLeft: '2.5',
     marginBottom: '0',
+    marginTop: 0,
   },
 });
 
@@ -133,8 +134,9 @@ export function TablePagination<T extends Record<string, unknown>>({
       page={pageIndex}
       SelectProps={{
         inputProps: { 'aria-label': 'rows per page' },
-        // native: true,
+        native: true,
       }}
+      labelRowsPerPage={<span>Rows</span>}
       onPageChange={handleChangePage}
       onRowsPerPageChange={onChangeRowsPerPage}
       ActionsComponent={TablePaginationActions}

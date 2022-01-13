@@ -2,6 +2,7 @@ import { Tooltip as MuiTooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { CSSProperties } from 'react';
 import { CellProps } from 'react-table';
+
 const useStyles = makeStyles({
   truncated: {
     textOverflow: 'ellipsis',
@@ -22,8 +23,9 @@ interface TooltipProps {
 
 export const TooltipCell: React.FC<TooltipProps> = ({ text, tooltip = text, align }) => {
   const classes = useStyles({});
+
   return (
-    <MuiTooltip title={tooltip} className={classes.truncated} style={{ textAlign: align } as CSSProperties}>
+    <MuiTooltip title={text} className={classes.truncated} style={{ textAlign: align } as CSSProperties}>
       <span>{text}</span>
     </MuiTooltip>
   );

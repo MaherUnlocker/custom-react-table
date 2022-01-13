@@ -87,9 +87,9 @@ export function FilterPage<T extends Record<string, unknown>>({
             <div>
               {allColumns
 
-                .filter((it) => it.canFilter)
+                .filter((it) => it.canFilter && it.isVisible)
                 .map((column) => (
-                  <div key={column.id} className='d-flex mt-2'>
+                  <div key={column.id} className='d-flex '>
                     {column.render('Filter')}
                   </div>
                 ))}

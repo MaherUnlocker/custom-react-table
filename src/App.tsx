@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Dynamictable from '../src/Table/Dynamictable';
+import Dynamictable from './Table/DynamicTable';
 import SelectAccountDropdown from './Table/SelectAccountDropdown';
 
 export default function App() {

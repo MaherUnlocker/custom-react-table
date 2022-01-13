@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Dynamictable from './Table/DynamicTable';
+import DynamicTable from './Table/DynamicTable';
 import SelectAccountDropdown from './Table/SelectAccountDropdown';
 
 export default function App() {
   return (
-    <Dynamictable
+    <DynamicTable
       //put your backed api url
       url='https://fakestoreapi.com/products'
       // url='http://localhost:3004/products'

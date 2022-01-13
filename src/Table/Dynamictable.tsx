@@ -17,13 +17,13 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
   });
 }
 
-// This is an autoRemove method on the filter function that
-// when given the new filter value and returns true, the filter
+// This is an autoRemove method on the filter function
+//that when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number';
 
-type DynamictableProps = {
+type DynamicTableProps = {
   url: string;
   canGroupBy?: boolean;
   canSort?: boolean;
@@ -47,7 +47,7 @@ export default function DynamicTable({
   showGlobalFilter,
   showFilterbyColomn,
   showColomnIcon,
-}: DynamictableProps) {
+}: DynamicTableProps) {
   const [apiResult, setApiResult] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<null | any>(null);

@@ -2,7 +2,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { TableSortLabel, TextField, Tooltip } from '@mui/material';
 import cx from 'classnames';
-import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect, useState } from 'react';
+import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
 import {
   Cell,
   CellProps,

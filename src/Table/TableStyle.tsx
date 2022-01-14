@@ -1,6 +1,4 @@
 import { Checkbox, styled } from '@mui/material';
-//import blue from '@mui/material/colors/blue';
-//import { cËËËKreateTheme } from '@mui/material/styles';
 import MuiTableTable from '@mui/material/Table';
 import { TableTypeMap } from '@mui/material/Table/Table';
 import MuiTableBody from '@mui/material/TableBody';
@@ -15,14 +13,7 @@ import { makeStyles } from '@mui/styles';
 //import { palette } from '@mui/system';
 import cx from 'classnames';
 import React, { CSSProperties } from 'react';
-// ******
 
-// const theme = createTheme({
-//   palette: {
-//     primary: blue,
-//   },
-// });
-// /////***** */
 export const useStyles = makeStyles({
   tableTable: {
     borderSpacing: 0,
@@ -31,7 +22,8 @@ export const useStyles = makeStyles({
   },
   tableHead: {},
   tableHeadRow: {
-    backgroundColor: 'rgba(255, 255, 255,)',
+    // backgroundColor: '#ffffff',
+    backgroundColor: '#F8F8FB ',
     // backgroundColor: theme.palette.background.paper,
     color: '#000',
     borderBottom: '1px solid rgba(224, 224, 224, 1)',
@@ -85,6 +77,9 @@ export const useStyles = makeStyles({
     lineHeight: 1.3,
     verticalAlign: 'inherit',
     color: 'rgba(0, 0, 0, 0.87)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRight: '1px solid rgba(224, 224, 224, 1)',
     '&:last-child': {
       borderRight: 'none',
@@ -95,8 +90,8 @@ export const useStyles = makeStyles({
     cursor: 'col-resize',
     zIndex: 100,
     opacity: 0,
-    // borderLeft: `1px solid ${theme.palette.primary.light}`,
-    // borderRight: `1px solid ${theme.palette.primary.light}`,
+    borderLeft: '1px solid #42a5f5',
+    borderRight: '1px solid #42a5f5',
     height: '50%',
     top: '25%',
     transition: 'all linear 100ms',
@@ -120,6 +115,13 @@ export const useStyles = makeStyles({
       marginLeft: 2,
     },
   },
+  tableFilterAltOutlinedIcon: {
+    width: ' 16px !important',
+    height: '16px !important',
+    marginTop: 0,
+    marginLeft: 2,
+  },
+
   headerIcon: {
     '& svg': {
       width: 16,

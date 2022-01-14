@@ -1,3 +1,4 @@
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { TableSortLabel, TextField, Tooltip } from '@mui/material';
@@ -106,8 +107,8 @@ const getStyles = (props: any, disableResizing = false, align = 'left') => [
   props,
   {
     style: {
-      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-      alignItems: 'flex-start',
+      justifyContent: 'center',
+      alignItems: 'center',
       display: 'flex',
     },
   },
@@ -124,8 +125,8 @@ const defaultColumn = {
   Cell: TooltipCellRenderer,
   Header: DefaultHeader,
   // When using the useFlexLayout:
-  minWidth: 30, // minWidth is only used as a limit for resizing
-  width: 150, // width is used for both the flex-basis and flex-grow
+  minWidth: 10, // minWidth is only used as a limit for resizing
+  // width: 150, // width is used for both the flex-basis and flex-grow
   maxWidth: 200, // maxWidth is only used as a limit for resizing
 };
 
@@ -317,17 +318,21 @@ export function Table<T extends Record<string, unknown>>({
                           )
                         : null}
                       {column.canSort && canSort ? (
-                        <Tooltip title={sortTitle}>
-                          <TableSortLabel
-                            active={column.isSorted}
-                            direction={column.isSortedDesc ? 'desc' : 'asc'}
-                            {...columnSortByProps}
-                            className={classes.tableSortLabel}
-                            style={style}
-                          >
-                            {column.render('Header')}
-                          </TableSortLabel>
-                        </Tooltip>
+                        <>
+                          <Tooltip title={sortTitle}>
+                            <TableSortLabel
+                              active={column.isSorted}
+                              direction={column.isSortedDesc ? 'desc' : 'asc'}
+                              {...columnSortByProps}
+                              className={classes.tableSortLabel}
+                              style={{ flexDirection: 'row-reverse' }}
+                            >
+                              {column.render('Header')}
+                            </TableSortLabel>
+                          </Tooltip>
+
+                          <FilterAltOutlinedIcon className={classes.tableFilterAltOutlinedIcon} />
+                        </>
                       ) : (
                         <TableLabel style={style}>{column.render('Header')}</TableLabel>
                       )}

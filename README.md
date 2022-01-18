@@ -59,8 +59,8 @@ import `Dynamictable` from @maherunlocker/react-table-component
     canSelect
     canExpand
     ShowGlobalFilter
-    ShowFilterbyColomn
-    showColomnIcon
+    showFilterbyColumn
+    showColumnIcon
   />
 ```
 

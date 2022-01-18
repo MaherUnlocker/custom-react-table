@@ -30,8 +30,8 @@ type DynamicTableProps = {
   canSelect?: boolean;
   canResize?: boolean;
   showGlobalFilter?: boolean;
-  showFilterbyColomn?: boolean;
-  showColomnIcon?: boolean;
+  showFilterbyColumn?: boolean;
+  showColumnIcon?: boolean;
   canExpand?: boolean;
   actionColumn?: React.ReactNode;
 };
@@ -45,8 +45,8 @@ export default function DynamicTable({
   canExpand,
   canSelect,
   showGlobalFilter,
-  showFilterbyColomn,
-  showColomnIcon,
+  showFilterbyColumn,
+  showColumnIcon,
 }: DynamicTableProps) {
   const [apiResult, setApiResult] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -89,6 +89,7 @@ export default function DynamicTable({
                 accessor: key,
                 aggregate: 'count',
                 Aggregated: ({ cell: { value } }: any) => `${value} `,
+                isFilterInputShown: false,
               };
             })
         : [],
@@ -136,7 +137,7 @@ export default function DynamicTable({
 
   return (
     <React.Fragment>
-      <div className='table-responsive card'>
+      <div className='table-responsive '>
         <Table
           name={'myTable'}
           columns={columns}
@@ -147,8 +148,8 @@ export default function DynamicTable({
           canResize={canResize}
           actionColumn={actionColumn}
           showGlobalFilter={showGlobalFilter}
-          showFilterbyColomn={showFilterbyColomn}
-          showColomnIcon={showColomnIcon}
+          showFilterbyColumn={showFilterbyColumn}
+          showColumnIcon={showColumnIcon}
         />
       </div>
     </React.Fragment>

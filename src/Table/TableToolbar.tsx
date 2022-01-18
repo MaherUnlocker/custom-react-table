@@ -135,15 +135,15 @@ type TableToolbarProps<T extends Record<string, unknown>> = {
   onDelete?: TableMouseEventHandler;
   onEdit?: TableMouseEventHandler;
   showGlobalFilter?: boolean;
-  showFilterbyColomn?: boolean;
-  showColomnIcon?: boolean;
+  showFilterbyColumn?: boolean;
+  showColumnIcon?: boolean;
 };
 
 export function TableToolbar<T extends Record<string, unknown>>({
   instance,
   showGlobalFilter,
-  showFilterbyColomn,
-  showColomnIcon,
+  showFilterbyColumn,
+  showColumnIcon,
 }: PropsWithChildren<TableToolbarProps<T>>): ReactElement | null {
   const { columns } = instance;
   const classes = useStyles();
@@ -177,7 +177,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
   // toolbar with  filter/search column select.
 
   return (
-    <Toolbar className={!showGlobalFilter && !showFilterbyColomn && !showColomnIcon ? 'd-none' : classes.toolbar}>
+    <Toolbar className={!showGlobalFilter && !showFilterbyColumn && !showColumnIcon ? 'd-none' : classes.toolbar}>
       {showGlobalFilter ? (
         <GlobalFilter
           preGlobalFilteredRows={instance.preGlobalFilteredRows}
@@ -190,7 +190,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
         <ColumnHidePage<T> instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
 
         <FilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
-        {showColomnIcon
+        {showColumnIcon
           ? hideableColumns.length > 1 && (
               <SmallIconActionButton
                 icon={<ViewColumnsIcon />}
@@ -200,7 +200,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
               />
             )
           : null}
-        {showFilterbyColomn ? (
+        {showFilterbyColumn ? (
           <SmallIconActionButton
             icon={<FilterListIcon />}
             // icon={<span>add filter</span>} //{<FilterListIcon />}
@@ -214,4 +214,4 @@ export function TableToolbar<T extends Record<string, unknown>>({
   );
 }
 
-// return <>{!showGlobalFilter && !showFilterbyColomn && !showColomnIcon ? null : <ToolbarWrapper />}</>;
+// return <>{!showGlobalFilter && !showFilterbyColumn && !showColumnIcon ? null : <ToolbarWrapper />}</>;

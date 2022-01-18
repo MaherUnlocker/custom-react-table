@@ -62,8 +62,8 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
   canResize?: boolean;
   canSelect?: boolean;
   showGlobalFilter?: boolean;
-  showFilterbyColomn?: boolean;
-  showColomnIcon?: boolean;
+  showFilterbyColumn?: boolean;
+  showColumnIcon?: boolean;
   actionColumn?: React.ReactNode;
 }
 
@@ -85,6 +85,11 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   useEffect(() => {
     setValue(filterValue || '');
   }, [filterValue]);
+  function handleKeyDown(e: any) {
+    if (e.key === 'Enter') {
+      setFilter(value);
+    }
+  }
 
   const isFirstColumn = findFirstColumn(columns) === column;
   return (
@@ -99,6 +104,7 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
       onBlur={(e) => {
         setFilter(e.target.value || undefined);
       }}
+      onKeyDown={handleKeyDown}
     />
   );
 }
@@ -173,8 +179,8 @@ export function Table<T extends Record<string, unknown>>({
   canResize,
   actionColumn,
   showGlobalFilter,
-  showFilterbyColomn,
-  showColomnIcon,
+  showFilterbyColumn,
+  showColumnIcon,
   ...props
 }: PropsWithChildren<TableProperties<T>>): ReactElement {
   const classes = useStyles();
@@ -198,16 +204,13 @@ export function Table<T extends Record<string, unknown>>({
                 <SettingIcon />
               </div>
 
-              <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
+              <ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
                 <div className='d-flex flex-column'>
                   {columns
                     .filter((column) => !(column.id === '_selector') && !(column.id === 'expander'))
                     .map((column: any) => {
                       return (
-                        <div
-                          key={column.id}
-                          className=' pretty p-default p-curve p-fill my-2 d-flex align-items-center'
-                        >
+                        <div key={column.id} className='pretty p-default p-curve p-fill my-2 d-flex align-items-center'>
                           <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
                           <div className='state p-primary '>
                             <label>{column.id}</label>
@@ -278,14 +281,27 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   const { role: tableRole, ...tableProps } = getTableProps();
+  const [headerGroupUpdated, setHeaderGroupUpdated] = React.useState(headerGroups);
+
+  function toggleFilter(column: any) {
+    console.log({ column });
+    if (column.canFilter) {
+      column.isFilterInputShown = !column.isFilterInputShown;
+    }
+
+    setHeaderGroupUpdated((prevState: any) => {
+      let newState = [...prevState];
+      return newState;
+    });
+  }
 
   return (
     <React.Fragment>
-      <TableToolbar instance={instance} {...{ showGlobalFilter, showFilterbyColomn, showColomnIcon }} />
+      <TableToolbar instance={instance} {...{ showGlobalFilter, showFilterbyColumn, showColumnIcon }} />
       <FilterChipBar instance={instance} />
       <TableTable {...tableProps}>
         <TableHead>
-          {headerGroups.map((headerGroup) => {
+          {headerGroupUpdated.map((headerGroup) => {
             const {
               key: headerGroupKey,
               title: headerGroupTitle,
@@ -294,7 +310,7 @@ export function Table<T extends Record<string, unknown>>({
             } = headerGroup.getHeaderGroupProps();
             return (
               <TableHeadRow key={headerGroupKey} {...getHeaderGroupProps}>
-                {headerGroup.headers.map((column) => {
+                {headerGroup.headers.map((column: any) => {
                   const style = {
                     textAlign: column.align ? column.align : 'left ',
                   } as CSSProperties;
@@ -318,25 +334,85 @@ export function Table<T extends Record<string, unknown>>({
                           )
                         : null}
                       {column.canSort && canSort ? (
-                        <>
-                          <Tooltip title={sortTitle}>
-                            <TableSortLabel
-                              active={column.isSorted}
-                              direction={column.isSortedDesc ? 'desc' : 'asc'}
-                              {...columnSortByProps}
-                              className={classes.tableSortLabel}
-                              style={{ flexDirection: 'row-reverse' }}
-                            >
-                              {column.render('Header')}
-                            </TableSortLabel>
-                          </Tooltip>
-
-                          <FilterAltOutlinedIcon className={classes.tableFilterAltOutlinedIcon} />
-                        </>
+                        <React.Fragment>
+                          {column.isFilterInputShown ? (
+                            column.canFilter ? (
+                              column.render('Filter')
+                            ) : (
+                              <>
+                                <Tooltip title={sortTitle}>
+                                  <TableSortLabel
+                                    active={column.isSorted}
+                                    direction={column.isSortedDesc ? 'desc' : 'asc'}
+                                    {...columnSortByProps}
+                                    className={classes.tableSortLabel}
+                                    style={{ flexDirection: 'row-reverse' }}
+                                  >
+                                    {column.render('Header')}
+                                  </TableSortLabel>
+                                </Tooltip>
+                                {console.log(column.id)}
+                                {column.id !== 'hidecolumns' ? (
+                                  <FilterAltOutlinedIcon
+                                    onClick={() => toggleFilter(column)}
+                                    className={classes.tableFilterAltOutlinedIcon}
+                                  />
+                                ) : (
+                                  <div>maher</div>
+                                )}
+                              </>
+                            )
+                          ) : (
+                            <>
+                              <Tooltip title={sortTitle}>
+                                <TableSortLabel
+                                  active={column.isSorted}
+                                  direction={column.isSortedDesc ? 'desc' : 'asc'}
+                                  {...columnSortByProps}
+                                  className={classes.tableSortLabel}
+                                  style={{ flexDirection: 'row-reverse' }}
+                                >
+                                  {column.render('Header')}
+                                </TableSortLabel>
+                              </Tooltip>
+                              {column.id !== 'hidecolumns' ? (
+                                <FilterAltOutlinedIcon
+                                  onClick={() => toggleFilter(column)}
+                                  className={classes.tableFilterAltOutlinedIcon}
+                                />
+                              ) : null}
+                            </>
+                          )}
+                        </React.Fragment>
                       ) : (
-                        <TableLabel style={style}>{column.render('Header')}</TableLabel>
+                        <React.Fragment>
+                          {column.isFilterInputShown ? (
+                            column.canFilter ? (
+                              column.render('Filter')
+                            ) : (
+                              <TableLabel style={style}>{column.render('Header')}</TableLabel>
+                            )
+                          ) : (
+                            <>
+                              <TableLabel style={style}>{column.render('Header')}</TableLabel>
+                              {column.id !== 'hidecolumns' ? (
+                                <FilterAltOutlinedIcon
+                                  onClick={() => toggleFilter(column)}
+                                  className={classes.tableFilterAltOutlinedIcon}
+                                />
+                              ) : null}
+                            </>
+                          )}
+                        </React.Fragment>
                       )}
-                      {/*<div>{column.canFilter ? column.render('Filter') : null}</div>*/}
+                      {/* {column.isFilterInputShown ? (
+                        column.canFilter ? (
+                          column.render('Filter')
+                        ) : (
+                          <TableLabel style={style}>{column.render('Header')}</TableLabel>
+                        )
+                      ) : null} */}
+
                       {canResize ? column.canResize && <ResizeHandle column={column} /> : null}
                     </TableHeadCell>
                   );

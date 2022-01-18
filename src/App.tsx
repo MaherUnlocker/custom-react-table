@@ -7,18 +7,18 @@ export default function App() {
   return (
     <DynamicTable
       //put your backed api url
-      url='https://fakestoreapi.com/products'
-      // url='http://localhost:3004/products'
+      // url='https://fakestoreapi.com/products'
+      url='http://localhost:3004/products'
       //optionnal props
       actionColumn={<SelectAccountDropdown />}
-      canGroupBy
+      // canGroupBy
       canSort
       canResize
       // canExpand
       // canSelect
       showGlobalFilter
-      showFilterbyColomn
-      showColomnIcon
+      showFilterbyColumn
+      // showColumnIcon
     />
   );
 }

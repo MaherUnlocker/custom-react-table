@@ -2,8 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './index.css';
 
-import { Paper } from '@mui/material';
-import { Box } from '@mui/system';
+import { DuplicateIcon, StyledCheckbox, TrashIcon } from '@aureskonnect/react-ui';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FilterValue, IdType, Row } from 'react-table';
@@ -19,25 +18,29 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
   });
 }
 
-// This is an autoRemove method on the filter function that
-// when given the new filter value and returns true, the filter
+// This is an autoRemove method on the filter function
+//that when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number';
 
-type DynamictableProps = {
+type DynamicTableProps = {
   url: string;
   canGroupBy?: boolean;
   canSort?: boolean;
   canSelect?: boolean;
   canResize?: boolean;
   showGlobalFilter?: boolean;
-  showFilterbyColomn?: boolean;
-  showColomnIcon?: boolean;
+  showFilterbyColumn?: boolean;
+  showColumnIcon?: boolean;
   canExpand?: boolean;
-  actionColumn?: React.ReactNode;
+  canDeleteOrDuplicate?: boolean;
+  actionColumn?: Function;
 };
-
+type apiResultProps = {
+  structure: string[];
+  data: any;
+};
 export default function DynamicTable({
   url,
   actionColumn,
@@ -47,10 +50,11 @@ export default function DynamicTable({
   canExpand,
   canSelect,
   showGlobalFilter,
-  showFilterbyColomn,
-  showColomnIcon,
-}: DynamictableProps) {
-  const [apiResult, setApiResult] = useState<any[]>([]);
+  showFilterbyColumn,
+  showColumnIcon,
+  canDeleteOrDuplicate,
+}: DynamicTableProps) {
+  const [apiResult, setApiResult] = useState<apiResultProps>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<null | any>(null);
 
@@ -68,20 +72,20 @@ export default function DynamicTable({
       });
   }
 
-  const apiResultColumns = useMemo(
+  let apiResultColumns = useMemo(
     () =>
-      apiResult[0]
-        ? Object.keys(apiResult[0])
+      apiResult
+        ? apiResult.structure
             .filter((key) => key !== 'rating' && key !== 'subRows')
             .map((key) => {
-              if (key === 'image') {
+              if (key === 'image' || key === 'picture') {
                 return {
                   Header: key,
                   accessor: key,
                   disableFilters: true,
                   // eslint-disable-next-line
                   Cell: (value: any) => {
-                    return <img src={value.cell.value} className='h-25 w-25' alt='' />;
+                    return <img src={value.cell.value} className='w-50 ' alt='' />;
                   },
                 };
               }
@@ -91,19 +95,35 @@ export default function DynamicTable({
                 accessor: key,
                 aggregate: 'count',
                 Aggregated: ({ cell: { value } }: any) => `${value} `,
+                isFilterInputShown: false,
               };
             })
         : [],
     [apiResult]
   );
 
+  function duplicateRow(index: number) {
+    const duplicatedData: any = { ...apiResult };
+    const duplicateRow = duplicatedData?.data[index];
+    const firstPart = duplicatedData?.data.slice(0, index + 1);
+    const secondPart = duplicatedData?.data.slice(index + 1, duplicatedData.data.length);
+    duplicatedData.data = [...firstPart, duplicateRow, ...secondPart];
+    setApiResult(duplicatedData);
+  }
+
   const columns: any = useMemo(() => {
+    let modifiedColumns: any = apiResultColumns;
+
     if (canExpand) {
-      return [
+      modifiedColumns = [
         {
           // Build our expander column
           id: 'expander', // Make sure it has an ID
           Header: '',
+          minWidth: 50,
+           width: 60,
+          disableResizing: true,
+          disableGroupBy: true,
           Cell: ({ row }: any) =>
             // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
             // to build the toggle for expanding a row
@@ -118,17 +138,50 @@ export default function DynamicTable({
                   },
                 })}
               >
-                {row.isExpanded ? <div className='arrowRight'></div> : <div className='arrowDown'></div>}
-                {/* {row.isExpanded ? '👇' : '👉'} */}
+                {/* {row.isExpanded ? <div className='arrowRight'></div> : <div className='arrowDown'></div>} */}
+                {row.isExpanded ? '👇' : '👉'}
               </span>
             ) : null,
         },
-        ...apiResultColumns,
+        ...modifiedColumns,
       ];
     }
 
-    return apiResultColumns;
+    if (canDeleteOrDuplicate) {
+      modifiedColumns = [
+        ...modifiedColumns,
+        {
+          Header: 'Actions',
+          id: 'Actions',
+          accessor: (str: any) => 'delete',
+
+          Cell: ({ row }: any) => (
+            <React.Fragment>
+              <TrashIcon
+                width={25}
+                height={25}
+                onClick={() => {
+                  const dataCopy: any = { ...apiResult };
+                  dataCopy.data.splice(row.index, 1);
+                  setApiResult(dataCopy);
+                }}
+              />
+              <DuplicateIcon
+                width={25}
+                height={25}
+                onClick={() => {
+                  duplicateRow(row.index);
+                }}
+              />
+            </React.Fragment>
+          ),
+        },
+      ];
+    }
+
+    return modifiedColumns;
   }, [apiResultColumns]);
+
   useEffect(() => {
     fetchData(url);
   }, [url]);
@@ -137,24 +190,20 @@ export default function DynamicTable({
   if (error) return <LoadingErrorAnimation />;
 
   return (
-    <React.Fragment>
-      <Paper elevation={2}>
-        <div className='table-responsive '>
-          <Table
-            name={'myTable'}
-            columns={columns}
-            data={apiResult}
-            canGroupBy={canGroupBy}
-            canSort={canSort}
-            canSelect={canSelect}
-            canResize={canResize}
-            actionColumn={actionColumn}
-            showGlobalFilter={showGlobalFilter}
-            showFilterbyColomn={showFilterbyColomn}
-            showColomnIcon={showColomnIcon}
-          />
-        </div>
-      </Paper>
-    </React.Fragment>
+    <div className='table-responsive'>
+      <Table
+        name={'myTable'}
+        columns={columns}
+        data={apiResult?.data}
+        canGroupBy={canGroupBy}
+        canSort={canSort}
+        canSelect={canSelect}
+        canResize={canResize}
+        actionColumn={actionColumn}
+        showGlobalFilter={showGlobalFilter}
+        showFilterbyColomn={showFilterbyColumn}
+        showColomnIcon={showColumnIcon}
+      />
+    </div>
   );
 }

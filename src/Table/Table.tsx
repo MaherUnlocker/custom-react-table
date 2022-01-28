@@ -63,7 +63,7 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
   showGlobalFilter?: boolean;
   showFilterbyColomn?: boolean;
   showColomnIcon?: boolean;
-  actionColumn?: React.ReactNode;
+  actionColumn?: Function | undefined;
 }
 
 function DefaultHeader({ column }: HeaderProps<any>) {
@@ -144,6 +144,7 @@ const filterTypes = {
   fuzzyText: fuzzyTextFilter,
   numeric: numericTextFilter,
 };
+
 const selectionHook = (hooks: Hooks<any>) => {
   hooks.allColumns.push((columns) => [
     // Let's make a column for selection
@@ -173,6 +174,7 @@ const selectionHook = (hooks: Hooks<any>) => {
   //   // selectionGroupHeader.canResize = false;
   // });
 };
+
 export function Table<T extends Record<string, unknown>>({
   name,
   columns,
@@ -231,8 +233,10 @@ export function Table<T extends Record<string, unknown>>({
             </div>
           );
         },
-        Cell: function () {
-          return actionColumn;
+        Cell: function (cell: any) {
+          const ActionColumnComponent = actionColumn as React.ElementType;
+
+          return <ActionColumnComponent selectedRow={cell.row} />;
         },
       },
     ]);
@@ -250,14 +254,17 @@ export function Table<T extends Record<string, unknown>>({
     useResizeColumns,
     useRowSelect,
   ];
+
   let localHooks = hooks;
 
   if (canSelect) {
     localHooks.push(selectionHook as any);
   }
+
   if (actionColumn !== undefined) {
     localHooks.push(customHooks as any);
   }
+
   const instance = useTable<T>(
     {
       ...props,

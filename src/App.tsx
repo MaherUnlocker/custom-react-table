@@ -1,24 +1,26 @@
 import React from 'react';
 
-import Dynamictable from './Table/DynamicTable';
+import DynamicTable from './Table/DynamicTable';
 import SelectAccountDropdown from './Table/SelectAccountDropdown';
 
 export default function App() {
   return (
-    <Dynamictable
+    <DynamicTable
       //put your backed api url
-      // url='https://fakestoreapi.com/products'
-      url='http://localhost:3004/products'
+      url='http://localhost:4000/client'
+      // url='http://localhost:4000/person'
+      // url='http://localhost:3004/categories'
       //optionnal props
-      actionColumn={<SelectAccountDropdown />}
+      actionColumn={SelectAccountDropdown}
       canGroupBy
       canSort
       canResize
       canExpand
       // canSelect
-      showGlobalFilter
-      showFilterbyColomn
-      showColomnIcon
+      // showGlobalFilter
+      // showFilterbyColumn
+      showColumnIcon
+      canDeleteOrDuplicate
     />
   );
 }

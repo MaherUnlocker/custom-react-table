@@ -1,6 +1,6 @@
 import React from 'react';
 
-import DynamicTable from './Table/DynamicTable';
+import DynamicTable from './Table/Dynamictable';
 import SelectAccountDropdown from './Table/SelectAccountDropdown';
 
 export default function App() {
@@ -16,9 +16,9 @@ export default function App() {
       canSort
       canResize
       canExpand
-      // canSelect
-      // showGlobalFilter
-      // showFilterbyColumn
+      canSelect
+      showGlobalFilter
+      showFilterbyColumn
       showColumnIcon
       canDeleteOrDuplicate
     />

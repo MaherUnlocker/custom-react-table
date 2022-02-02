@@ -121,7 +121,7 @@ export default function DynamicTable({
           id: 'expander', // Make sure it has an ID
           Header: '',
           minWidth: 50,
-           width: 60,
+          width: 60,
           disableResizing: true,
           disableGroupBy: true,
           Cell: ({ row }: any) =>

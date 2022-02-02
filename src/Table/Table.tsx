@@ -1,6 +1,6 @@
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { TableSortLabel, TextField, Tooltip } from '@mui/material';
+import { Hidden, TableSortLabel, TextField, Tooltip } from '@mui/material';
 import cx from 'classnames';
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
 import {
@@ -300,106 +300,110 @@ export function Table<T extends Record<string, unknown>>({
     <React.Fragment>
       <TableToolbar instance={instance} {...{ showGlobalFilter, showFilterbyColomn, showColomnIcon }} />
       <FilterChipBar instance={instance} />
-      <TableTable {...tableProps}>
-        <TableHead>
-          {headerGroups.map((headerGroup) => {
-            const {
-              key: headerGroupKey,
-              title: headerGroupTitle,
-              role: headerGroupRole,
-              ...getHeaderGroupProps
-            } = headerGroup.getHeaderGroupProps();
-            return (
-              <TableHeadRow key={headerGroupKey} {...getHeaderGroupProps}>
-                {headerGroup.headers.map((column) => {
-                  const style = {
-                    textAlign: column.align ? column.align : 'center ',
-                  } as CSSProperties;
-                  const { key: headerKey, role: headerRole, ...getHeaderProps } = column.getHeaderProps(headerProps);
-                  const { title: groupTitle = '', ...columnGroupByProps } = column.getGroupByToggleProps();
-                  const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps();
+      
+      <Hidden only={['xs', 'sm', 'md']} implementation={'js'}>
+        <TableTable {...tableProps}>
+          <TableHead>
+            {headerGroups.map((headerGroup) => {
+              const {
+                key: headerGroupKey,
+                title: headerGroupTitle,
+                role: headerGroupRole,
+                ...getHeaderGroupProps
+              } = headerGroup.getHeaderGroupProps();
+              return (
+                <TableHeadRow key={headerGroupKey} {...getHeaderGroupProps}>
+                  {headerGroup.headers.map((column) => {
+                    const style = {
+                      textAlign: column.align ? column.align : 'center ',
+                    } as CSSProperties;
+                    const { key: headerKey, role: headerRole, ...getHeaderProps } = column.getHeaderProps(headerProps);
+                    const { title: groupTitle = '', ...columnGroupByProps } = column.getGroupByToggleProps();
+                    const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps();
 
-                  return (
-                    <TableHeadCell key={headerKey} {...getHeaderProps}>
-                      {canGroupBy
-                        ? column.canGroupBy && (
-                            <Tooltip title={groupTitle}>
-                              <TableSortLabel
-                                active
-                                // direction={column.isGrouped ? 'desc' : 'asc'}
-                                IconComponent={KeyboardArrowRight}
-                                {...columnGroupByProps}
-                                className={classes.headerIcon}
-                              />
-                            </Tooltip>
-                          )
-                        : null}
-                      {column.canSort && canSort ? (
-                        <Tooltip title={sortTitle}>
-                          <TableSortLabel
-                            active={column.isSorted}
-                            direction={column.isSortedDesc ? 'desc' : 'asc'}
-                            {...columnSortByProps}
-                            className={classes.tableSortLabel}
-                            style={style}
-                          >
-                            {column.render('Header')}
-                          </TableSortLabel>
-                        </Tooltip>
-                      ) : (
-                        <TableLabel style={style}>{column.render('Header')}</TableLabel>
-                      )}
-                      {/*<div>{column.canFilter ? column.render('Filter') : null}</div>*/}
-                      {canResize ? column.canResize && <ResizeHandle column={column} /> : null}
-                    </TableHeadCell>
-                  );
-                })}
-              </TableHeadRow>
-            );
-          })}
-        </TableHead>
-        <TableBody {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
-            return (
-              <TableRow
-                key={rowKey}
-                {...getRowProps}
-                className={cx({ rowSelected: row.isSelected, clickable: onClick })}
-              >
-                {row.cells.map((cell) => {
-                  const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
-                  return (
-                    <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
-                      {cell.isGrouped ? (
-                        <>
-                          <TableSortLabel
-                            classes={{
-                              iconDirectionAsc: classes.iconDirectionAsc,
-                              iconDirectionDesc: classes.iconDirectionDesc,
-                            }}
-                            active
-                            direction={row.isExpanded ? 'desc' : 'asc'}
-                            IconComponent={KeyboardArrowUp}
-                            {...row.getToggleRowExpandedProps()}
-                            className={classes.cellIcon}
-                          />{' '}
-                          {cell.render('Cell', { editable: false })} ({row.subRows.length})
-                        </>
-                      ) : cell.isAggregated ? (
-                        cell.render('Aggregated')
-                      ) : cell.isPlaceholder ? null : (
-                        cell.render('Cell')
-                      )}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </TableTable>
+                    return (
+                      <TableHeadCell key={headerKey} {...getHeaderProps}>
+                        {canGroupBy
+                          ? column.canGroupBy && (
+                              <Tooltip title={groupTitle}>
+                                <TableSortLabel
+                                  active
+                                  // direction={column.isGrouped ? 'desc' : 'asc'}
+                                  IconComponent={KeyboardArrowRight}
+                                  {...columnGroupByProps}
+                                  className={classes.headerIcon}
+                                />
+                              </Tooltip>
+                            )
+                          : null}
+                        {column.canSort && canSort ? (
+                          <Tooltip title={sortTitle}>
+                            <TableSortLabel
+                              active={column.isSorted}
+                              direction={column.isSortedDesc ? 'desc' : 'asc'}
+                              {...columnSortByProps}
+                              className={classes.tableSortLabel}
+                              style={style}
+                            >
+                              {column.render('Header')}
+                            </TableSortLabel>
+                          </Tooltip>
+                        ) : (
+                          <TableLabel style={style}>{column.render('Header')}</TableLabel>
+                        )}
+                        {/*<div>{column.canFilter ? column.render('Filter') : null}</div>*/}
+                        {canResize ? column.canResize && <ResizeHandle column={column} /> : null}
+                      </TableHeadCell>
+                    );
+                  })}
+                </TableHeadRow>
+              );
+            })}
+          </TableHead>
+          <TableBody {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row);
+              const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
+              return (
+                <TableRow
+                  key={rowKey}
+                  {...getRowProps}
+                  className={cx({ rowSelected: row.isSelected, clickable: onClick })}
+                >
+                  {row.cells.map((cell) => {
+                    const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
+                    return (
+                      <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
+                        {cell.isGrouped ? (
+                          <>
+                            <TableSortLabel
+                              classes={{
+                                iconDirectionAsc: classes.iconDirectionAsc,
+                                iconDirectionDesc: classes.iconDirectionDesc,
+                              }}
+                              active
+                              direction={row.isExpanded ? 'desc' : 'asc'}
+                              IconComponent={KeyboardArrowUp}
+                              {...row.getToggleRowExpandedProps()}
+                              className={classes.cellIcon}
+                            />{' '}
+                            {cell.render('Cell', { editable: false })} ({row.subRows.length})
+                          </>
+                        ) : cell.isAggregated ? (
+                          cell.render('Aggregated')
+                        ) : cell.isPlaceholder ? null : (
+                          cell.render('Cell')
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </TableTable>
+      </Hidden>
+
       <TablePagination<T> instance={instance} />
     </React.Fragment>
   );

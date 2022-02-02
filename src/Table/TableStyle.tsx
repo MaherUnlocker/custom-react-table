@@ -13,14 +13,7 @@ import { makeStyles } from '@mui/styles';
 //import { palette } from '@mui/system';
 import cx from 'classnames';
 import React, { CSSProperties } from 'react';
-// ******
 
-// const theme = createTheme({
-//   palette: {
-//     primary: blue,
-//   },
-// });
-// /////***** */
 export const useStyles = makeStyles({
   tableTable: {
     borderSpacing: 0,
@@ -122,6 +115,13 @@ export const useStyles = makeStyles({
       marginLeft: 2,
     },
   },
+  tableFilterAltOutlinedIcon: {
+    width: ' 16px !important',
+    height: '16px !important',
+    marginTop: 0,
+    marginLeft: 2,
+  },
+
   headerIcon: {
     '& svg': {
       width: 16,

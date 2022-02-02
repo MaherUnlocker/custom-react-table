@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './index.css';
 
-import { DuplicateIcon, StyledCheckbox, TrashIcon } from '@aureskonnect/react-ui';
+import { DuplicateIcon, TrashIcon } from '@aureskonnect/react-ui';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FilterValue, IdType, Row } from 'react-table';
@@ -61,10 +61,10 @@ export default function DynamicTable({
   async function fetchData(url: string) {
     await axios
       .get(url)
-      .then((response) => {
+      .then((response: any) => {
         setApiResult(response.data);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         setError(err);
       })
       .finally(() => {
@@ -72,20 +72,21 @@ export default function DynamicTable({
       });
   }
 
-  let apiResultColumns = useMemo(
+  const apiResultColumns = useMemo(
     () =>
       apiResult
         ? apiResult.structure
-            .filter((key) => key !== 'rating' && key !== 'subRows')
+            .filter((key) => key !== 'subRows')
             .map((key) => {
               if (key === 'image' || key === 'picture') {
                 return {
                   Header: key,
                   accessor: key,
                   disableFilters: true,
+                  
                   // eslint-disable-next-line
                   Cell: (value: any) => {
-                    return <img src={value.cell.value} className='w-50 ' alt='' />;
+                    return <img src={value.cell.value} className='w-50' alt='' />;
                   },
                 };
               }
@@ -94,8 +95,8 @@ export default function DynamicTable({
                 Header: key,
                 accessor: key,
                 aggregate: 'count',
+                primary: true,
                 Aggregated: ({ cell: { value } }: any) => `${value} `,
-                isFilterInputShown: false,
               };
             })
         : [],
@@ -190,20 +191,22 @@ export default function DynamicTable({
   if (error) return <LoadingErrorAnimation />;
 
   return (
-    <div className='table-responsive'>
-      <Table
-        name={'myTable'}
-        columns={columns}
-        data={apiResult?.data}
-        canGroupBy={canGroupBy}
-        canSort={canSort}
-        canSelect={canSelect}
-        canResize={canResize}
-        actionColumn={actionColumn}
-        showGlobalFilter={showGlobalFilter}
-        showFilterbyColomn={showFilterbyColumn}
-        showColomnIcon={showColumnIcon}
-      />
-    </div>
+    <React.Fragment>
+      <div className='table-responsive '>
+        <Table
+          name={'myTable'}
+          columns={columns}
+          data={apiResult?.data}
+          canGroupBy={canGroupBy}
+          canSort={canSort}
+          canSelect={canSelect}
+          canResize={canResize}
+          actionColumn={actionColumn}
+          showGlobalFilter={showGlobalFilter}
+          showFilterbyColumn={showFilterbyColumn}
+          showColumnIcon={showColumnIcon}
+        />
+      </div>
+    </React.Fragment>
   );
 }

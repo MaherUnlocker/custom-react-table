@@ -1,7 +1,12 @@
 import { Chip } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import { ReactElement, useCallback } from 'react';
-import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
+import React, { ReactElement, useCallback } from 'react';
+import {
+  ColumnInstance,
+  FilterValue,
+  IdType,
+  TableInstance,
+} from 'react-table';
 
 const useStyles = makeStyles(
   createStyles({
@@ -29,7 +34,10 @@ type FilterChipBarProps<T extends Record<string, unknown>> = {
   instance: TableInstance<T>;
 };
 
-const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
+const getFilterValue = (
+  column: ColumnInstance<any>,
+  filterValue: FilterValue
+) => {
   switch (column.filter) {
     case 'between':
       const min = filterValue[0];
@@ -46,13 +54,9 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   const {
     allColumns,
     setFilter,
-    setAllFilters,
+
     state: { filters },
   } = instance;
-
-  const resetFilters = useCallback(() => {
-    setAllFilters([]);
-  }, [setAllFilters]);
 
   const handleDelete = useCallback(
     (id: string | number) => {
@@ -63,7 +67,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
 
   return Object.keys(filters).length > 0 ? (
     <div className={classes.chipZone}>
-      {/* <span className={classes.filtersActiveLabel}>Active filters:</span> */}
+      <span className={classes.filtersActiveLabel}>Active filters:</span>
 
       {filters &&
         allColumns.map((column) => {
@@ -77,17 +81,18 @@ export function FilterChipBar<T extends Record<string, unknown>>({
                 key={column.id}
                 label={
                   <>
-                    <span className={classes.chipLabel}>{column.render('Header')}: </span>
+                    <span className={classes.chipLabel}>
+                      {column.render('Header')}:{' '}
+                    </span>
                     {getFilterValue(column, value)}
                   </>
                 }
                 onDelete={() => handleDelete(column.id)}
-                variant='outlined'
+                variant="outlined"
               />
             )
           );
         })}
-      <button onClick={resetFilters}>Reset</button>
     </div>
   ) : null;
 }

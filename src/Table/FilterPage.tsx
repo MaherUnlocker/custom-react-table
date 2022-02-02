@@ -1,7 +1,8 @@
 import { Popover } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import { FormEvent, ReactElement, useCallback } from 'react';
+import React, { FormEvent, ReactElement, useCallback } from 'react';
 import { TableInstance } from 'react-table';
+
 const useStyles = makeStyles(
   createStyles({
     columnsPopOver: {
@@ -87,9 +88,9 @@ export function FilterPage<T extends Record<string, unknown>>({
             <div>
               {allColumns
 
-                .filter((it) => it.canFilter && it.isVisible)
+                .filter((it) => it.canFilter)
                 .map((column) => (
-                  <div key={column.id} className='d-flex '>
+                  <div key={column.id} className="d-flex mt-2">
                     {column.render('Filter')}
                   </div>
                 ))}

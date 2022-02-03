@@ -27,9 +27,11 @@ export default function App() {
   return (
     <DynamicTable
       //put your backed api url
+      // url=' http://localhost:4000/products'
       url='http://localhost:4000/client'
-      // url='http://localhost:4000/person'
+      // url='http://localhost:4000/cards'
       // url='http://localhost:3004/categories'
+      //  url='http://localhost:3004/categories'
       //optionnal props
       actionColumn={SelectAccountDropdown}
       canGroupBy

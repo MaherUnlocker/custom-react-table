@@ -3,7 +3,7 @@ import './table.css';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Hidden, Paper, TableSortLabel, TextField, Tooltip } from '@mui/material';
+import { Paper, TableSortLabel, TextField, Tooltip } from '@mui/material';
 import cx from 'classnames';
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
 import {
@@ -32,6 +32,7 @@ import {
 } from 'react-table';
 
 import { camelToWords, useDebounce, useLocalStorage } from '../utils';
+import CollapsibleTable from './CollapsibleTable';
 import { FilterChipBar } from './FilterChipBar';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
 import { ResizeHandle } from './ResizeHandle';
@@ -281,17 +282,14 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   const { role: tableRole, ...tableProps } = getTableProps();
+ 
 
   return (
     <React.Fragment>
       <TableToolbar instance={instance} {...{ showGlobalFilter, showFilterbyColumn, showColumnIcon }} />
       <FilterChipBar instance={instance} />
-      
 
-     
-
-      <Paper sx={{ display: { xl: 'none', md: 'none' } }}>
-        {/* MOBILE EXPANDABLE LIST OF CARDS */}
+      <Paper elevation={3} sx={{ display: { xs: 'none', md: 'block' } }}>
         <TableTable {...tableProps}>
           <TableHead>
             {headerGroups.map((headerGroup) => {
@@ -359,51 +357,53 @@ export function Table<T extends Record<string, unknown>>({
               prepareRow(row);
               const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
               return (
-                <>
-                  <div></div>
-                  <TableRow
-                    key={rowKey}
-                    {...getRowProps}
-                    className={cx({
-                      rowSelected: row.isSelected,
-                      clickable: onClick,
-                    })}
-                  >
-                    {row.cells.map((cell) => {
-                      const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
-                      return (
-                        <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
-                          {cell.isGrouped ? (
-                            <>
-                              <TableSortLabel
-                                classes={{
-                                  iconDirectionAsc: classes.iconDirectionAsc,
-                                  iconDirectionDesc: classes.iconDirectionDesc,
-                                }}
-                                active
-                                direction={row.isExpanded ? 'desc' : 'asc'}
-                                IconComponent={KeyboardArrowUp}
-                                {...row.getToggleRowExpandedProps()}
-                                className={classes.cellIcon}
-                              />{' '}
-                              {cell.render('Cell', { editable: false })} ({row.subRows.length})
-                            </>
-                          ) : cell.isAggregated ? (
-                            cell.render('Aggregated')
-                          ) : cell.isPlaceholder ? null : (
-                            cell.render('Cell')
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </>
+                <TableRow
+                  key={rowKey}
+                  {...getRowProps}
+                  className={cx({
+                    rowSelected: row.isSelected,
+                    clickable: onClick,
+                  })}
+                >
+                  {row.cells.map((cell) => {
+                    const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
+                    return (
+                      <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
+                        {cell.isGrouped ? (
+                          <>
+                            <TableSortLabel
+                              classes={{
+                                iconDirectionAsc: classes.iconDirectionAsc,
+                                iconDirectionDesc: classes.iconDirectionDesc,
+                              }}
+                              active
+                              direction={row.isExpanded ? 'desc' : 'asc'}
+                              IconComponent={KeyboardArrowUp}
+                              {...row.getToggleRowExpandedProps()}
+                              className={classes.cellIcon}
+                            />{' '}
+                            {cell.render('Cell', { editable: false })} ({row.subRows.length})
+                          </>
+                        ) : cell.isAggregated ? (
+                          cell.render('Aggregated')
+                        ) : cell.isPlaceholder ? null : (
+                          cell.render('Cell')
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
               );
             })}
           </TableBody>
         </TableTable>
-        <TablePagination<T> instance={instance} />
       </Paper>
+
+      <Paper sx={{ display: { xl: 'none', md: 'none' } }}>
+        {/* MOBILE EXPANDABLE LIST OF CARDS */}
+        <CollapsibleTable props={instance} />
+      </Paper>
+      <TablePagination<T> instance={instance} />
     </React.Fragment>
   );
 }

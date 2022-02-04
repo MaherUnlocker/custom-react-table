@@ -37,7 +37,7 @@ export default function App() {
       canGroupBy
       canSort
       canResize
-      // canExpand
+      canExpand
       canSelect
       showGlobalFilter
       showFilterbyColumn

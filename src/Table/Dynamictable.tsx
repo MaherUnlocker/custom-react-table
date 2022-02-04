@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import './index.css';
 
@@ -83,7 +83,7 @@ export default function DynamicTable({
                   Header: key,
                   accessor: key,
                   disableFilters: true,
-                  
+
                   // eslint-disable-next-line
                   Cell: (value: any) => {
                     return <img src={value.cell.value} className='w-50' alt='' />;
@@ -95,7 +95,7 @@ export default function DynamicTable({
                 Header: key,
                 accessor: key,
                 aggregate: 'count',
-                primary: true,
+                primary: false,
                 Aggregated: ({ cell: { value } }: any) => `${value} `,
               };
             })

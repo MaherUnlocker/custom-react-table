@@ -11,7 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { makeStyles } from '@mui/styles';
-import * as React from 'react';
+import React from 'react';
 
 const useStyles = makeStyles({
   cell_short: {
@@ -22,27 +22,11 @@ const useStyles = makeStyles({
   },
 });
 
-// import MobileRow from './MobileRow';
-
 function MobileRow(props: any) {
   const { row, headerGroups } = props;
   const dataRow = row.original;
   const classes = useStyles(props);
-  console.log({ dataRow, row });
   const [open, setOpen] = React.useState(false);
-  //   console.log(headerGroups.headerGroups.headerGroups[0].headers);
-  //   console.log({
-  //     data: headerGroups[0].headers.filter(
-  //       (headerGroup: any) =>
-  //         headerGroup.id !== '_selector' &&
-  //         headerGroup.id !== 'rating' &&
-  //         headerGroup.id !== 'subRows' &&
-  //         headerGroup.id !== 'hidecolumns' &&
-  //         headerGroup.id !== 'expander' &&
-  //         headerGroup.id !== 'Actions'
-  //     ),
-  //     //   .slice(0, 3),
-  //   });
 
   return (
     <React.Fragment>
@@ -137,48 +121,6 @@ function MobileRow(props: any) {
                         );
                       })}
                   </TableRow>
-                  {/* old methode */}
-                  {/* <TableRow key={row.id}>
-                    {Object.keys(row.original)
-
-                      .filter(
-                        (key) =>
-                          key !== 'rating' &&
-                          key !== 'subRows' &&
-                          key !== 'hidecolumns' &&
-                          key !== 'expander' &&
-                          key !== 'Actions'
-                      )
-                      //.slice(3)
-                      .map((key, index: number) => {
-                        if (index > 2) {
-                          if (key === 'image' || key === 'picture') {
-                            return (
-                              <TableRow component='th' scope='row'>
-                                <TableCell scope='key' variant='body'>
-                                  {key}
-                                </TableCell>
-                                <TableCell component='th' scope='key' variant='body'>
-                                  <img
-                                    src={row.original[Object.keys(row.original)[index]]}
-                                    className='w-25 h-25'
-                                    alt=''
-                                  />
-                                </TableCell>{' '}
-                              </TableRow>
-                            );
-                          }
-                          return (
-                            <TableRow component='th' scope='row'>
-                              <TableCell scope='key' variant='body'>
-                                {key}
-                              </TableCell>
-                              <TableCell scope='key'>{row.original[Object.keys(row.original)[index]]}</TableCell>
-                            </TableRow>
-                          );
-                        }
-                      })}
-                  </TableRow> */}
                 </TableBody>
               </Table>
             </Box>
@@ -190,24 +132,33 @@ function MobileRow(props: any) {
 }
 
 export default function CollapsibleTable(props: any) {
-  const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state } = props.props;
-  console.log({ headerGroups });
+  const { headerGroups, page } = props.props;
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label='collapsible table'>
-        {/* <TableHead>
+    <TableContainer component={Paper} sx={{ maxHeight: 'auto' }}>
+      <Table aria-label='collapsible table' stickyHeader>
+        <TableHead>
           <TableRow>
-            <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            {headerGroups[0]?.headers
+
+              .filter(
+                (headerGroup: any) =>
+                  headerGroup.id !== '_selector' &&
+                  headerGroup.id !== 'rating' &&
+                  headerGroup.id !== 'subRows' &&
+                  headerGroup.id !== 'hidecolumns' &&
+                  headerGroup.id !== 'expander' &&
+                  headerGroup.id !== 'Actions'
+              )
+              .slice(0, 3)
+
+              .map((headerGroup: any) => {
+                return <TableCell>{headerGroup.id}</TableCell>;
+              })}
+            <TableCell align='right'>actions</TableCell>;
           </TableRow>
-        </TableHead> */}
+        </TableHead>
         <TableBody>
           {page?.map((row: any) => {
-            // console.log({ page });
             return <MobileRow key={row.id} row={row} headerGroups={headerGroups} />;
           })}
         </TableBody>

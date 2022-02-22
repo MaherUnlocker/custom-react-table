@@ -15,12 +15,13 @@ import cx from 'classnames';
 import React, { CSSProperties } from 'react';
 
 export const useStyles = makeStyles({
-  tableTable: {
+  rawTable: {
     borderSpacing: 0,
     border: '1px solid rgba(224, 224, 224, 1)',
     width: '100%',
+    // minHeight: '100vh',
   },
-  tableHead: {},
+  tableHead: {  },
   tableHeadRow: {
     // backgroundColor: '#ffffff',
     backgroundColor: '#F8F8FB ',
@@ -38,7 +39,7 @@ export const useStyles = makeStyles({
 
     verticalAlign: 'inherit',
     // color: theme.palette.text.primary,
-    fontWeight: 700,
+    fontWeight: '700 !important',
     lineHeight: '1.5rem',
     borderRight: '1px solid rgba(224, 224, 224, 1)',
     '&:last-child': {
@@ -54,7 +55,8 @@ export const useStyles = makeStyles({
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.07)',
     },
-    borderBottom: '1px solid rgba(224, 224, 224, 1)',
+
+    borderBottom: '1px rgb(239, 239, 239)',
     '&:last-child': {
       borderBottom: 'none',
     },
@@ -80,10 +82,10 @@ export const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRight: '1px solid rgba(224, 224, 224, 1)',
-    '&:last-child': {
-      borderRight: 'none',
-    },
+    // borderRight: '1px solid rgba(224, 224, 224, 1)',
+    // '&:last-child': {
+    //   borderRight: 'none',
+    // },
   },
   resizeHandle: {
     position: 'absolute',
@@ -116,12 +118,11 @@ export const useStyles = makeStyles({
     },
   },
   tableFilterAltOutlinedIcon: {
-    width: ' 16px !important',
-    height: '16px !important',
+    width: ' 21px !important',
+    height: '23px !important',
     marginTop: 0,
-    marginLeft: 2,
+    marginRight: 2,
   },
-
   headerIcon: {
     '& svg': {
       width: 16,
@@ -134,6 +135,9 @@ export const useStyles = makeStyles({
     transform: 'rotate(90deg)',
   },
   iconDirectionDesc: {
+    transform: 'rotate(180deg)',
+  },
+  iconDirectionRight: {
     transform: 'rotate(180deg)',
   },
   cellIcon: {
@@ -150,10 +154,10 @@ const areEqual = (prevProps: any, nextProps: any) =>
 
 type CN = { className?: string; style?: CSSProperties };
 
-export const TableTable: React.FC<Partial<TableTypeMap> & CN> = ({ children, className, ...rest }) => {
+export const RawTable: React.FC<Partial<TableTypeMap> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
-    <MuiTableTable className={cx(className, classes.tableTable)} {...rest}>
+    <MuiTableTable className={cx(className, classes.rawTable)} {...rest}>
       {children}
     </MuiTableTable>
   );

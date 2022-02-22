@@ -1,4 +1,6 @@
-import './Loading.css'
+import './Loading.css';
+
+import React from 'react';
 
 export default function LoadingDataAnimation(): JSX.Element {
   return (
@@ -28,5 +30,5 @@ export default function LoadingDataAnimation(): JSX.Element {
         <span className='sr-only'></span>
       </div>
     </div>
-  )
+  );
 }

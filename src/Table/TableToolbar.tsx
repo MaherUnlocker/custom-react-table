@@ -1,21 +1,13 @@
-import FilterListIcon from '@mui/icons-material/FilterList';
+import { DiskIcon, StyledButton, TrashIcon } from '@aureskonnect/react-ui';
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 import classnames from 'classnames';
-import React, {
-  MouseEvent,
-  MouseEventHandler,
-  PropsWithChildren,
-  ReactElement,
-  useCallback,
-  useState,
-} from 'react';
+import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
 import { TableInstance } from 'react-table';
 
 import { TableMouseEventHandler } from '../../types/react-table-config';
 import { ColumnHidePage } from './ColumnHidePage';
-import { FilterPage } from './FilterPage';
 import GlobalFilter from './filters/GlobalFilter';
 
 export const useStyles = makeStyles((theme: Theme) =>
@@ -68,37 +60,20 @@ export const InstanceLabeledActionButton = <T extends Record<string, unknown>>({
   label,
   enabled = () => true,
 }: InstanceActionButton<T>): ReactElement => (
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={onClick(instance)}
-    disabled={!enabled(instance)}
-  >
+  <Button variant='contained' color='primary' onClick={onClick(instance)} disabled={!enabled(instance)}>
     {icon}
     {label}
   </Button>
 );
 
-export const LabeledActionButton = ({
-  icon,
-  onClick,
-  label,
-  enabled = true,
-}: ActionButton): ReactElement => (
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={onClick}
-    disabled={!enabled}
-  >
+export const LabeledActionButton = ({ icon, onClick, label, enabled = true }: ActionButton): ReactElement => (
+  <Button variant='contained' color='primary' onClick={onClick} disabled={!enabled}>
     {icon}
     {label}
   </Button>
 );
 
-export const InstanceSmallIconActionButton = <
-  T extends Record<string, unknown>
->({
+export const InstanceSmallIconActionButton = <T extends Record<string, unknown>>({
   instance,
   icon,
   onClick,
@@ -117,7 +92,7 @@ export const InstanceSmallIconActionButton = <
           })}
           onClick={onClick(instance)}
           disabled={!enabled(instance)}
-          size="large"
+          size='large'
         >
           {icon}
         </IconButton>
@@ -144,7 +119,7 @@ export const SmallIconActionButton = ({
           })}
           onClick={onClick}
           disabled={!enabled}
-          size="large"
+          size='large'
         >
           {icon}
         </IconButton>
@@ -161,6 +136,8 @@ type TableToolbarProps<T extends Record<string, unknown>> = {
   showGlobalFilter?: boolean;
   showFilterbyColumn?: boolean;
   showColumnIcon?: boolean;
+  filterActive?: boolean;
+  setLocalFilterActive?: Function;
 };
 
 export function TableToolbar<T extends Record<string, unknown>>({
@@ -168,15 +145,16 @@ export function TableToolbar<T extends Record<string, unknown>>({
   showGlobalFilter,
   showFilterbyColumn,
   showColumnIcon,
+  filterActive,
+  setLocalFilterActive,
 }: PropsWithChildren<TableToolbarProps<T>>): ReactElement | null {
-  const { columns } = instance;
+  const { columns, setAllFilters } = instance;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
   const [columnsOpen, setColumnsOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-  const hideableColumns = columns.filter(
-    (column) => !(column.id === '_selector')
-  );
+
+  const hideableColumns = columns.filter((column) => !(column.id === '_selector'));
 
   const handleColumnsClick = useCallback(
     (event: MouseEvent) => {
@@ -193,63 +171,54 @@ export function TableToolbar<T extends Record<string, unknown>>({
     },
     [setAnchorEl, setFilterOpen]
   );
-
+  const resetFilters = useCallback(() => {
+    setAllFilters([]);
+  }, [setAllFilters]);
   const handleClose = useCallback(() => {
     setColumnsOpen(false);
     setFilterOpen(false);
     setAnchorEl(undefined);
+    // setLocalFilterActive!(false);
   }, []);
 
   // toolbar with  filter/search column select.
 
   return (
-    <Toolbar
-      className={
-        !showGlobalFilter && !showFilterbyColumn && !showColumnIcon
-          ? 'd-none'
-          : classes.toolbar
-      }
-    >
+    <Toolbar className={!showGlobalFilter && !showFilterbyColumn && !showColumnIcon ? 'd-none' : classes.toolbar}>
       {showGlobalFilter ? (
         <GlobalFilter
           preGlobalFilteredRows={instance.preGlobalFilteredRows}
           setGlobalFilter={instance.setGlobalFilter}
-          style={{ width: '80%' }}
+          style={{ width: '40%' }}
         />
       ) : null}
 
-      <div className={classes.rightButtons}>
-        <ColumnHidePage<T>
-          instance={instance}
-          onClose={handleClose}
-          show={columnsOpen}
-          anchorEl={anchorEl}
-        />
+      <div className={classes.rightButtons} style={{ display: 'flex', alignItems: 'center', height: '25' }}>
+        <ColumnHidePage<T> instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
 
-        <FilterPage<T>
-          instance={instance}
-          onClose={handleClose}
-          show={filterOpen}
-          anchorEl={anchorEl}
-        />
+        {/* <FilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} /> */}
+
         {showColumnIcon
           ? hideableColumns.length > 1 && (
               <SmallIconActionButton
                 icon={<ViewColumnsIcon />}
                 onClick={handleColumnsClick}
-                label="Show / hide columns"
-                variant="right"
+                label='Show / hide columns'
+                variant='right'
               />
             )
           : null}
         {showFilterbyColumn ? (
-          <SmallIconActionButton
-            icon={<FilterListIcon />}
-            // icon={<span>add filter</span>} //{<FilterListIcon />}
-            onClick={handleFilterClick}
-            label="Filter by columns"
-            variant="right"
-          />
+          <StyledButton
+            rounded
+            variant='primary'
+            onClick={() => {
+              setLocalFilterActive!(true);
+            }}
+            label='Filter by columns'
+          >
+            Filtrer
+          </StyledButton>
         ) : null}
       </div>
     </Toolbar>

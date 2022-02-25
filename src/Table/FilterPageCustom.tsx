@@ -1,10 +1,22 @@
-import { CrossIcon, DiskIcon, RefreshIcon, StyledButton, StyledIconButton } from '@aureskonnect/react-ui';
+import {
+  CrossIcon,
+  DiskIcon,
+  RefreshIcon,
+  StyledButton,
+  StyledH2,
+  StyledIconButton,
+  StyledLabel,
+  StyledSelectInput,
+  VerticalDotsIcon,
+} from '@aureskonnect/react-ui';
 import { Box, Popover } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { createStyles, makeStyles } from '@mui/styles';
 import React, { FormEvent, ReactElement, useCallback } from 'react';
 import { TableInstance } from 'react-table';
+
+import { FilterChipBar } from './FilterChipBar';
 
 const useStyles = makeStyles(
   createStyles({
@@ -53,9 +65,7 @@ type FilterPageCustomProps<T extends Record<string, unknown>> = {
 
 export function FilterPageCustom<T extends Record<string, unknown>>({
   instance,
-  anchorEl,
   onClose,
-  show,
   filterActive,
   setLocalFilterActive,
 }: FilterPageCustomProps<T>): ReactElement {
@@ -73,25 +83,107 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   const resetFilters = useCallback(() => {
     setAllFilters([]);
   }, [setAllFilters]);
-
+  let testarray = [
+    {
+      label: 'background',
+      value: 'background',
+    },
+    {
+      label: 'principal',
+      value: 'principal',
+    },
+    {
+      label: 'secondary',
+      value: 'secondary',
+    },
+    {
+      label: 'disabledButtonBorder',
+      value: 'disabledButtonBorder',
+    },
+    {
+      label: 'disabled',
+      value: 'disabled',
+    },
+    {
+      label: 'white',
+      value: 'white',
+    },
+    {
+      label: 'text',
+      value: 'text',
+    },
+    {
+      label: 'danger',
+      value: 'danger',
+    },
+    {
+      label: 'reminder',
+      value: 'reminder',
+    },
+    {
+      label: 'success',
+      value: 'success',
+    },
+    {
+      label: 'info',
+      value: 'info',
+    },
+    {
+      label: 'warning',
+      value: 'warning',
+    },
+  ];
   return (
-    <div className={(classes.columnsPopOver, classes.grid, classes.cell)}>
-      <form onSubmit={onSubmit} className={classes.cell}>
-        <Box component='div' sx={{ borderBottom: '1px solid', marginX: 1, marginY: 2 }}>
-          Filtrer
+    <>
+      <div className={(classes.columnsPopOver, classes.grid, classes.cell)}>
+        <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtres enregistrés</StyledLabel>
+
+        <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: ' 100%', marginTop: 10 }}>
+            <StyledLabel htmlFor='savedFilter'>Sélectionner un filtre</StyledLabel>
+            <StyledSelectInput
+              // defaultValue={selectedValueState}
+              // value={selectedValueState}
+              id='savedFilter'
+              name='savedFilter'
+              options={testarray}
+              placeholder={testarray.length > 0 ? 'Sélectionner ...' : 'Aucune'}
+              // onChange={handleChange}
+              // onChange={handleSelectOnChangeEvent}
+              // autoFocus={isFirstColumn}
+              // onBlur={(e: any) => {
+              //   console.log(e.target);
+              //   // setFilter(e.target.value || undefined);
+              // }}
+            />
+          </div>
+
+          <Box component='div' sx={{ display: 'flex', alignItems: 'end' }}>
+            <StyledIconButton icon='DiskIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
+              <DiskIcon height={20} width={20} />
+            </StyledIconButton>
+
+            <StyledIconButton icon='VerticalDotsIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
+              <VerticalDotsIcon height={20} width={20} />
+            </StyledIconButton>
+          </Box>
         </Box>
 
-        <Box component='div' sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <StyledButton rounded variant='info' style={{ margin: '5px' }}>
-            Appliquer
+        <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtrer</StyledLabel>
+
+        {Object.keys(instance.state.filters).length > 0 ? (
+          <Box
+            component='div'
+            style={{ maxHeight: '10vh', overflow: 'auto', alignItems: 'center', overflowY: 'auto' }}
+            sx={{ marginLeft: 1, marginRight: 1 }}
+          >
+            <FilterChipBar instance={instance} />{' '}
+          </Box>
+        ) : (
+          <StyledButton rounded variant='light' style={{ width: '100%' }}>
+            Aucun filtre actif
           </StyledButton>
-          <StyledIconButton icon='DiskIcon' style={{ margin: '5px', border: '1px solid' }}>
-            <DiskIcon height={20} width={20} />
-          </StyledIconButton>
-          <StyledIconButton onClick={resetFilters} icon='RefreshIcon' style={{ margin: '5px', border: '1px solid' }}>
-            <RefreshIcon height={20} width={20} />
-          </StyledIconButton>
-        </Box>
+        )}
 
         <Box
           component='div'
@@ -111,14 +203,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
               );
             })}
         </Box>
-      </form>
-      {/* <button
-        onClick={() => {
-          setLocalFilterActive(false);
-        }}
-      >
-        fermer
-      </button> */}
-    </div>
+      </div>
+    </>
   );
 }

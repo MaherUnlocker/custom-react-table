@@ -23,7 +23,44 @@ function SelectAccountDropdown(props: any) {
   );
 }
 
+function SelectAccountDropdown2(props: any) {
+  return (
+    <div className='w-100 d-flex justify-content-center'>
+      <div className='dropdown'>
+        <button
+          id='dropdownMenuButton1'
+          data-bs-toggle='dropdown'
+          // className=" dropdown-toggle"
+        >
+          test
+        </button>
+        <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+          <div className='dropdown-item' onClick={() => console.log({ props })}>
+            Accéder à la carte
+          </div>
+          <div className='dropdown-item'>Voir la liste des boutiques</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+interface customColumnProps {
+  indexOFColumn: number;
+  columnName: string;
+  customJsx: Function;
+}
+
+let arrayOfCustomColumns: customColumnProps[] = [];
+
+arrayOfCustomColumns.push(
+  { indexOFColumn: 0, columnName: 'column1', customJsx: SelectAccountDropdown2 },
+  { indexOFColumn: 2, columnName: 'column2', customJsx: SelectAccountDropdown }
+);
+
+
 export default function App() {
+  const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
+
   return (
     <DynamicTable
       //put your backed api url
@@ -43,6 +80,9 @@ export default function App() {
       showFilterbyColumn
       showColumnIcon
       canDeleteOrDuplicate
+      filterActive={filterActive}
+      setLocalFilterActive={setLocalFilterActive}
+      arrayOfCustomColumns={arrayOfCustomColumns}
     />
   );
 }

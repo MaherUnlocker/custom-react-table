@@ -1,10 +1,13 @@
 import './table.css';
 
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import { CrossIcon, FilterIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Paper, TableSortLabel, TextField, Tooltip } from '@mui/material';
+import { Box, Grid, Paper, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
 import cx from 'classnames';
+import _concat from 'lodash.concat';
+import _uniqby from 'lodash.uniqby';
+import _without from 'lodash.without';
 import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
 import {
   Cell,
@@ -34,12 +37,14 @@ import {
 import { camelToWords, useDebounce, useLocalStorage } from '../utils';
 import CollapsibleTable from './CollapsibleTable';
 import { FilterChipBar } from './FilterChipBar';
+import { FilterPageCustom } from './FilterPageCustom';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
 import { ResizeHandle } from './ResizeHandle';
 import SettingIcon from './SettingIcon';
 import { TablePagination } from './TablePagination';
 import {
   HeaderCheckbox,
+  RawTable,
   RowCheckbox,
   TableBody,
   TableCell,
@@ -48,7 +53,6 @@ import {
   TableHeadRow,
   TableLabel,
   TableRow,
-  TableTable,
   useStyles,
 } from './TableStyle';
 import { TableToolbar } from './TableToolbar';
@@ -67,20 +71,54 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
   showGlobalFilter?: boolean;
   showFilterbyColumn?: boolean;
   showColumnIcon?: boolean;
+  filterActive?: boolean;
   actionColumn?: Function;
+  setLocalFilterActive?: Function;
 }
 
 function DefaultHeader({ column }: HeaderProps<any>) {
-  return <React.Fragment>{column.id.startsWith('_') ? null : camelToWords(column.id)}</React.Fragment>;
+  return <>{column.id.startsWith('_') ? null : camelToWords(column.id)}</>;
 }
 
 // yes this is recursive, but the depth never exceeds three so it seems safe enough
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<ColumnInstance<T>>): ColumnInstance<T> =>
   columns[0].columns ? findFirstColumn(columns[0].columns) : columns[0];
+// old version
 
-function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column }: FilterProps<T>) {
+// function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column }: FilterProps<T>) {
+//   const { id, filterValue, setFilter, render } = column;
+//   const [value, setValue] = React.useState(filterValue || '');
+
+//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     setValue(event.target.value);
+//   };
+//   // ensure that reset loads the new value
+//   useEffect(() => {
+//     setValue(filterValue || '');
+//   }, [filterValue]);
+
+//   const isFirstColumn = findFirstColumn(columns) === column;
+//   return (
+//     <TextField
+//       name={id}
+//       label={render('Header')}
+//       InputLabelProps={{ htmlFor: id }}
+//       value={value}
+//       autoFocus={isFirstColumn}
+//       variant='standard'
+//       onChange={handleChange}
+//       onBlur={(e: any) => {
+//         setFilter(e.target.value || undefined);
+//       }}
+//     />
+//   );
+// }
+
+// ***************New Version of filter
+function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column, rows, prepareRow }: FilterProps<T>) {
   const { id, filterValue, setFilter, render } = column;
   const [value, setValue] = React.useState(filterValue || '');
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
@@ -88,23 +126,60 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   useEffect(() => {
     setValue(filterValue || '');
   }, [filterValue]);
+  let FilterArray: any[] = rows.map((row) => {
+    prepareRow(row);
+    return row.cells
+      .filter((cel: any) => {
+        const { key: cellKey } = cel.getCellProps();
+        return (cellKey as string).replace(/([^\_]*\_){2}/, '') === (column.id as string);
+      })
+
+      .map((cell: any) => {
+        return { label: String(cell.value), value: String(cell.value) };
+      })[0];
+  });
+
+  // his uniquby from lodash for get unique array of object
+  let unique: any = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
+
+  // this uniquby from lodash for get unique array of object
+  // FilterArray = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
+  // console.log({ FilterArray });
+  // let unique: any = [...new Set(_without(FilterArray, undefined, null, 'null', 'undefined'))]; // FilterArray.filter((v, i, a) => a.indexOf(v) === i);
+  //  console.log({ unique });
 
   const isFirstColumn = findFirstColumn(columns) === column;
+  const [selectedValueState, setSelectedValueState] = React.useState<any[]>([]);
+
+  function handleSelectOnChangeEvent(selectedValue: any) {
+    setSelectedValueState(selectedValue);
+    //  add selected filter
+    setFilter(selectedValue.value);
+  }
+
   return (
-    <TextField
-      name={id}
-      label={render('Header')}
-      InputLabelProps={{ htmlFor: id }}
-      value={value}
-      autoFocus={isFirstColumn}
-      variant='standard'
-      onChange={handleChange}
-      onBlur={(e: any) => {
-        setFilter(e.target.value || undefined);
-      }}
-    />
+    <React.Fragment>
+      <StyledLabel htmlFor={column.id}>{render('Header')}</StyledLabel>
+      <StyledSelectInput
+        // defaultValue={selectedValueState}
+        //value={selectedValueState}
+        id={render('Header')}
+        name={render('Header')}
+        options={unique}
+        placeholder='Sélectionner ...'
+        // onChange={handleChange}
+        onChange={handleSelectOnChangeEvent}
+        autoFocus={isFirstColumn}
+        // onBlur={(e: any) => {
+        //   console.log(e.target);
+        //   // setFilter(e.target.value || undefined);
+        // }}
+      />
+    </React.Fragment>
   );
 }
+
+// *************************************
 
 const getStyles = (props: any, disableResizing = false, align = 'left') => [
   props,
@@ -178,6 +253,8 @@ export function Table<T extends Record<string, unknown>>({
   showGlobalFilter,
   showFilterbyColumn,
   showColumnIcon,
+  filterActive,
+  setLocalFilterActive,
   ...props
 }: PropsWithChildren<TableProperties<T>>): ReactElement {
   const classes = useStyles();
@@ -252,6 +329,7 @@ export function Table<T extends Record<string, unknown>>({
   if (actionColumn !== undefined) {
     localHooks.push(customHooks as any);
   }
+
   const instance = useTable<T>(
     {
       ...props,
@@ -262,7 +340,7 @@ export function Table<T extends Record<string, unknown>>({
     },
     ...localHooks
   );
-
+  console.log({ instance });
   const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
   const debouncedState = useDebounce(state, 200);
 
@@ -282,128 +360,186 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   const { role: tableRole, ...tableProps } = getTableProps();
- 
 
   return (
-    <React.Fragment>
-      <TableToolbar instance={instance} {...{ showGlobalFilter, showFilterbyColumn, showColumnIcon }} />
+    <Paper elevation={0} sx={{ paddingX: 1 }}>
+      <TableToolbar
+        instance={instance}
+        {...{
+          showGlobalFilter,
+          showFilterbyColumn,
+          showColumnIcon,
+          filterActive,
+          setLocalFilterActive,
+        }}
+      />
       <FilterChipBar instance={instance} />
 
-      <Paper elevation={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-        <TableTable {...tableProps}>
-          <TableHead>
-            {headerGroups.map((headerGroup) => {
-              const {
-                key: headerGroupKey,
-                title: headerGroupTitle,
-                role: headerGroupRole,
-                ...getHeaderGroupProps
-              } = headerGroup.getHeaderGroupProps();
-              return (
-                <TableHeadRow key={headerGroupKey} {...getHeaderGroupProps}>
-                  {headerGroup.headers.map((column) => {
-                    const style = {
-                      textAlign: column.align ? column.align : 'left ',
-                    } as CSSProperties;
-                    const { key: headerKey, role: headerRole, ...getHeaderProps } = column.getHeaderProps(headerProps);
-                    const { title: groupTitle = '', ...columnGroupByProps } = column.getGroupByToggleProps();
-                    const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps();
-
+      <Paper elevation={0} sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Grid container spacing={1} direction={'row'}>
+          <Grid container item xs={filterActive ? 8 : 12} className='table-responsive'>
+            <TableContainer sx={{ overflowX: 'initial', maxHeight: '60vh' }}>
+              <RawTable>
+                <TableHead>
+                  {headerGroups.map((headerGroup) => {
+                    const {
+                      key: headerGroupKey,
+                      title: headerGroupTitle,
+                      role: headerGroupRole,
+                      ...getHeaderGroupProps
+                    } = headerGroup.getHeaderGroupProps();
                     return (
-                      <TableHeadCell key={headerKey} {...getHeaderProps}>
-                        {canGroupBy
-                          ? column.canGroupBy && (
-                              <Tooltip title={groupTitle}>
-                                <TableSortLabel
-                                  active
-                                  // direction={column.isGrouped ? 'desc' : 'asc'}
-                                  IconComponent={KeyboardArrowRight}
-                                  {...columnGroupByProps}
-                                  className={classes.headerIcon}
-                                />
-                              </Tooltip>
-                            )
-                          : null}
-                        {column.canSort && canSort ? (
-                          <>
-                            <Tooltip title={sortTitle}>
-                              <TableSortLabel
-                                active={column.isSorted}
-                                direction={column.isSortedDesc ? 'desc' : 'asc'}
-                                {...columnSortByProps}
-                                className={classes.tableSortLabel}
-                                style={{ flexDirection: 'row-reverse' }}
-                              >
-                                {column.render('Header')}
-                              </TableSortLabel>
-                            </Tooltip>
+                      <TableHeadRow key={headerGroupKey} {...getHeaderGroupProps}>
+                        {headerGroup.headers.map((column) => {
+                          const style = {
+                            textAlign: column.align ? column.align : 'left ',
+                          } as CSSProperties;
+                          const {
+                            key: headerKey,
+                            role: headerRole,
+                            ...getHeaderProps
+                          } = column.getHeaderProps(headerProps);
+                          const { title: groupTitle = '', ...columnGroupByProps } = column.getGroupByToggleProps();
+                          const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps();
 
-                            <FilterAltOutlinedIcon className={classes.tableFilterAltOutlinedIcon} />
-                          </>
-                        ) : (
-                          <TableLabel style={style}>{column.render('Header')}</TableLabel>
-                        )}
-                        {/*<div>{column.canFilter ? column.render('Filter') : null}</div>*/}
-                        {canResize ? column.canResize && <ResizeHandle column={column} /> : null}
-                      </TableHeadCell>
+                          return (
+                            <TableHeadCell key={headerKey} {...getHeaderProps}>
+                              {canGroupBy
+                                ? column.canGroupBy && (
+                                    <Tooltip title={groupTitle}>
+                                      <TableSortLabel
+                                        active
+                                        // direction={column.isGrouped ? 'desc' : 'asc'}
+                                        IconComponent={KeyboardArrowRight}
+                                        {...columnGroupByProps}
+                                        className={classes.headerIcon}
+                                      />
+                                    </Tooltip>
+                                  )
+                                : null}
+                              {column.canSort && canSort ? (
+                                <>
+                                  <Tooltip title={sortTitle}>
+                                    <TableSortLabel
+                                      active={column.isSorted}
+                                      direction={column.isSortedDesc ? 'desc' : 'asc'}
+                                      {...columnSortByProps}
+                                      className={classes.tableSortLabel}
+                                      style={{ flexDirection: 'row-reverse' }}
+                                    >
+                                      {column.render('Header')}
+                                    </TableSortLabel>
+                                  </Tooltip>
+
+                                  {/* <FilterAltOutlinedIcon
+                                  className={classes.tableFilterAltOutlinedIcon}
+                                  style={{ flexDirection: 'row-reverse' }}
+                                /> */}
+                                </>
+                              ) : (
+                                <TableLabel style={style}>{column.render('Header')}</TableLabel>
+                              )}
+                              {/*<div>{column.canFilter ? column.render('Filter') : null}</div>*/}
+                              {canResize ? column.canResize && <ResizeHandle column={column} /> : null}
+                            </TableHeadCell>
+                          );
+                        })}
+                      </TableHeadRow>
                     );
                   })}
-                </TableHeadRow>
-              );
-            })}
-          </TableHead>
-          <TableBody {...getTableBodyProps()}>
-            {page.map((row) => {
-              prepareRow(row);
-              const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
-              return (
-                <TableRow
-                  key={rowKey}
-                  {...getRowProps}
-                  className={cx({
-                    rowSelected: row.isSelected,
-                    clickable: onClick,
+                </TableHead>
+                <TableBody {...getTableBodyProps()}>
+                  {page.map((row) => {
+                    prepareRow(row);
+                    const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
+
+                    return (
+                      <TableRow
+                        key={rowKey}
+                        {...getRowProps}
+                        className={cx({
+                          rowSelected: row.isSelected,
+                          clickable: onClick,
+                        })}
+                      >
+                        {row.cells.map((cell) => {
+                          const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
+
+                          return (
+                            <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
+                              {cell.isGrouped ? (
+                                <>
+                                  <TableSortLabel
+                                    classes={{
+                                      iconDirectionAsc: classes.iconDirectionAsc,
+                                      iconDirectionDesc: classes.iconDirectionDesc,
+                                    }}
+                                    active
+                                    direction={row.isExpanded ? 'desc' : 'asc'}
+                                    IconComponent={KeyboardArrowUp}
+                                    {...row.getToggleRowExpandedProps()}
+                                    className={classes.cellIcon}
+                                  />{' '}
+                                  {cell.render('Cell', { editable: false })} ({row.subRows.length})
+                                </>
+                              ) : cell.isAggregated ? (
+                                cell.render('Aggregated')
+                              ) : cell.isPlaceholder ? null : (
+                                cell.render('Cell')
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
                   })}
+                </TableBody>
+              </RawTable>
+              <Grid xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <TablePagination<T> instance={instance} />
+              </Grid>
+            </TableContainer>
+          </Grid>
+          {filterActive ? (
+            <>
+              <Grid item xs={4}>
+                <Box
+                  component='div'
+                  sx={{ height: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                  className={classes.tableHeadRow}
                 >
-                  {row.cells.map((cell) => {
-                    const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
-                    return (
-                      <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
-                        {cell.isGrouped ? (
-                          <>
-                            <TableSortLabel
-                              classes={{
-                                iconDirectionAsc: classes.iconDirectionAsc,
-                                iconDirectionDesc: classes.iconDirectionDesc,
-                              }}
-                              active
-                              direction={row.isExpanded ? 'desc' : 'asc'}
-                              IconComponent={KeyboardArrowUp}
-                              {...row.getToggleRowExpandedProps()}
-                              className={classes.cellIcon}
-                            />{' '}
-                            {cell.render('Cell', { editable: false })} ({row.subRows.length})
-                          </>
-                        ) : cell.isAggregated ? (
-                          cell.render('Aggregated')
-                        ) : cell.isPlaceholder ? null : (
-                          cell.render('Cell')
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </TableTable>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <FilterIcon
+                      className={classes.tableFilterAltOutlinedIcon}
+                      style={{ flexDirection: 'row-reverse' }}
+                    />
+                    <StyledH2>Filtres</StyledH2>
+                  </Box>
+
+                  <CrossIcon
+                    height={11}
+                    width={25}
+                    onClick={() => {
+                      setLocalFilterActive!(false);
+                    }}
+                  />
+                </Box>
+                <FilterPageCustom<T>
+                  instance={instance}
+                  setLocalFilterActive={setLocalFilterActive}
+                  filterActive={filterActive}
+                />
+              </Grid>
+            </>
+          ) : null}
+        </Grid>
       </Paper>
 
       <Paper sx={{ display: { xl: 'none', md: 'none' } }}>
         {/* MOBILE EXPANDABLE LIST OF CARDS */}
         <CollapsibleTable props={instance} />
       </Paper>
-      <TablePagination<T> instance={instance} />
-    </React.Fragment>
+      {/* <TablePagination<T> instance={instance} /> */}
+    </Paper>
   );
 }

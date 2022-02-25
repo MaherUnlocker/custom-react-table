@@ -1,8 +1,8 @@
+import { StyledButton } from '@aureskonnect/react-ui';
 import { Chip } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 import React, { ReactElement, useCallback } from 'react';
 import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
-
 const useStyles = makeStyles(
   createStyles({
     filtersActiveLabel: {
@@ -19,7 +19,8 @@ const useStyles = makeStyles(
       marginRight: 5,
     },
     filterChip: {
-      marginRight: 4,
+      marginRight: '5px!important',
+      marginBottom: '5px!important',
       color: '#222',
     },
   })
@@ -46,7 +47,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   const {
     allColumns,
     setFilter,
-
+    setAllFilters,
     state: { filters },
   } = instance;
 
@@ -57,9 +58,19 @@ export function FilterChipBar<T extends Record<string, unknown>>({
     [setFilter]
   );
 
+  const resetFilters = useCallback(() => {
+    setAllFilters([]);
+  }, [setAllFilters]);
+
   return Object.keys(filters).length > 0 ? (
     <div className={classes.chipZone}>
-      {/* <span className={classes.filtersActiveLabel}>Active filters:</span> */}
+      <span
+        className={classes.filtersActiveLabel}
+        style={{ color: '#FF0000', textDecoration: 'underline', cursor: 'pointer', fontWeight: 'bold' }}
+        onClick={() => resetFilters()}
+      >
+        Effacer tous
+      </span>
 
       {filters &&
         allColumns.map((column) => {
@@ -69,6 +80,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
           return (
             value && (
               <Chip
+                // sx={{ marginRight: '8px!important' }}
                 className={classes.filterChip}
                 key={column.id}
                 label={

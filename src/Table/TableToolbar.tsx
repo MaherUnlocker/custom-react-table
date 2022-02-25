@@ -1,4 +1,4 @@
-import { DiskIcon, StyledButton, TrashIcon } from '@aureskonnect/react-ui';
+import { StyledButton } from '@aureskonnect/react-ui';
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
@@ -224,5 +224,3 @@ export function TableToolbar<T extends Record<string, unknown>>({
     </Toolbar>
   );
 }
-
-// return <>{!showGlobalFilter && !showFilterbyColumn && !showColumnIcon ? null : <ToolbarWrapper />}</>;

@@ -13,6 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 
+// import MobileRow from './MobileRow';
 const useStyles = makeStyles({
   cell_short: {
     fontSize: '150px',
@@ -47,26 +48,13 @@ function MobileRow(props: any) {
           .map((headerGroup: any) => {
             if (headerGroup.id === 'image' || headerGroup.id === 'picture') {
               return (
-                <TableCell component='th' scope='key' variant='body'>
-                  {/* <Box
-                    component='img'
-                    sx={{
-                      objectFit: 'cover',
-                      height: '25%',
-                      width: '25%',
-                      maxHeight: { xs: 100, md: 167 },
-                      maxWidth: { xs: 120, md: 250 },
-                    }}
-                    alt='The house from the offer.'
-                    src={dataRow[headerGroup.id]}
-                  /> */}
-
+                <TableCell component='th' scope='key' variant='body' key={headerGroup.id}>
                   <img src={dataRow[headerGroup.id]} className='w-25 h-25' alt='' />
                 </TableCell>
               );
             }
             return (
-              <TableCell component='th' scope='row'>
+              <TableCell component='th' scope='row' key={headerGroup.id}>
                 {dataRow[headerGroup.id]}
               </TableCell>
             );
@@ -101,7 +89,7 @@ function MobileRow(props: any) {
                       .map((headerGroup: any) => {
                         if (headerGroup.id === 'image' || headerGroup.id === 'picture') {
                           return (
-                            <TableRow component='th' scope='row'>
+                            <TableRow component='th' scope='row' key={headerGroup.id}>
                               <TableCell className='tableCellLabel' scope='key' variant='body' align='right'>
                                 {headerGroup.id}
                               </TableCell>
@@ -112,8 +100,18 @@ function MobileRow(props: any) {
                           );
                         }
                         return (
-                          <TableRow component='th' scope='row'>
-                            <TableCell scope='key' variant='body' className={classes.cell_short}>
+                          <TableRow component='th' scope='row' key={headerGroup.id}>
+                            <TableCell
+                              scope='key'
+                              variant='body'
+                              className={classes.cell_short}
+                              style={{
+                                fontSize: '150px',
+                                lineHeight: '1.5rem',
+                                fontWeight: 700,
+                                width: 100,
+                              }}
+                            >
                               {headerGroup.id}
                             </TableCell>
                             <TableCell scope='key'>{dataRow[headerGroup.id]}</TableCell>
@@ -134,7 +132,7 @@ function MobileRow(props: any) {
 export default function CollapsibleTable(props: any) {
   const { headerGroups, page } = props.props;
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 'auto' }}>
+    <TableContainer component={Paper}>
       <Table aria-label='collapsible table' stickyHeader>
         <TableHead>
           <TableRow>
@@ -152,9 +150,9 @@ export default function CollapsibleTable(props: any) {
               .slice(0, 3)
 
               .map((headerGroup: any) => {
-                return <TableCell>{headerGroup.id}</TableCell>;
+                return <TableCell key={headerGroup.id}>{headerGroup.id}</TableCell>;
               })}
-            <TableCell align='right'>actions</TableCell>;
+            <TableCell align='right'>actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

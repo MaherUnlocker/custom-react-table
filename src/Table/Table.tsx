@@ -1,14 +1,6 @@
 import './table.css';
 
-import { CrossIcon, FilterIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Box, Grid, Paper, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
-import cx from 'classnames';
-import _concat from 'lodash.concat';
-import _uniqby from 'lodash.uniqby';
-import _without from 'lodash.without';
-import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
 import {
   Cell,
   CellProps,
@@ -33,15 +25,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-
-import { camelToWords, useDebounce, useLocalStorage } from '../utils';
-import CollapsibleTable from './CollapsibleTable';
-import { FilterChipBar } from './FilterChipBar';
-import { FilterPageCustom } from './FilterPageCustom';
-import { fuzzyTextFilter, numericTextFilter } from './filters';
-import { ResizeHandle } from './ResizeHandle';
-import SettingIcon from './SettingIcon';
-import { TablePagination } from './TablePagination';
+import { CrossIcon, FilterIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
 import {
   HeaderCheckbox,
   RawTable,
@@ -55,8 +39,24 @@ import {
   TableRow,
   useStyles,
 } from './TableStyle';
+import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
+import { camelToWords, useDebounce, useLocalStorage } from '../utils';
+import { fuzzyTextFilter, numericTextFilter } from './filters';
+
+import CollapsibleTable from './CollapsibleTable';
+import { FilterChipBar } from './FilterChipBar';
+import { FilterPageCustom } from './FilterPageCustom';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import { ResizeHandle } from './ResizeHandle';
+import SettingIcon from './SettingIcon';
+import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
+import _concat from 'lodash.concat';
+import _uniqby from 'lodash.uniqby';
+import _without from 'lodash.without';
+import cx from 'classnames';
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string;
@@ -340,7 +340,7 @@ export function Table<T extends Record<string, unknown>>({
     },
     ...localHooks
   );
-  console.log({ instance });
+
   const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
   const debouncedState = useDebounce(state, 200);
 
@@ -375,7 +375,7 @@ export function Table<T extends Record<string, unknown>>({
       />
       <FilterChipBar instance={instance} />
 
-      <Paper elevation={0} sx={{ display: { xs: 'none', md: 'block' } }}>
+      <Paper elevation={0} sx={{ display: { xs: 'none', md: 'block' }, marginTop: 5 }}>
         <Grid container spacing={1} direction={'row'}>
           <Grid container item xs={filterActive ? 8 : 12} className='table-responsive'>
             <TableContainer sx={{ overflowX: 'initial', maxHeight: '60vh' }}>
@@ -495,17 +495,18 @@ export function Table<T extends Record<string, unknown>>({
                   })}
                 </TableBody>
               </RawTable>
-              <Grid xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <TablePagination<T> instance={instance} />
               </Grid>
             </TableContainer>
           </Grid>
+          {/* here the filter component is always in the right place*/}
           {filterActive ? (
             <>
-              <Grid item xs={4}>
+              <Grid item xs={4} className={classes.FiltersCss}>
                 <Box
                   component='div'
-                  sx={{ height: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingX: 1 }}
                   className={classes.tableHeadRow}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

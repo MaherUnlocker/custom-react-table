@@ -1,28 +1,27 @@
 import {
-  CrossIcon,
   DiskIcon,
-  RefreshIcon,
   StyledButton,
-  StyledH2,
   StyledIconButton,
   StyledLabel,
   StyledSelectInput,
   VerticalDotsIcon,
 } from '@aureskonnect/react-ui';
-import { Box, Popover } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import React, { FormEvent, ReactElement, useCallback, useEffect, useRef } from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
-import React, { FormEvent, ReactElement, useCallback } from 'react';
-import { TableInstance } from 'react-table';
 
-import { FilterChipBar } from './FilterChipBar';
+import { Box } from '@mui/material';
+import { FilterChipBarCollapsible } from './FilterChipBarCollapsible';
+import { TableInstance } from 'react-table';
+import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles(
   createStyles({
     columnsPopOver: {
       padding: 24,
       display: 'flex',
+    },
+    FiltersCss: {
+      border: '1px solid rgba(224, 224, 224, 1)',
     },
     filtersResetButton: {
       position: 'absolute',
@@ -44,7 +43,6 @@ const useStyles = makeStyles(
       gridRowGap: 24,
     },
     cell: {
-      width: '100%',
       display: 'flex',
       flexDirection: 'column',
     },
@@ -88,122 +86,83 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
       label: 'background',
       value: 'background',
     },
-    {
-      label: 'principal',
-      value: 'principal',
-    },
-    {
-      label: 'secondary',
-      value: 'secondary',
-    },
-    {
-      label: 'disabledButtonBorder',
-      value: 'disabledButtonBorder',
-    },
-    {
-      label: 'disabled',
-      value: 'disabled',
-    },
-    {
-      label: 'white',
-      value: 'white',
-    },
-    {
-      label: 'text',
-      value: 'text',
-    },
-    {
-      label: 'danger',
-      value: 'danger',
-    },
-    {
-      label: 'reminder',
-      value: 'reminder',
-    },
-    {
-      label: 'success',
-      value: 'success',
-    },
-    {
-      label: 'info',
-      value: 'info',
-    },
-    {
-      label: 'warning',
-      value: 'warning',
-    },
   ];
+  const heightRef = useRef(null);
+  const [showMore, setShowMore] = React.useState(() => false);
+  const [currentHeight, setCurrentHeight] = React.useState(() => 120);
+
+  React.useEffect(() => {
+    console.log(heightRef.current);
+    if (heightRef.current !== null) {
+      setShowMore(document.getElementById('maher')?.offsetHeight! > 120);
+      setCurrentHeight(document.getElementById('maher')?.offsetHeight!);
+    }
+  });
+
+  console.log('show', showMore);
+
   return (
-    <>
-      <div className={(classes.columnsPopOver, classes.grid, classes.cell)}>
-        <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtres enregistrés</StyledLabel>
+    <div className={(classes.columnsPopOver, classes.grid, classes.cell)} style={{ marginLeft: 5, marginRight: 5 }}>
+      <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtres enregistrés</StyledLabel>
 
-        <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div style={{ width: ' 100%', marginTop: 10 }}>
-            <StyledLabel htmlFor='savedFilter'>Sélectionner un filtre</StyledLabel>
-            <StyledSelectInput
-              // defaultValue={selectedValueState}
-              // value={selectedValueState}
-              id='savedFilter'
-              name='savedFilter'
-              options={testarray}
-              placeholder={testarray.length > 0 ? 'Sélectionner ...' : 'Aucune'}
-              // onChange={handleChange}
-              // onChange={handleSelectOnChangeEvent}
-              // autoFocus={isFirstColumn}
-              // onBlur={(e: any) => {
-              //   console.log(e.target);
-              //   // setFilter(e.target.value || undefined);
-              // }}
-            />
-          </div>
+      <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ width: ' 100%', marginTop: 10 }}>
+          <StyledLabel htmlFor='savedFilter'>Sélectionner un filtre</StyledLabel>
+          <StyledSelectInput
+            // defaultValue={selectedValueState}
+            // value={selectedValueState}
+            id='savedFilter'
+            name='savedFilter'
+            options={testarray}
+            placeholder={testarray.length > 0 ? 'Sélectionner ...' : 'Aucune'}
+            // onChange={handleChange}
+            // onChange={handleSelectOnChangeEvent}
+            // autoFocus={isFirstColumn}
+            // onBlur={(e: any) => {
+            //   console.log(e.target);
+            //   // setFilter(e.target.value || undefined);
+            // }}
+          />
+        </div>
 
-          <Box component='div' sx={{ display: 'flex', alignItems: 'end' }}>
-            <StyledIconButton icon='DiskIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
-              <DiskIcon height={20} width={20} />
-            </StyledIconButton>
+        <Box component='div' sx={{ display: 'flex', alignItems: 'end' }}>
+          <StyledIconButton icon='DiskIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
+            <DiskIcon height={20} width={20} />
+          </StyledIconButton>
 
-            <StyledIconButton icon='VerticalDotsIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
-              <VerticalDotsIcon height={20} width={20} />
-            </StyledIconButton>
-          </Box>
+          <StyledIconButton icon='VerticalDotsIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
+            <VerticalDotsIcon height={20} width={20} />
+          </StyledIconButton>
         </Box>
+      </Box>
 
-        <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtrer</StyledLabel>
+      <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtrer</StyledLabel>
 
-        {Object.keys(instance.state.filters).length > 0 ? (
-          <Box
-            component='div'
-            style={{ maxHeight: '10vh', overflow: 'auto', alignItems: 'center', overflowY: 'auto' }}
-            sx={{ marginLeft: 1, marginRight: 1 }}
-          >
-            <FilterChipBar instance={instance} />{' '}
-          </Box>
-        ) : (
-          <StyledButton rounded variant='light' style={{ width: '100%' }}>
-            Aucun filtre actif
-          </StyledButton>
-        )}
-
-        <Box
-          component='div'
-          style={{ height: '60vh', overflow: 'auto', alignItems: 'center' }}
-          sx={{ marginLeft: 1, marginRight: 1 }}
-        >
-          {allColumns
-            .filter((it) => it.canFilter && it.id !== 'delete' && it.isVisible)
-            .map((column) => {
-              return (
-                <div
-                  className='my-2'
-                  // sx={{ height: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                >
-                  {column.render('Filter')}
-                </div>
-              );
-            })}
+      {Object.keys(instance.state.filters).length > 0 ? (
+        <Box id='maher' component='div' ref={heightRef}>
+          <FilterChipBarCollapsible instance={instance} showMore={showMore} currentHeight={currentHeight} />
         </Box>
-      </div>
-    </>
+      ) : (
+        <StyledButton rounded variant='light' style={{ width: '100%' }}>
+          Aucun filtre actif
+        </StyledButton>
+      )}
+
+      <Box component='div' style={{ height: '60vh', overflow: 'auto', alignItems: 'center' }}>
+        {allColumns
+          .filter((it) => it.canFilter && it.id !== 'delete' && it.isVisible)
+          .map((column) => {
+            return (
+              <div
+                key={column.id}
+                className='my-2'
+                // sx={{ height: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                {column.render('Filter')}
+              </div>
+            );
+          })}
+      </Box>
+    </div>
   );
 }

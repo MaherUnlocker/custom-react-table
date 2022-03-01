@@ -87,6 +87,7 @@ export default function DynamicTable({
             .map((key) => {
               if (key === 'image' || key === 'picture') {
                 return {
+                  id: key,
                   Header: key,
                   accessor: key,
                   disableFilters: true,
@@ -99,6 +100,7 @@ export default function DynamicTable({
               }
 
               return {
+                id: key,
                 Header: key,
                 accessor: key,
                 aggregate: 'count',
@@ -152,7 +154,6 @@ export default function DynamicTable({
                 ) : (
                   <AngleSmallRightIcon height={25} width={25} />
                 )}
-                {/* {row.isExpanded ? '👇' : '👉'} */}
               </span>
             ) : null,
         },

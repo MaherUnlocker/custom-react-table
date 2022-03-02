@@ -71,14 +71,14 @@ export default function App() {
       //  url='http://localhost:3004/categories'
       //optionnal props
       actionColumn={SelectAccountDropdown}
-      canGroupBy
+      // canGroupBy
       canSort
       canResize
-      canExpand
+      // canExpand
       canSelect
       showGlobalFilter
       showFilterbyColumn
-      showColumnIcon
+      // showColumnIcon
       canDeleteOrDuplicate
       filterActive={filterActive}
       setLocalFilterActive={setLocalFilterActive}

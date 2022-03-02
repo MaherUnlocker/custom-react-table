@@ -103,7 +103,9 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
 
   return (
     <div className={(classes.columnsPopOver, classes.grid, classes.cell)} style={{ marginLeft: 5, marginRight: 5 }}>
-      <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtres enregistrés</StyledLabel>
+      <StyledLabel style={{ borderBottom: '2px solid', marginLeft: 1, marginRight: 1, marginTop: 10 }}>
+        Filtres enregistrés
+      </StyledLabel>
 
       <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ width: ' 100%', marginTop: 10 }}>
@@ -136,7 +138,9 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
         </Box>
       </Box>
 
-      <StyledLabel style={{ borderBottom: '2px solid', marginX: 1, marginTop: 10 }}>Filtrer</StyledLabel>
+      <StyledLabel style={{ borderBottom: '2px solid', marginLeft: 1, marginRight: 1, marginTop: 10 }}>
+        Filtrer
+      </StyledLabel>
 
       {Object.keys(instance.state.filters).length > 0 ? (
         <Box id='maher' component='div' ref={heightRef}>

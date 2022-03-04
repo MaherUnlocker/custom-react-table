@@ -120,7 +120,6 @@ export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
       >
         Effacer tous
       </span>
-
       {filters.length > 0 ? <FilteredChipBar splicedFilter={false} showMore={showMore} /> : null}
 
       <Collapse in={expanded}>

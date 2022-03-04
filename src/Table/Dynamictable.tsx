@@ -1,14 +1,14 @@
 import './index.css';
 
 import { AngleSmallRightIcon, DuplicateIcon, TrashIcon } from '@aureskonnect/react-ui';
-import axios from 'axios';
-import React, { useEffect, useMemo, useState } from 'react';
 import { FilterValue, IdType, Row } from 'react-table';
-import { customColumnProps } from 'react-table';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import LoadingDataAnimation from '../components/LoadingDataAnimation';
 import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
 import { Table } from './Table';
+import axios from 'axios';
+import { customColumnProps } from 'react-table';
 import { useStyles } from './TableStyle';
 
 function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
@@ -37,6 +37,7 @@ type DynamicTableProps = {
   canDeleteOrDuplicate?: boolean;
   filterActive?: boolean;
   actionColumn?: Function;
+  customJsxSideFilterButton?: React.ReactNode;
   setLocalFilterActive?: Function | undefined;
   arrayOfCustomColumns?: customColumnProps[] | undefined;
 };
@@ -60,6 +61,7 @@ export default function DynamicTable({
   arrayOfCustomColumns,
   filterActive,
   setLocalFilterActive,
+  customJsxSideFilterButton,
 }: DynamicTableProps) {
   const [apiResult, setApiResult] = useState<apiResultProps>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -230,6 +232,7 @@ export default function DynamicTable({
       showColumnIcon={showColumnIcon}
       filterActive={filterActive}
       setLocalFilterActive={setLocalFilterActive}
+      customJsxSideFilterButton={customJsxSideFilterButton}
     />
   );
 }

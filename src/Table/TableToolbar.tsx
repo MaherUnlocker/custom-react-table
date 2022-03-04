@@ -1,14 +1,14 @@
-import { StyledButton } from '@aureskonnect/react-ui';
-import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
-import { createStyles, makeStyles } from '@mui/styles';
-import classnames from 'classnames';
 import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
-import { TableInstance } from 'react-table';
+import { createStyles, makeStyles } from '@mui/styles';
 
-import { TableMouseEventHandler } from '../../types/react-table-config';
 import { ColumnHidePage } from './ColumnHidePage';
 import GlobalFilter from './filters/GlobalFilter';
+import { StyledButton } from '@aureskonnect/react-ui';
+import { TableInstance } from 'react-table';
+import { TableMouseEventHandler } from '../../types/react-table-config';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
+import classnames from 'classnames';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -138,6 +138,7 @@ type TableToolbarProps<T extends Record<string, unknown>> = {
   showColumnIcon?: boolean;
   filterActive?: boolean;
   setLocalFilterActive?: Function;
+  customJsxSideFilterButton?: React.ReactNode;
 };
 
 export function TableToolbar<T extends Record<string, unknown>>({
@@ -147,6 +148,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
   showColumnIcon,
   filterActive,
   setLocalFilterActive,
+  customJsxSideFilterButton,
 }: PropsWithChildren<TableToolbarProps<T>>): ReactElement | null {
   const { columns, setAllFilters } = instance;
   const classes = useStyles();
@@ -209,16 +211,19 @@ export function TableToolbar<T extends Record<string, unknown>>({
             )
           : null}
         {showFilterbyColumn ? (
-          <StyledButton
-            rounded
-            variant='primary'
-            onClick={() => {
-              setLocalFilterActive!(true);
-            }}
-            label='Filter by columns'
-          >
-            Filtrer
-          </StyledButton>
+          <React.Fragment>
+            <StyledButton
+              rounded
+              variant='primary'
+              onClick={() => {
+                setLocalFilterActive!(true);
+              }}
+              label='Filter by columns'
+            >
+              Filtrer
+            </StyledButton>
+            {customJsxSideFilterButton}
+          </React.Fragment>
         ) : null}
       </div>
     </Toolbar>

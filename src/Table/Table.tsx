@@ -74,6 +74,7 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
   filterActive?: boolean;
   actionColumn?: Function;
   setLocalFilterActive?: Function;
+  customJsxSideFilterButton?: React.ReactNode;
 }
 
 function DefaultHeader({ column }: HeaderProps<any>) {
@@ -161,25 +162,16 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
     <React.Fragment>
       <StyledLabel htmlFor={column.id}>{render('Header')}</StyledLabel>
       <StyledSelectInput
-        // defaultValue={selectedValueState}
-        //value={selectedValueState}
         id={render('Header')}
         name={render('Header')}
         options={unique}
         placeholder='Sélectionner ...'
-        // onChange={handleChange}
         onChange={handleSelectOnChangeEvent}
         autoFocus={isFirstColumn}
-        // onBlur={(e: any) => {
-        //   console.log(e.target);
-        //   // setFilter(e.target.value || undefined);
-        // }}
       />
     </React.Fragment>
   );
 }
-
-// *************************************
 
 const getStyles = (props: any, disableResizing = false, align = 'left') => [
   props,
@@ -235,11 +227,6 @@ const selectionHook = (hooks: Hooks<any>) => {
     },
     ...columns,
   ]);
-  // hooks.useInstanceBeforeDimensions.push(({ headerGroups }) => {
-  //   // fix the parent group of the selection button to not be resizable
-  //   const selectionGroupHeader = headerGroups[0].headers[0];
-  //   // selectionGroupHeader.canResize = false;
-  // });
 };
 export function Table<T extends Record<string, unknown>>({
   name,
@@ -255,6 +242,7 @@ export function Table<T extends Record<string, unknown>>({
   showColumnIcon,
   filterActive,
   setLocalFilterActive,
+  customJsxSideFilterButton,
   ...props
 }: PropsWithChildren<TableProperties<T>>): ReactElement {
   const classes = useStyles();
@@ -371,6 +359,7 @@ export function Table<T extends Record<string, unknown>>({
           showColumnIcon,
           filterActive,
           setLocalFilterActive,
+          customJsxSideFilterButton,
         }}
       />
       <FilterChipBar instance={instance} />
@@ -418,24 +407,17 @@ export function Table<T extends Record<string, unknown>>({
                                   )
                                 : null}
                               {column.canSort && canSort ? (
-                                <>
-                                  <Tooltip title={sortTitle}>
-                                    <TableSortLabel
-                                      active={column.isSorted}
-                                      direction={column.isSortedDesc ? 'desc' : 'asc'}
-                                      {...columnSortByProps}
-                                      className={classes.tableSortLabel}
-                                      style={{ flexDirection: 'row-reverse' }}
-                                    >
-                                      {column.render('Header')}
-                                    </TableSortLabel>
-                                  </Tooltip>
-
-                                  {/* <FilterAltOutlinedIcon
-                                  className={classes.tableFilterAltOutlinedIcon}
-                                  style={{ flexDirection: 'row-reverse' }}
-                                /> */}
-                                </>
+                                <Tooltip title={sortTitle}>
+                                  <TableSortLabel
+                                    active={column.isSorted}
+                                    direction={column.isSortedDesc ? 'desc' : 'asc'}
+                                    {...columnSortByProps}
+                                    className={classes.tableSortLabel}
+                                    style={{ flexDirection: 'row-reverse' }}
+                                  >
+                                    {column.render('Header')}
+                                  </TableSortLabel>
+                                </Tooltip>
                               ) : (
                                 <TableLabel style={style}>{column.render('Header')}</TableLabel>
                               )}
@@ -502,36 +484,31 @@ export function Table<T extends Record<string, unknown>>({
           </Grid>
           {/* here the filter component is always in the right place*/}
           {filterActive ? (
-            <>
-              <Grid item xs={4} className={classes.FiltersCss}>
-                <Box
-                  component='div'
-                  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingX: 1 }}
-                  className={classes.tableHeadRow}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <FilterIcon
-                      className={classes.tableFilterAltOutlinedIcon}
-                      style={{ flexDirection: 'row-reverse' }}
-                    />
-                    <StyledH2>Filtres</StyledH2>
-                  </Box>
-
-                  <CrossIcon
-                    height={11}
-                    width={25}
-                    onClick={() => {
-                      setLocalFilterActive!(false);
-                    }}
-                  />
+            <Grid item xs={4} className={classes.FiltersCss}>
+              <Box
+                component='div'
+                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingX: 1 }}
+                className={classes.tableHeadRow}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <FilterIcon className={classes.tableFilterAltOutlinedIcon} style={{ flexDirection: 'row-reverse' }} />
+                  <StyledH2>Filtres</StyledH2>
                 </Box>
-                <FilterPageCustom<T>
-                  instance={instance}
-                  setLocalFilterActive={setLocalFilterActive}
-                  filterActive={filterActive}
+
+                <CrossIcon
+                  height={11}
+                  width={25}
+                  onClick={() => {
+                    setLocalFilterActive!(false);
+                  }}
                 />
-              </Grid>
-            </>
+              </Box>
+              <FilterPageCustom<T>
+                instance={instance}
+                setLocalFilterActive={setLocalFilterActive}
+                filterActive={filterActive}
+              />
+            </Grid>
           ) : null}
         </Grid>
       </Paper>

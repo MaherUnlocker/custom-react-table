@@ -1,7 +1,6 @@
-import React from 'react';
-
 import DotIcon from './Table/DotIcon.svg';
 import DynamicTable from './Table/DynamicTable';
+import React from 'react';
 
 function SelectAccountDropdown(props: any) {
   return (
@@ -44,6 +43,15 @@ function SelectAccountDropdown2(props: any) {
     </div>
   );
 }
+function FilterSideComponent(): JSX.Element {
+  return (
+    <div style={{ marginLeft: 200, backgroundColor: 'red' }}>
+      <div>Afficher Categorie</div>
+      <div>test</div>
+    </div>
+  );
+}
+
 interface customColumnProps {
   indexOFColumn: number;
   columnName: string;
@@ -56,7 +64,6 @@ arrayOfCustomColumns.push(
   { indexOFColumn: 0, columnName: 'column1', customJsx: SelectAccountDropdown2 },
   { indexOFColumn: 2, columnName: 'column2', customJsx: SelectAccountDropdown }
 );
-
 
 export default function App() {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
@@ -71,6 +78,7 @@ export default function App() {
       //  url='http://localhost:3004/categories'
       //optionnal props
       actionColumn={SelectAccountDropdown}
+      customJsxSideFilterButton={<FilterSideComponent />}
       // canGroupBy
       canSort
       canResize

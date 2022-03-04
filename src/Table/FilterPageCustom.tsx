@@ -12,7 +12,7 @@ import { createStyles, makeStyles } from '@mui/styles';
 import { Box } from '@mui/material';
 import { FilterChipBarCollapsible } from './FilterChipBarCollapsible';
 import { TableInstance } from 'react-table';
-import TextField from '@mui/material/TextField';
+import { useLocalStorage } from '../utils';
 
 const useStyles = makeStyles(
   createStyles({
@@ -61,6 +61,7 @@ type FilterPageCustomProps<T extends Record<string, unknown>> = {
   filterActive?: boolean;
 };
 
+
 export function FilterPageCustom<T extends Record<string, unknown>>({
   instance,
   onClose,
@@ -68,38 +69,42 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   setLocalFilterActive,
 }: FilterPageCustomProps<T>): ReactElement {
   const classes = useStyles({});
-  const { allColumns, setAllFilters, rows, prepareRow } = instance;
-
-  const onSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      // onClose();
-    },
-    [onClose]
-  );
-
-  const resetFilters = useCallback(() => {
-    setAllFilters([]);
-  }, [setAllFilters]);
-  let testarray = [
-    {
-      label: 'background',
-      value: 'background',
-    },
-  ];
+  const {
+    allColumns,
+    setAllFilters,
+    state: { filters },
+    rows,
+    prepareRow,
+  } = instance;
   const heightRef = useRef(null);
   const [showMore, setShowMore] = React.useState(() => false);
   const [currentHeight, setCurrentHeight] = React.useState(() => 120);
 
+  // for adding  selected filter
+
+  const [savedFilters, setSavedFilters] = useLocalStorage(`SavedFilters`, {});
+  const [designationFilter, setDesignationFiltert] = React.useState('');
+
+
+  const resetFilters = useCallback(() => {
+    setAllFilters([]);
+  }, [setAllFilters]);
+
   React.useEffect(() => {
-    console.log(heightRef.current);
     if (heightRef.current !== null) {
       setShowMore(document.getElementById('maher')?.offsetHeight! > 120);
       setCurrentHeight(document.getElementById('maher')?.offsetHeight!);
     }
   });
 
-  console.log('show', showMore);
+  const handleSavedFiltersClick = useCallback(() => {
+    console.log('handleSavedFiltersClick');
+    setSavedFilters([{ label: designationFilter, value: filters }]);
+  }, [designationFilter]);
+
+  const handleSavedFiltersSelect = useCallback(() => {
+    setAllFilters(savedFilters.value);
+  }, []);
 
   return (
     <div className={(classes.columnsPopOver, classes.grid, classes.cell)} style={{ marginLeft: 5, marginRight: 5 }}>
@@ -111,24 +116,25 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
         <div style={{ width: ' 100%', marginTop: 10 }}>
           <StyledLabel htmlFor='savedFilter'>Sélectionner un filtre</StyledLabel>
           <StyledSelectInput
-            // defaultValue={selectedValueState}
-            // value={selectedValueState}
+            onInputChange={(e: string) => {
+              e !== '' ? setDesignationFiltert(e) : null;
+            }}
+            inputValue={designationFilter}
             id='savedFilter'
             name='savedFilter'
-            options={testarray}
-            placeholder={testarray.length > 0 ? 'Sélectionner ...' : 'Aucune'}
-            // onChange={handleChange}
-            // onChange={handleSelectOnChangeEvent}
-            // autoFocus={isFirstColumn}
-            // onBlur={(e: any) => {
-            //   console.log(e.target);
-            //   // setFilter(e.target.value || undefined);
-            // }}
+            options={savedFilters.length > 0 ? savedFilters : []}
+            placeholder={savedFilters.length > 0 ? 'Sélectionner ...' : 'Aucune'}
+            onChange={handleSavedFiltersSelect}
+            allowCreateWhileLoading
           />
         </div>
 
         <Box component='div' sx={{ display: 'flex', alignItems: 'end' }}>
-          <StyledIconButton icon='DiskIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
+          <StyledIconButton
+            icon='DiskIcon'
+            style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}
+            onClick={handleSavedFiltersClick}
+          >
             <DiskIcon height={20} width={20} />
           </StyledIconButton>
 

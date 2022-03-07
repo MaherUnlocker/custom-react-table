@@ -55,7 +55,7 @@ function FilterSideComponent(): JSX.Element {
 interface customColumnProps {
   indexOFColumn: number;
   columnName: string;
-  customJsx: Function;
+  customJsx: React.ReactNode;
 }
 
 let arrayOfCustomColumns: customColumnProps[] = [];

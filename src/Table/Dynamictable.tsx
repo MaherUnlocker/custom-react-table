@@ -167,7 +167,7 @@ export default function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
-          Cell: function (cell: any) {
+          Cell(cell: any) {
             return <elm.customJsx selectedRow={cell.row.original} />;
           },
         })

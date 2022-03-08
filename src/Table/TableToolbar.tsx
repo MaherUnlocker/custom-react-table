@@ -150,11 +150,11 @@ export function TableToolbar<T extends Record<string, unknown>>({
   setLocalFilterActive,
   customJsxSideFilterButton,
 }: PropsWithChildren<TableToolbarProps<T>>): ReactElement | null {
-  const { columns, setAllFilters } = instance;
+  const { columns } = instance;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
   const [columnsOpen, setColumnsOpen] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [, setFilterOpen] = useState(false);
 
   const hideableColumns = columns.filter((column) => !(column.id === '_selector'));
 
@@ -166,21 +166,10 @@ export function TableToolbar<T extends Record<string, unknown>>({
     [setAnchorEl, setColumnsOpen]
   );
 
-  const handleFilterClick = useCallback(
-    (event: MouseEvent) => {
-      setAnchorEl(event.currentTarget);
-      setFilterOpen(true);
-    },
-    [setAnchorEl, setFilterOpen]
-  );
-  const resetFilters = useCallback(() => {
-    setAllFilters([]);
-  }, [setAllFilters]);
   const handleClose = useCallback(() => {
     setColumnsOpen(false);
     setFilterOpen(false);
     setAnchorEl(undefined);
-    // setLocalFilterActive!(false);
   }, []);
 
   // toolbar with  filter/search column select.
@@ -197,8 +186,6 @@ export function TableToolbar<T extends Record<string, unknown>>({
 
       <div className={classes.rightButtons} style={{ display: 'flex', alignItems: 'center', height: '25' }}>
         <ColumnHidePage<T> instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
-
-        {/* <FilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} /> */}
 
         {showColumnIcon
           ? hideableColumns.length > 1 && (

@@ -1,7 +1,7 @@
 import DotIcon from './Table/DotIcon.svg';
 import DynamicTable from './Table/DynamicTable';
 import React from 'react';
-
+// eslint-disable-next-line
 function SelectAccountDropdown(props: any) {
   return (
     <div className='w-100'>
@@ -58,14 +58,14 @@ interface customColumnProps {
   customJsx: React.ReactNode;
 }
 
+// eslint-disable-next-line
 let arrayOfCustomColumns: customColumnProps[] = [];
-
 arrayOfCustomColumns.push(
   { indexOFColumn: 0, columnName: 'column1', customJsx: SelectAccountDropdown2 },
   { indexOFColumn: 2, columnName: 'column2', customJsx: SelectAccountDropdown }
 );
 
-export default function App() {
+export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
 
   return (

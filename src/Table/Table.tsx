@@ -92,17 +92,20 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   useEffect(() => {
     setValue(filterValue || '');
   }, [filterValue]);
-  let FilterArray: any[] = rows.map((row) => {
+  const FilterArray: any[] = rows.map((row) => {
     prepareRow(row);
-    return row.cells
-      .filter((cel: any) => {
-        const { key: cellKey } = cel.getCellProps();
-        return (cellKey as string).replace(/([^\_]*\_){2}/, '') === (column.id as string);
-      })
-
-      .map((cell: any) => {
-        return { label: String(cell.value), value: String(cell.value) };
-      })[0];
+    return (
+      row.cells
+        .filter((cel: any) => {
+          const { key: cellKey } = cel.getCellProps();
+          // eslint-disable-next-line
+          return (cellKey as string).replace(/([^\_]*\_){2}/, '') === (column.id as string);
+        })
+        // eslint-disable-next-line
+        .map((cell: any) => {
+          return { label: String(cell.value), value: String(cell.value) };
+        })[0]
+    );
   });
 
   // his uniquby from lodash for get unique array of object
@@ -248,7 +251,7 @@ export function Table<T extends Record<string, unknown>>({
           </div>
         ),
 
-        Cell: function (cell: any) {
+        Cell(cell: any) {
           const ActionColumnComponent = actionColumn as React.ElementType;
           return <ActionColumnComponent selectedRow={cell.row} />;
         },
@@ -268,6 +271,7 @@ export function Table<T extends Record<string, unknown>>({
     useResizeColumns,
     useRowSelect,
   ];
+  // eslint-disable-next-line
   let localHooks = hooks;
 
   if (canSelect) {
@@ -288,7 +292,7 @@ export function Table<T extends Record<string, unknown>>({
     ...localHooks
   );
 
-  const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+  const { headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
   const debouncedState = useDebounce(state, 200);
 
   useEffect(() => {
@@ -305,8 +309,6 @@ export function Table<T extends Record<string, unknown>>({
   const cellClickHandler = (cell: Cell<T>) => () => {
     onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
   };
-
-  const { role: tableRole } = getTableProps();
 
   return (
     <Paper elevation={0} sx={{ paddingX: 1 }}>

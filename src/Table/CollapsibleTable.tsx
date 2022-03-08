@@ -128,7 +128,7 @@ function MobileRow(props: any): React.ReactElement {
     </React.Fragment>
   );
 }
-
+// eslint-disable-next-line
 export default function CollapsibleTable(props: any): React.ReactElement {
   const { headerGroups, page } = props.props;
   return (

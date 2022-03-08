@@ -167,8 +167,9 @@ export default function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
+          // eslint-disable-next-line
           Cell(cell: any) {
-            return <elm.customJsx selectedRow={cell.row.original} />;
+            <elm.customJsx selectedRow={cell.row.original} />;
           },
         })
       );
@@ -206,6 +207,7 @@ export default function DynamicTable({
     }
 
     return modifiedColumns;
+    // eslint-disable-next-line
   }, [apiResultColumns]);
 
   useEffect(() => {

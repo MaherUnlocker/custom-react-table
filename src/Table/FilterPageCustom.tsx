@@ -61,7 +61,6 @@ type FilterPageCustomProps<T extends Record<string, unknown>> = {
   filterActive?: boolean;
 };
 
-
 export function FilterPageCustom<T extends Record<string, unknown>>({
   instance,
   onClose,
@@ -83,8 +82,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   // for adding  selected filter
 
   const [savedFilters, setSavedFilters] = useLocalStorage(`SavedFilters`, {});
-  const [designationFilter, setDesignationFiltert] = React.useState('');
-
+  const [designationFilter, setDesignationFilter] = React.useState('');
 
   const resetFilters = useCallback(() => {
     setAllFilters([]);
@@ -92,10 +90,10 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
 
   React.useEffect(() => {
     if (heightRef.current !== null) {
-      setShowMore(document.getElementById('maher')?.offsetHeight! > 120);
-      setCurrentHeight(document.getElementById('maher')?.offsetHeight!);
+      setShowMore(document.getElementById('maher')!.offsetHeight! > 120);
+      setCurrentHeight(document.getElementById('maher')!.offsetHeight!);
     }
-  });
+  }, []);
 
   const handleSavedFiltersClick = useCallback(() => {
     console.log('handleSavedFiltersClick');
@@ -117,7 +115,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
           <StyledLabel htmlFor='savedFilter'>Sélectionner un filtre</StyledLabel>
           <StyledSelectInput
             onInputChange={(e: string) => {
-              e !== '' ? setDesignationFiltert(e) : null;
+              if (e !== '') setDesignationFilter(e);
             }}
             inputValue={designationFilter}
             id='savedFilter'

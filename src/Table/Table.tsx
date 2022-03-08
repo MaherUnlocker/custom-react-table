@@ -72,8 +72,8 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
   showFilterbyColumn?: boolean;
   showColumnIcon?: boolean;
   filterActive?: boolean;
-  actionColumn?: Function;
-  setLocalFilterActive?: Function;
+  actionColumn?: React.ReactNode;
+  setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
   customJsxSideFilterButton?: React.ReactNode;
 }
 

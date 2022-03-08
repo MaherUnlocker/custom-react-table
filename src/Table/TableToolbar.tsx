@@ -137,7 +137,7 @@ type TableToolbarProps<T extends Record<string, unknown>> = {
   showFilterbyColumn?: boolean;
   showColumnIcon?: boolean;
   filterActive?: boolean;
-  setLocalFilterActive?: Function;
+  setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
   customJsxSideFilterButton?: React.ReactNode;
 };
 

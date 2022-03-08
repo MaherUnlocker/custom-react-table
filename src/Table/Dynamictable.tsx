@@ -1,14 +1,13 @@
 import './index.css';
 
 import { AngleSmallRightIcon, DuplicateIcon, TrashIcon } from '@aureskonnect/react-ui';
-import { FilterValue, IdType, Row } from 'react-table';
+import { FilterValue, IdType, Row, customColumnProps } from 'react-table';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import LoadingDataAnimation from '../components/LoadingDataAnimation';
 import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
 import { Table } from './Table';
 import axios from 'axios';
-import { customColumnProps } from 'react-table';
 import { useStyles } from './TableStyle';
 
 function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
@@ -36,9 +35,9 @@ type DynamicTableProps = {
   canExpand?: boolean;
   canDeleteOrDuplicate?: boolean;
   filterActive?: boolean;
-  actionColumn?: Function;
+  actionColumn?: React.ReactNode;
   customJsxSideFilterButton?: React.ReactNode;
-  setLocalFilterActive?: Function | undefined;
+  setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>>;
   arrayOfCustomColumns?: customColumnProps[] | undefined;
 };
 
@@ -164,7 +163,7 @@ export default function DynamicTable({
     }
 
     if (arrayOfCustomColumns && arrayOfCustomColumns.length > 0) {
-      arrayOfCustomColumns.map((elm) => {
+      arrayOfCustomColumns.map((elm: any) => {
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,

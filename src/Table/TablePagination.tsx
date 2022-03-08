@@ -15,7 +15,6 @@ import { makeStyles } from '@mui/styles';
 import React, { PropsWithChildren, ReactElement, useCallback } from 'react';
 import { TableInstance } from 'react-table';
 
-const rowsPerPageOptions = [10, 25, 50];
 
 // avoid all of the redraws caused by the internal withStyles
 const interestingPropsEqual = (prevProps: any, nextProps: any) =>

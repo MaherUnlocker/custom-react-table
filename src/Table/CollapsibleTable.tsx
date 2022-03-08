@@ -1,9 +1,10 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Paper from '@mui/material/Paper';
+import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,7 +12,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
 
 // import MobileRow from './MobileRow';
 const useStyles = makeStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-function MobileRow(props: any) {
+function MobileRow(props: any): React.ReactElement {
   const { row, headerGroups } = props;
   const dataRow = row.original;
   const classes = useStyles(props);
@@ -129,7 +129,7 @@ function MobileRow(props: any) {
   );
 }
 
-export default function CollapsibleTable(props: any) {
+export default function CollapsibleTable(props: any): React.ReactElement {
   const { headerGroups, page } = props.props;
   return (
     <TableContainer component={Paper}>
@@ -149,16 +149,16 @@ export default function CollapsibleTable(props: any) {
               )
               .slice(0, 3)
 
-              .map((headerGroup: any) => {
-                return <TableCell key={headerGroup.id}>{headerGroup.id}</TableCell>;
-              })}
+              .map((headerGroup: any) => (
+                <TableCell key={headerGroup.id}>{headerGroup.id}</TableCell>
+              ))}
             <TableCell align='right'>actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {page?.map((row: any) => {
-            return <MobileRow key={row.id} row={row} headerGroups={headerGroups} />;
-          })}
+          {page?.map((row: any) => (
+            <MobileRow key={row.id} row={row} headerGroups={headerGroups} />
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

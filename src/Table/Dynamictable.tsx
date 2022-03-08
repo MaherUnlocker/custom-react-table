@@ -61,7 +61,7 @@ export default function DynamicTable({
   filterActive,
   setLocalFilterActive,
   customJsxSideFilterButton,
-}: DynamicTableProps) {
+}: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = useState<apiResultProps>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<null | any>(null);
@@ -163,16 +163,15 @@ export default function DynamicTable({
     }
 
     if (arrayOfCustomColumns && arrayOfCustomColumns.length > 0) {
-      arrayOfCustomColumns.map((elm: any) => {
+      arrayOfCustomColumns.map((elm: any) =>
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
           Cell: function (cell: any) {
-            const ActionColumnComponent = elm.customJsx as React.ElementType;
             return <elm.customJsx selectedRow={cell.row.original} />;
           },
-        });
-      });
+        })
+      );
     }
     if (canDeleteOrDuplicate) {
       modifiedColumns = [

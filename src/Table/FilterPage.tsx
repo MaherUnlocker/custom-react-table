@@ -1,6 +1,7 @@
-import { Popover } from '@mui/material';
-import { createStyles, makeStyles } from '@mui/styles';
 import React, { FormEvent, ReactElement, useCallback } from 'react';
+import { createStyles, makeStyles } from '@mui/styles';
+
+import { Popover } from '@mui/material';
 import { TableInstance } from 'react-table';
 
 const useStyles = makeStyles(
@@ -50,7 +51,7 @@ export function FilterPage<T extends Record<string, unknown>>({
   anchorEl,
   onClose,
   show,
-}: FilterPageProps<T>): ReactElement {
+}: FilterPageProps<T>): React.ReactElement {
   const classes = useStyles({});
   const { allColumns, setAllFilters } = instance;
 

@@ -1,9 +1,9 @@
 import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
-import { CrossIcon, StyledButton } from '@aureskonnect/react-ui';
 import React, { ReactElement, useCallback } from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 
 import { Chip } from '@mui/material';
+import { CrossIcon } from '@aureskonnect/react-ui';
 
 const useStyles = makeStyles(
   createStyles({
@@ -32,26 +32,6 @@ const useStyles = makeStyles(
 
 type FilterChipBarProps<T extends Record<string, unknown>> = {
   instance: TableInstance<T>;
-};
-
-type ExpandableProps = { baseHeight: any; children: any };
-
-const Expandable = ({ baseHeight, children }: ExpandableProps) => {
-  const [expanded, setExpanded] = React.useState(false);
-  const [overflow, setOverflow] = React.useState(false);
-  return (
-    <div
-      style={{ position: 'relative', overflow: 'hidden', height: expanded ? null : baseHeight }}
-      ref={(v) => v && setOverflow(v.offsetHeight < v.scrollHeight)}
-    >
-      {children}
-      {overflow && (
-        <button onClick={() => setExpanded(true)} style={{ position: 'absolute', bottom: 0 }}>
-          Afficher plus
-        </button>
-      )}
-    </div>
-  );
 };
 
 const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
@@ -95,7 +75,6 @@ export function FilterChipBar<T extends Record<string, unknown>>({
       >
         Effacer tous
       </span>
-      {/* <Expandable baseHeight={30}> */}
       {filters &&
         allColumns.map((column) => {
           const filter = filters.find((f) => f.id === column.id);
@@ -119,7 +98,6 @@ export function FilterChipBar<T extends Record<string, unknown>>({
             )
           );
         })}
-      {/* </Expandable> */}
     </div>
   ) : null;
 }

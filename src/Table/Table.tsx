@@ -53,9 +53,9 @@ import SettingIcon from './SettingIcon';
 import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
-import _concat from 'lodash.concat';
+// import _concat from 'lodash.concat';
 import _uniqby from 'lodash.uniqby';
-import _without from 'lodash.without';
+// import _without from 'lodash.without';
 import cx from 'classnames';
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
@@ -84,45 +84,10 @@ function DefaultHeader({ column }: HeaderProps<any>) {
 // yes this is recursive, but the depth never exceeds three so it seems safe enough
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<ColumnInstance<T>>): ColumnInstance<T> =>
   columns[0].columns ? findFirstColumn(columns[0].columns) : columns[0];
-// old version
-
-// function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column }: FilterProps<T>) {
-//   const { id, filterValue, setFilter, render } = column;
-//   const [value, setValue] = React.useState(filterValue || '');
-
-//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     setValue(event.target.value);
-//   };
-//   // ensure that reset loads the new value
-//   useEffect(() => {
-//     setValue(filterValue || '');
-//   }, [filterValue]);
-
-//   const isFirstColumn = findFirstColumn(columns) === column;
-//   return (
-//     <TextField
-//       name={id}
-//       label={render('Header')}
-//       InputLabelProps={{ htmlFor: id }}
-//       value={value}
-//       autoFocus={isFirstColumn}
-//       variant='standard'
-//       onChange={handleChange}
-//       onBlur={(e: any) => {
-//         setFilter(e.target.value || undefined);
-//       }}
-//     />
-//   );
-// }
-
-// ***************New Version of filter
 function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column, rows, prepareRow }: FilterProps<T>) {
-  const { id, filterValue, setFilter, render } = column;
-  const [value, setValue] = React.useState(filterValue || '');
+  const { filterValue, setFilter, render } = column;
+  const [, setValue] = React.useState(filterValue || '');
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
   // ensure that reset loads the new value
   useEffect(() => {
     setValue(filterValue || '');
@@ -141,7 +106,7 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   });
 
   // his uniquby from lodash for get unique array of object
-  let unique: any = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
+  const unique: any = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
 
   // this uniquby from lodash for get unique array of object
   // FilterArray = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
@@ -150,7 +115,7 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   //  console.log({ unique });
 
   const isFirstColumn = findFirstColumn(columns) === column;
-  const [selectedValueState, setSelectedValueState] = React.useState<any[]>([]);
+  const [, setSelectedValueState] = React.useState<any[]>([]);
 
   function handleSelectOnChangeEvent(selectedValue: any) {
     setSelectedValueState(selectedValue);
@@ -259,36 +224,30 @@ export function Table<T extends Record<string, unknown>>({
         minWidth: 60,
         width: 60,
         maxWidth: 100,
-        Header: () => {
-          return (
-            <div className='dropdown'>
-              <div id='dropdownMenuButton1' data-bs-toggle='dropdown' className=' dropdown-toggle'>
-                <SettingIcon />
-              </div>
-
-              <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
-                <div className='d-flex flex-column'>
-                  {columns
-                    .filter((column) => !(column.id === '_selector') && !(column.id === 'expander'))
-                    .map((column: any) => {
-                      return (
-                        <div
-                          key={column.id}
-                          className=' pretty p-default p-curve p-fill my-2 d-flex align-items-center'
-                        >
-                          <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
-                          <div className='state p-primary '>
-                            <label>{column.id}</label>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  <br />
-                </div>
-              </ul>
+        Header: () => (
+          <div className='dropdown'>
+            <div id='dropdownMenuButton1' data-bs-toggle='dropdown' className=' dropdown-toggle'>
+              <SettingIcon />
             </div>
-          );
-        },
+
+            <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
+              <div className='d-flex flex-column'>
+                {columns
+                  .filter((column) => !(column.id === '_selector') && !(column.id === 'expander'))
+                  .map((column: any) => (
+                    <div key={column.id} className=' pretty p-default p-curve p-fill my-2 d-flex align-items-center'>
+                      <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
+                      <div className='state p-primary '>
+                        <label>{column.id}</label>
+                      </div>
+                    </div>
+                  ))}
+                <br />
+              </div>
+            </ul>
+          </div>
+        ),
+
         Cell: function (cell: any) {
           const ActionColumnComponent = actionColumn as React.ElementType;
           return <ActionColumnComponent selectedRow={cell.row} />;
@@ -347,7 +306,7 @@ export function Table<T extends Record<string, unknown>>({
     onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
   };
 
-  const { role: tableRole, ...tableProps } = getTableProps();
+  const { role: tableRole } = getTableProps();
 
   return (
     <Paper elevation={0} sx={{ paddingX: 1 }}>

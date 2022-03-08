@@ -6,7 +6,7 @@ import {
   StyledSelectInput,
   VerticalDotsIcon,
 } from '@aureskonnect/react-ui';
-import React, { FormEvent, ReactElement, useCallback, useEffect, useRef } from 'react';
+import React, { ReactElement, useCallback, useRef } from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 
 import { Box } from '@mui/material';
@@ -72,8 +72,6 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
     allColumns,
     setAllFilters,
     state: { filters },
-    rows,
-    prepareRow,
   } = instance;
   const heightRef = useRef(null);
   const [showMore, setShowMore] = React.useState(() => false);
@@ -83,10 +81,6 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
 
   const [savedFilters, setSavedFilters] = useLocalStorage(`SavedFilters`, {});
   const [designationFilter, setDesignationFilter] = React.useState('');
-
-  const resetFilters = useCallback(() => {
-    setAllFilters([]);
-  }, [setAllFilters]);
 
   React.useEffect(() => {
     if (heightRef.current !== null) {
@@ -159,17 +153,15 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
       <Box component='div' style={{ height: '60vh', overflow: 'auto', alignItems: 'center' }}>
         {allColumns
           .filter((it) => it.canFilter && it.id !== 'delete' && it.isVisible)
-          .map((column) => {
-            return (
-              <div
-                key={column.id}
-                className='my-2'
-                // sx={{ height: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-              >
-                {column.render('Filter')}
-              </div>
-            );
-          })}
+          .map((column) => (
+            <div
+              key={column.id}
+              className='my-2'
+              // sx={{ height: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+            >
+              {column.render('Filter')}
+            </div>
+          ))}
       </Box>
     </div>
   );

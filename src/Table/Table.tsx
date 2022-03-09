@@ -69,7 +69,7 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
   canResize?: boolean;
   canSelect?: boolean;
   showGlobalFilter?: boolean;
-  showFilterbyColumn?: boolean;
+  showFilter?: boolean;
   showColumnIcon?: boolean;
   filterActive?: boolean;
   actionColumn?: React.ReactNode;
@@ -113,9 +113,7 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
 
   // this uniquby from lodash for get unique array of object
   // FilterArray = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
-  // console.log({ FilterArray });
   // let unique: any = [...new Set(_without(FilterArray, undefined, null, 'null', 'undefined'))]; // FilterArray.filter((v, i, a) => a.indexOf(v) === i);
-  //  console.log({ unique });
 
   const isFirstColumn = findFirstColumn(columns) === column;
   const [, setSelectedValueState] = React.useState<any[]>([]);
@@ -206,7 +204,7 @@ export function Table<T extends Record<string, unknown>>({
   canResize,
   actionColumn,
   showGlobalFilter,
-  showFilterbyColumn,
+  showFilter,
   showColumnIcon,
   filterActive,
   setLocalFilterActive,
@@ -316,7 +314,7 @@ export function Table<T extends Record<string, unknown>>({
         instance={instance}
         {...{
           showGlobalFilter,
-          showFilterbyColumn,
+          showFilter,
           showColumnIcon,
           filterActive,
           setLocalFilterActive,

@@ -13,7 +13,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { makeStyles } from '@mui/styles';
 
-// import MobileRow from './MobileRow';
 const useStyles = makeStyles({
   cell_short: {
     fontSize: '150px',

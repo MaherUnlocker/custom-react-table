@@ -134,7 +134,7 @@ type TableToolbarProps<T extends Record<string, unknown>> = {
   onDelete?: TableMouseEventHandler;
   onEdit?: TableMouseEventHandler;
   showGlobalFilter?: boolean;
-  showFilterbyColumn?: boolean;
+  showFilter?: boolean;
   showColumnIcon?: boolean;
   filterActive?: boolean;
   setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
@@ -144,7 +144,7 @@ type TableToolbarProps<T extends Record<string, unknown>> = {
 export function TableToolbar<T extends Record<string, unknown>>({
   instance,
   showGlobalFilter,
-  showFilterbyColumn,
+  showFilter,
   showColumnIcon,
   filterActive,
   setLocalFilterActive,
@@ -175,7 +175,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
   // toolbar with  filter/search column select.
 
   return (
-    <Toolbar className={!showGlobalFilter && !showFilterbyColumn && !showColumnIcon ? 'd-none' : classes.toolbar}>
+    <Toolbar className={!showGlobalFilter && !showFilter && !showColumnIcon ? 'd-none' : classes.toolbar}>
       {showGlobalFilter ? (
         <GlobalFilter
           preGlobalFilteredRows={instance.preGlobalFilteredRows}
@@ -197,22 +197,22 @@ export function TableToolbar<T extends Record<string, unknown>>({
               />
             )
           : null}
-        {showFilterbyColumn ? (
+        {showFilter ? (
           <React.Fragment>
             <StyledButton
               rounded
               variant='primary'
               onClick={() => {
-                setLocalFilterActive!(true);
+                setLocalFilterActive!(!filterActive);
               }}
               label='Filter by columns'
             >
               Filtrer
             </StyledButton>
-            {customJsxSideFilterButton}
           </React.Fragment>
         ) : null}
       </div>
+      {customJsxSideFilterButton}
     </Toolbar>
   );
 }

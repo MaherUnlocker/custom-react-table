@@ -43,6 +43,7 @@ function SelectAccountDropdown2(props: any) {
     </div>
   );
 }
+
 function FilterSideComponent(): JSX.Element {
   return (
     <div style={{ marginLeft: 200, backgroundColor: 'red' }}>
@@ -74,19 +75,19 @@ export default function App(): JSX.Element {
       // url=' http://localhost:4000/products'
       url='http://localhost:4000/client'
       // url='http://localhost:4000/cards'
-      // url='http://localhost:3004/categories'
-      //  url='http://localhost:3004/categories'
+
       //optionnal props
       actionColumn={SelectAccountDropdown}
-      customJsxSideFilterButton={<FilterSideComponent />}
+      // customJsxSideFilterButton={<FilterSideComponent />}
       // canGroupBy
-      canSort
-      canResize
+      // canSort
+      // canResize
       // canExpand
       canSelect
+      //return props after select
       showGlobalFilter
-      showFilterbyColumn
-      // showColumnIcon
+      showFilter
+      showColumnIcon
       canDeleteOrDuplicate
       filterActive={filterActive}
       setLocalFilterActive={setLocalFilterActive}

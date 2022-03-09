@@ -74,12 +74,14 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
     state: { filters },
   } = instance;
   const heightRef = useRef(null);
+  // eslint-disable-next-line
   const [showMore, setShowMore] = React.useState(() => false);
+  // eslint-disable-next-line
   const [currentHeight, setCurrentHeight] = React.useState(() => 120);
 
   // for adding  selected filter
 
-  const [savedFilters, setSavedFilters] = useLocalStorage(`SavedFilters`, {});
+  const [savedFilters, setSavedFilters] = useLocalStorage(`SavedFilters`, []);
   const [designationFilter, setDesignationFilter] = React.useState('');
 
   React.useEffect(() => {
@@ -88,15 +90,28 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
       setCurrentHeight(document.getElementById('maher')!.offsetHeight!);
     }
   }, []);
-
   const handleSavedFiltersClick = useCallback(() => {
-    console.log('handleSavedFiltersClick');
-    setSavedFilters([{ label: designationFilter, value: filters }]);
-  }, [designationFilter]);
+    const found = savedFilters.find((f: any) => f.label === designationFilter);
+    if (found) {
+      savedFilters[savedFilters.findIndex((f: any) => f.label === designationFilter)] = {
+        label: designationFilter,
+        value: filters,
+      };
+    } else {
+      setSavedFilters([...savedFilters, { label: designationFilter, value: filters }]);
+    }
+  }, [designationFilter, filters, setSavedFilters, savedFilters]);
 
-  const handleSavedFiltersSelect = useCallback(() => {
-    setAllFilters(savedFilters.value);
-  }, []);
+  const handleSavedFiltersSelect = useCallback(
+    (selectedValue: any) => {
+      setDesignationFilter(selectedValue.label);
+      const indexofSelected = savedFilters.findIndex((f: any) => f.label === selectedValue.label);
+      if (indexofSelected) {
+        setAllFilters(savedFilters[indexofSelected].value);
+      }
+    },
+    [savedFilters, setAllFilters]
+  );
 
   return (
     <div className={(classes.columnsPopOver, classes.grid, classes.cell)} style={{ marginLeft: 5, marginRight: 5 }}>
@@ -124,13 +139,16 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
         <Box component='div' sx={{ display: 'flex', alignItems: 'end' }}>
           <StyledIconButton
             icon='DiskIcon'
-            style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}
+            style={{ margin: '5px', marginBottom: '0', border: '1px solid', borderRadius: '6px' }}
             onClick={handleSavedFiltersClick}
           >
             <DiskIcon height={20} width={20} />
           </StyledIconButton>
 
-          <StyledIconButton icon='VerticalDotsIcon' style={{ margin: '5px', marginBottom: '0', border: '1px solid' }}>
+          <StyledIconButton
+            icon='VerticalDotsIcon'
+            style={{ margin: '5px', marginBottom: '0', border: '1px solid', borderRadius: '6px' }}
+          >
             <VerticalDotsIcon height={20} width={20} />
           </StyledIconButton>
         </Box>

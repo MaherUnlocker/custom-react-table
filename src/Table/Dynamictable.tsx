@@ -30,7 +30,7 @@ type DynamicTableProps = {
   canSelect?: boolean;
   canResize?: boolean;
   showGlobalFilter?: boolean;
-  showFilterbyColumn?: boolean;
+  showFilter?: boolean;
   showColumnIcon?: boolean;
   canExpand?: boolean;
   canDeleteOrDuplicate?: boolean;
@@ -54,7 +54,7 @@ export default function DynamicTable({
   canExpand,
   canSelect,
   showGlobalFilter,
-  showFilterbyColumn,
+  showFilter,
   showColumnIcon,
   canDeleteOrDuplicate,
   arrayOfCustomColumns,
@@ -92,11 +92,7 @@ export default function DynamicTable({
                   Header: key,
                   accessor: key,
                   disableFilters: true,
-
-                  // eslint-disable-next-line
-                  Cell: (value: any) => {
-                    return <img src={value.cell.value} className='w-50' alt='' />;
-                  },
+                  Cell: (value: any) => <img src={value.cell.value} className='w-50' alt='' />,
                 };
               }
 
@@ -167,10 +163,7 @@ export default function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
-          // eslint-disable-next-line
-          Cell(cell: any) {
-            <elm.customJsx selectedRow={cell.row.original} />;
-          },
+          Cell: (cell: any) => <elm.customJsx selectedRow={cell.row.original} />,
         })
       );
     }
@@ -228,7 +221,7 @@ export default function DynamicTable({
       canResize={canResize}
       actionColumn={actionColumn}
       showGlobalFilter={showGlobalFilter}
-      showFilterbyColumn={showFilterbyColumn}
+      showFilter={showFilter}
       showColumnIcon={showColumnIcon}
       filterActive={filterActive}
       setLocalFilterActive={setLocalFilterActive}

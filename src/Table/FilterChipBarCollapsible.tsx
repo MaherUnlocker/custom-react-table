@@ -81,7 +81,7 @@ export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
       if (showMore) {
         setFiltersToShow(splicedFilter ? filters.slice(2, filters.length) : filters.slice(0, 2));
       }
-    }, [showMore]);
+    }, [showMore, splicedFilter]);
 
     return (
       <React.Fragment>

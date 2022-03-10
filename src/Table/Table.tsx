@@ -19,13 +19,21 @@ import {
   useFlexLayout,
   useGlobalFilter,
   useGroupBy,
+  useMountedLayoutEffect,
   usePagination,
   useResizeColumns,
   useRowSelect,
   useSortBy,
   useTable,
 } from 'react-table';
-import { CrossIcon, FilterIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
+import {
+  CrossIcon,
+  FilterIcon,
+  SettingsIcon,
+  StyledH2,
+  StyledLabel,
+  StyledSelectInput,
+} from '@aureskonnect/react-ui';
 import {
   HeaderCheckbox,
   RawTable,
@@ -44,12 +52,12 @@ import { camelToWords, useDebounce, useLocalStorage } from '../utils';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
 
 import CollapsibleTable from './CollapsibleTable';
+import { DynamicTableProps } from './DynamicTable';
 import { FilterChipBar } from './FilterChipBar';
 import { FilterPageCustom } from './FilterPageCustom';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { ResizeHandle } from './ResizeHandle';
-import SettingIcon from './SettingIcon';
 import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
@@ -58,23 +66,12 @@ import _uniqby from 'lodash.uniqby';
 // import _without from 'lodash.without';
 import cx from 'classnames';
 
-export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
+export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T>, DynamicTableProps {
   name: string;
   onAdd?: (instance: TableInstance<T>) => MouseEventHandler;
   onDelete?: (instance: TableInstance<T>) => MouseEventHandler;
   onEdit?: (instance: TableInstance<T>) => MouseEventHandler;
   onClick?: (row: Row<T>) => void;
-  canGroupBy?: boolean;
-  canSort?: boolean;
-  canResize?: boolean;
-  canSelect?: boolean;
-  showGlobalFilter?: boolean;
-  showFilter?: boolean;
-  showColumnIcon?: boolean;
-  filterActive?: boolean;
-  actionColumn?: React.ReactNode;
-  setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
-  customJsxSideFilterButton?: React.ReactNode;
 }
 
 function DefaultHeader({ column }: HeaderProps<any>) {
@@ -84,6 +81,7 @@ function DefaultHeader({ column }: HeaderProps<any>) {
 // yes this is recursive, but the depth never exceeds three so it seems safe enough
 const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<ColumnInstance<T>>): ColumnInstance<T> =>
   columns[0].columns ? findFirstColumn(columns[0].columns) : columns[0];
+
 function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column, rows, prepareRow }: FilterProps<T>) {
   const { filterValue, setFilter, render } = column;
   const [, setValue] = React.useState(filterValue || '');
@@ -92,6 +90,7 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   useEffect(() => {
     setValue(filterValue || '');
   }, [filterValue]);
+
   const FilterArray: any[] = rows.map((row) => {
     prepareRow(row);
     return (
@@ -209,6 +208,7 @@ export function Table<T extends Record<string, unknown>>({
   filterActive,
   setLocalFilterActive,
   customJsxSideFilterButton,
+  setSelectedRows,
   ...props
 }: PropsWithChildren<TableProperties<T>>): ReactElement {
   const classes = useStyles();
@@ -227,11 +227,11 @@ export function Table<T extends Record<string, unknown>>({
         maxWidth: 100,
         Header: () => (
           <div className='dropdown'>
-            <div id='dropdownMenuButton1' data-bs-toggle='dropdown' className=' dropdown-toggle'>
-              <SettingIcon />
+            <div id='dropdownHideColomuns' data-bs-toggle='dropdown' className=' dropdown-toggle'>
+              <SettingsIcon height={20} width={20} />
             </div>
 
-            <ul className='dropdown-menu ' aria-labelledby='dropdownMenuButton1'>
+            <ul className='dropdown-menu ' aria-labelledby='dropdownHideColomuns'>
               <div className='d-flex flex-column'>
                 {columns
                   .filter((column) => !(column.id === '_selector') && !(column.id === 'expander'))
@@ -290,9 +290,11 @@ export function Table<T extends Record<string, unknown>>({
     ...localHooks
   );
 
-  const { headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+  const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
   const debouncedState = useDebounce(state, 200);
-
+  useMountedLayoutEffect(() => {
+    setSelectedRows && setSelectedRows(selectedFlatRows.map((row) => row.original));
+  }, [setSelectedRows, selectedFlatRows]);
   useEffect(() => {
     const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState;
     setInitialState({

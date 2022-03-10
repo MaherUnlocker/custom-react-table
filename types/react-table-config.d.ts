@@ -136,5 +136,24 @@ declare module 'react-table' {
     customJsx: React.ReactNode;
   }
 }
+export type canSelectProps =
+  | {
+    canSelect: true;
+    onChange: () => void;
+  }
+  | {
+    canSelect: false;
+  };
+export type canSelectProps =
+  | {
+    canSelect: true;
+    onChange: () => void;
+  }
+  | {
+    canSelect: false;
+  };
+
+
+
 
 export type TableMouseEventHandler = (instance: TableInstance<T>) => MouseEventHandler

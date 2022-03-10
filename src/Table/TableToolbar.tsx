@@ -209,10 +209,10 @@ export function TableToolbar<T extends Record<string, unknown>>({
             >
               Filtrer
             </StyledButton>
+            {customJsxSideFilterButton}
           </React.Fragment>
         ) : null}
       </div>
-      {customJsxSideFilterButton}
     </Toolbar>
   );
 }

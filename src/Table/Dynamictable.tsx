@@ -10,6 +10,32 @@ import { Table } from './Table';
 import axios from 'axios';
 import { useStyles } from './TableStyle';
 
+export interface DynamicTableProps {
+  url?: string;
+  onClick?: (row: any) => void;
+
+  canGroupBy?: boolean;
+  canSort?: boolean;
+  canSelect?: boolean;
+  canResize?: boolean;
+  showGlobalFilter?: boolean;
+  showFilter?: boolean;
+  showColumnIcon?: boolean;
+  canExpand?: boolean;
+  canDeleteOrDuplicate?: boolean;
+  filterActive?: boolean;
+  actionColumn?: React.ReactNode;
+  customJsxSideFilterButton?: React.ReactNode;
+  arrayOfCustomColumns?: customColumnProps[] | undefined;
+  setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+export type apiResultProps = {
+  structure: string[];
+  data: any;
+};
+
 function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
   return rows.filter((row) => {
     const rowValue = row.values[id[0]];
@@ -23,28 +49,6 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
 // check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number';
 
-type DynamicTableProps = {
-  url: string;
-  canGroupBy?: boolean;
-  canSort?: boolean;
-  canSelect?: boolean;
-  canResize?: boolean;
-  showGlobalFilter?: boolean;
-  showFilter?: boolean;
-  showColumnIcon?: boolean;
-  canExpand?: boolean;
-  canDeleteOrDuplicate?: boolean;
-  filterActive?: boolean;
-  actionColumn?: React.ReactNode;
-  customJsxSideFilterButton?: React.ReactNode;
-  setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>>;
-  arrayOfCustomColumns?: customColumnProps[] | undefined;
-};
-
-type apiResultProps = {
-  structure: string[];
-  data: any;
-};
 export default function DynamicTable({
   url,
   actionColumn,
@@ -61,8 +65,11 @@ export default function DynamicTable({
   filterActive,
   setLocalFilterActive,
   customJsxSideFilterButton,
+  onClick,
+  setSelectedRows,
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = useState<apiResultProps>();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<null | any>(null);
   const classes = useStyles();
@@ -204,7 +211,7 @@ export default function DynamicTable({
   }, [apiResultColumns]);
 
   useEffect(() => {
-    fetchData(url);
+    fetchData(url!);
   }, [url]);
 
   if (loading) return <LoadingDataAnimation />;
@@ -214,6 +221,7 @@ export default function DynamicTable({
     <Table
       name={'myTable'}
       columns={columns}
+      setSelectedRows={setSelectedRows}
       data={apiResult?.data}
       canGroupBy={canGroupBy}
       canSort={canSort}
@@ -226,6 +234,7 @@ export default function DynamicTable({
       filterActive={filterActive}
       setLocalFilterActive={setLocalFilterActive}
       customJsxSideFilterButton={customJsxSideFilterButton}
+      onClick={onClick}
     />
   );
 }

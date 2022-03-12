@@ -26,14 +26,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-import {
-  CrossIcon,
-  FilterIcon,
-  SettingsIcon,
-  StyledH2,
-  StyledLabel,
-  StyledSelectInput,
-} from '@aureskonnect/react-ui';
+import { CrossIcon, FilterIcon, SettingsIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
 import {
   HeaderCheckbox,
   RawTable,
@@ -438,10 +431,10 @@ export function Table<T extends Record<string, unknown>>({
                   })}
                 </TableBody>
               </RawTable>
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <TablePagination<T> instance={instance} />
-              </Grid>
             </TableContainer>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', bottom: '0px', }}>
+              <TablePagination<T> instance={instance} />
+            </Grid>
           </Grid>
           {/* here the filter component is always in the right place*/}
           {filterActive ? (

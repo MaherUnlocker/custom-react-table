@@ -66,6 +66,9 @@ export default function App(): JSX.Element {
 
   return (
     <>
+      <div className='ro' style={{ height: '50px' }}>
+        maher{' '}
+      </div>
       <DynamicTable
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"

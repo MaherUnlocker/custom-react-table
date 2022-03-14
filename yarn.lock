@@ -9,10 +9,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@aureskonnect/react-ui@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@aureskonnect/react-ui/-/react-ui-3.18.0.tgz#56f66d7e8d869283f61652304df4f4d22083920a"
-  integrity sha512-6Wzj8BWVB7oVAj9HaPYp8jIwvfbFSkw8sGg+fPLpZGawMQ59Zr55VllaZ/wFY00xxPO/iMZeQ2R82ck3twSDew==
+"@aureskonnect/react-ui@latest":
+  version "3.20.0"
+  resolved "https://registry.yarnpkg.com/@aureskonnect/react-ui/-/react-ui-3.20.0.tgz#f4ca275c5a345acb7b0a22164e04226a3ba69b13"
+  integrity sha512-MR8Gg91p767JimSx0y8iNLmQQeInPTOd7idkXwa7Ecs0bjmucE0UqBeR58XIIOcjojREzLiMR9VJOFP1nd2Img==
   dependencies:
     "@metismenu/react" "^0.0.2"
     availity-reactstrap-validation "^2.7.1"

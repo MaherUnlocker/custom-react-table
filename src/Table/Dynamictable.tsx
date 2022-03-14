@@ -13,7 +13,7 @@ import { useStyles } from './TableStyle';
 export interface DynamicTableProps {
   url?: string;
   onClick?: (row: any) => void;
-
+  name?: string;
   canGroupBy?: boolean;
   canSort?: boolean;
   canSelect?: boolean;
@@ -51,6 +51,7 @@ filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number';
 
 export default function DynamicTable({
   url,
+  name,
   actionColumn,
   canGroupBy,
   canSort,
@@ -219,7 +220,7 @@ export default function DynamicTable({
 
   return (
     <Table
-      name={'myTable'}
+      name={name}
       columns={columns}
       setSelectedRows={setSelectedRows}
       data={apiResult?.data}

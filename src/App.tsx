@@ -68,7 +68,7 @@ export default function App(): JSX.Element {
     <>
       <DynamicTable
         //put your backed api url it's obligation  to get your date from api
-
+        // name="'mah'"
         url='http://localhost:4000/client'
         // url='http://localhost:4000/cards'
 
@@ -78,16 +78,16 @@ export default function App(): JSX.Element {
         // --->here you can add component side Filter Button
         customJsxSideFilterButton={<FilterSideComponent />}
         // --->here for grouping columns with same name
-        canGroupBy
+        // canGroupBy
         // --->here for sorting table
         canSort
         // --->here for resising with of column
         canResize
         // --->here for row and subrows
-        canExpand
+        // canExpand
         // --->here showing checkbox in the begin of RowTable with return you the checked rows
-        canSelect
-        setSelectedRows={setSelectedRows}
+        // canSelect
+        // setSelectedRows={setSelectedRows}
         // --->here showing golobal filter input on the top of table
         showGlobalFilter
         // --->here showing  filter button  on the top of table
@@ -102,7 +102,7 @@ export default function App(): JSX.Element {
 
         onClick={(row: any) => console.log(row.original)}
       />
-      <p>Selected Rows: {selectedRows.length}</p>
+      {/* <p>Selected Rows: {selectedRows.length}</p>
       <pre>
         <code>
           {JSON.stringify(
@@ -113,7 +113,7 @@ export default function App(): JSX.Element {
             2
           )}
         </code>
-      </pre>
+      </pre> */}
     </>
   );
 }

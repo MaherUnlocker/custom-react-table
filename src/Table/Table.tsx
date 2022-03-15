@@ -1,6 +1,6 @@
 import './table.css';
 
-import { Box, Grid, Paper, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
+import { Box, Divider, Grid, Paper, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
 import {
   Cell,
   CellProps,
@@ -26,7 +26,14 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-import { CrossIcon, FilterIcon, SettingsIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
+import {
+  CrossIcon,
+  FilterIcon,
+  StyledCheckbox,
+  StyledH2,
+  StyledLabel,
+  StyledSelectInput,
+} from '@aureskonnect/react-ui';
 import {
   HeaderCheckbox,
   RawTable,
@@ -44,6 +51,7 @@ import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElemen
 import { camelToWords, useDebounce, useLocalStorage } from '../utils';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
 
+import ChoiceIcon from './Choice';
 import CollapsibleTable from './CollapsibleTable';
 import { DynamicTableProps } from './DynamicTable';
 import { FilterChipBar } from './FilterChipBar';
@@ -222,23 +230,41 @@ export function Table<T extends Record<string, unknown>>({
         maxWidth: 100,
         Header: () => (
           <div className='dropdown'>
-            <div id='dropdownHideColomuns' data-bs-toggle='dropdown' className=' dropdown-toggle'>
-              <SettingsIcon height={20} width={20} />
+            <div id='dropdownHideColomuns' data-bs-toggle='dropdown'>
+              <ChoiceIcon height={25} width={25} />
             </div>
 
             <ul className='dropdown-menu ' aria-labelledby='dropdownHideColomuns'>
               <div className='d-flex flex-column'>
+                <div key='showall' className='   mx-2 d-flex align-items-center justify-content-between'>
+                  <label
+                    style={{
+                      font: 'normal normal normal 13px/17px Segoe UI',
+                      letterSpacing: '0px',
+                      color: '#495057 ',
+                    }}
+                  >
+                    Afficher tous:
+                  </label>
+                  <input type='checkbox' />
+                </div>
+                <Divider className={classes.DividerCss} />
                 {columns
                   .filter((column) => !(column.id === '_selector') && !(column.id === 'expander'))
                   .map((column: any) => (
-                    <div key={column.id} className=' pretty p-default p-curve p-fill my-2 d-flex align-items-center'>
-                      <input type='checkbox' className='mx-2' {...column.getToggleHiddenProps()} />
-                      <div className='state p-primary '>
-                        <label>{column.id}</label>
-                      </div>
+                    <div key={column.id} className='  my-1 mx-2 d-flex align-items-center justify-content-between'>
+                      <label
+                        style={{
+                          font: 'normal normal normal 13px/17px Segoe UI',
+                          letterSpacing: '0px',
+                          color: '#495057 ',
+                        }}
+                      >
+                        {column.id}
+                      </label>
+                      <input type='checkbox' {...column.getToggleHiddenProps()} />
                     </div>
                   ))}
-                <br />
               </div>
             </ul>
           </div>
@@ -307,34 +333,30 @@ export function Table<T extends Record<string, unknown>>({
 
   return (
     <Paper elevation={0} sx={{ paddingX: 1 }}>
-      <TableToolbar
-        instance={instance}
-        {...{
-          showGlobalFilter,
-          showFilter,
-          showColumnIcon,
-          filterActive,
-          setLocalFilterActive,
-          customJsxSideFilterButton,
-        }}
-      />
-      <FilterChipBar instance={instance} />
+      <Paper elevation={2} sx={{ marginTop: '2px' }}>
+        <TableToolbar
+          instance={instance}
+          {...{
+            showGlobalFilter,
+            showFilter,
+            showColumnIcon,
+            filterActive,
+            setLocalFilterActive,
+            customJsxSideFilterButton,
+          }}
+        />
+        <FilterChipBar instance={instance} />
+      </Paper>
 
-      <Paper elevation={0} sx={{ display: { xs: 'none', md: 'block' }, marginTop: 2 }}>
+      <Divider className={classes.DividerCss} />
+
+      <Paper elevation={2} sx={{ display: { xs: 'none', md: 'block' }, marginTop: '2px' }}>
         <Grid
           container
-          spacing={1}
           direction={'row'}
           sx={{ display: 'grid', gridTemplateColumns: filterActive ? '2fr 1fr ' : 'auto', gridColumnGap: '10px' }}
         >
-          {/* <Grid
-            container
-            item
-            // xs={filterActive ? 8 : 12}
-            className='table-responsive'
-            sx={{ maxHeight: '80vh', minHeight: '80vh' }}
-          > */}
-          <TableContainer sx={{ overflowX: 'auto', maxHeight: '90vh' }} className='table-responsive'>
+          <TableContainer sx={{ overflowX: 'auto', maxHeight: '630px' }} className='table-responsive'>
             <RawTable>
               <TableHead>
                 {headerGroups.map((headerGroup) => {
@@ -397,6 +419,7 @@ export function Table<T extends Record<string, unknown>>({
                   );
                 })}
               </TableHead>
+              <Divider className={classes.DividerCss} />
               <TableBody {...getTableBodyProps()}>
                 {page.map((row) => {
                   prepareRow(row);
@@ -445,15 +468,14 @@ export function Table<T extends Record<string, unknown>>({
               </TableBody>
             </RawTable>
           </TableContainer>
-          {/* </Grid> */}
 
           {/* here the filter component is always in the right place*/}
           {filterActive ? (
-            <Grid item className={classes.FiltersCss}>
+            <Paper elevation={2}>
               <Box
                 component='div'
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingX: 1 }}
-                className={classes.tableHeadRow}
+                className={classes.FiltersCss}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <FilterIcon className={classes.tableFilterAltOutlinedIcon} style={{ flexDirection: 'row-reverse' }} />
@@ -468,12 +490,13 @@ export function Table<T extends Record<string, unknown>>({
                   }}
                 />
               </Box>
+              <Divider className={classes.DividerCss} />
               <FilterPageCustom<T>
                 instance={instance}
                 setLocalFilterActive={setLocalFilterActive}
                 filterActive={filterActive}
               />
-            </Grid>
+            </Paper>
           ) : null}
         </Grid>
         <Grid item xs={filterActive ? 8 : 12}>

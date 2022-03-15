@@ -1,4 +1,4 @@
-import DynamicTable from './Table/DynamicTable';
+import {DynamicTable} from './Table/DynamicTable';
 import React from 'react';
 import { VerticalDotsIcon } from '@aureskonnect/react-ui';
 // eslint-disable-next-line
@@ -65,58 +65,54 @@ export default function App(): JSX.Element {
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
 
   return (
-    <>
-      <div className='ro' style={{ height: '50px' }}>
-        maher{' '}
-      </div>
-      <DynamicTable
-        //put your backed api url it's obligation  to get your date from api
-        // name="'mah'"
-        url='http://localhost:4000/client'
-        // url='http://localhost:4000/cards'
+    <DynamicTable
+      //put your backed api url it's obligation  to get your date from api
+      // name="'mah'"
+      url='http://localhost:4000/client'
+      // url='http://localhost:4000/cards'
 
-        //optionnal props
-        // --->here for add cusom component in the end of table
-        actionColumn={SelectAccountDropdown}
-        // --->here you can add component side Filter Button
-        customJsxSideFilterButton={<FilterSideComponent />}
-        // --->here for grouping columns with same name
-        // canGroupBy
-        // --->here for sorting table
-        canSort
-        // --->here for resising with of column
-        canResize
-        // --->here for row and subrows
-        // canExpand
-        // --->here showing checkbox in the begin of RowTable with return you the checked rows
-        // canSelect
-        // setSelectedRows={setSelectedRows}
-        // --->here showing golobal filter input on the top of table
-        showGlobalFilter
-        // --->here showing  filter button  on the top of table
-        showFilter
-        filterActive={filterActive}
-        setLocalFilterActive={setLocalFilterActive}
-        // --->here add action header with delete and duplicate
-        canDeleteOrDuplicate
-        // --->here you can add any column to the table in the specified place with custom name and customjsx
-        // arrayOfCustomColumns={arrayOfCustomColumns}
-        // --->here  if you dont have any other click in row you can use to get clicked row details
+      //optionnal props
+      // --->here for add cusom component in the end of table
+      actionColumn={SelectAccountDropdown}
+      // --->here you can add component side Filter Button
+      customJsxSideFilterButton={<FilterSideComponent />}
+      // --->here for grouping columns with same name
+      // canGroupBy
+      // --->here for sorting table
+      canSort
+      // --->here for resising with of column
+      canResize
+      // --->here for row and subrows
+      // canExpand
+      // --->here showing checkbox in the begin of RowTable with return you the checked rows
+      // canSelect
+      // setSelectedRows={setSelectedRows}
+      // --->here showing golobal filter input on the top of table
+      showGlobalFilter
+      // --->here showing  filter button  on the top of table
+      showFilter
+      filterActive={filterActive}
+      setLocalFilterActive={setLocalFilterActive}
+      // --->here add action header with delete and duplicate
+      canDeleteOrDuplicate
+      // --->here you can add any column to the table in the specified place with custom name and customjsx
+      // arrayOfCustomColumns={arrayOfCustomColumns}
+      // --->here  if you dont have any other click in row you can use to get clicked row details
 
-        onClick={(row: any) => console.log(row.original)}
-      />
-      {/* <p>Selected Rows: {selectedRows.length}</p>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              selectedRows,
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre> */}
-    </>
+      onClick={(row: any) => console.log(row.original)}
+    />
+
+    //  <p>Selected Rows: {selectedRows.length}</p>
+    // <pre>
+    //   <code>
+    //     {JSON.stringify(
+    //       {
+    //         selectedRows,
+    //       },
+    //       null,
+    //       2
+    //     )}
+    //   </code>
+    // </pre>
   );
 }

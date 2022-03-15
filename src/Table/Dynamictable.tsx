@@ -49,7 +49,7 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
 // check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number';
 
-export default function DynamicTable({
+export function DynamicTable({
   url,
   name,
   actionColumn,

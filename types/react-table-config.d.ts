@@ -2,6 +2,7 @@ import { MouseEventHandler } from 'react'
 import {
   TableInstance,
   UseColumnOrderInstanceProps,
+  getToggleHideAllColumnsProps,
   UseColumnOrderState,
   UseExpandedHooks,
   UseExpandedInstanceProps,

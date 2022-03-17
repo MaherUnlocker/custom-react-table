@@ -53,6 +53,7 @@ import { fuzzyTextFilter, numericTextFilter } from './filters';
 
 import ChoiceIcon from './Choice';
 import CollapsibleTable from './CollapsibleTable';
+import { ColumnHidePageCustom } from './ColumnHidePageCustom';
 import { DynamicTableProps } from './DynamicTable';
 import { FilterChipBar } from './FilterChipBar';
 import { FilterPageCustom } from './FilterPageCustom';
@@ -209,6 +210,9 @@ export function Table<T extends Record<string, unknown>>({
   setLocalFilterActive,
   customJsxSideFilterButton,
   setSelectedRows,
+  elevationTable,
+  minHeight,
+  maxHeight,
   ...props
 }: PropsWithChildren<TableProperties<T>>): ReactElement {
   const classes = useStyles();
@@ -228,6 +232,7 @@ export function Table<T extends Record<string, unknown>>({
         minWidth: 60,
         width: 60,
         maxWidth: 100,
+
         Header: () => (
           <div className='dropdown'>
             <div id='dropdownHideColomuns' data-bs-toggle='dropdown'>
@@ -235,37 +240,7 @@ export function Table<T extends Record<string, unknown>>({
             </div>
 
             <ul className='dropdown-menu ' aria-labelledby='dropdownHideColomuns'>
-              <div className='d-flex flex-column'>
-                <div key='showall' className='   mx-2 d-flex align-items-center justify-content-between'>
-                  <label
-                    style={{
-                      font: 'normal normal normal 13px/17px Segoe UI',
-                      letterSpacing: '0px',
-                      color: '#495057 ',
-                    }}
-                  >
-                    Afficher tous:
-                  </label>
-                  <input type='checkbox' />
-                </div>
-                <Divider className={classes.DividerCss} />
-                {columns
-                  .filter((column) => !(column.id === '_selector') && !(column.id === 'expander'))
-                  .map((column: any) => (
-                    <div key={column.id} className='  my-1 mx-2 d-flex align-items-center justify-content-between'>
-                      <label
-                        style={{
-                          font: 'normal normal normal 13px/17px Segoe UI',
-                          letterSpacing: '0px',
-                          color: '#495057 ',
-                        }}
-                      >
-                        {column.id}
-                      </label>
-                      <input type='checkbox' {...column.getToggleHiddenProps()} />
-                    </div>
-                  ))}
-              </div>
+              <ColumnHidePageCustom instance={instance} />
             </ul>
           </div>
         ),
@@ -310,7 +285,7 @@ export function Table<T extends Record<string, unknown>>({
     },
     ...localHooks
   );
-
+  console.log({ instance });
   const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
   const debouncedState = useDebounce(state, 200);
   useMountedLayoutEffect(() => {
@@ -330,10 +305,13 @@ export function Table<T extends Record<string, unknown>>({
   const cellClickHandler = (cell: Cell<T>) => () => {
     onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
   };
-
   return (
-    <Paper elevation={0} sx={{ paddingX: 1 }}>
-      <Paper elevation={2} sx={{ marginTop: '2px' }}>
+    <Paper elevation={elevationTable}>
+      <Paper
+        elevation={elevationTable}
+        sx={{ marginTop: '2px' }}
+        className={!showGlobalFilter && !showFilter && !showColumnIcon ? 'd-none' : ''}
+      >
         <TableToolbar
           instance={instance}
           {...{
@@ -348,15 +326,20 @@ export function Table<T extends Record<string, unknown>>({
         <FilterChipBar instance={instance} />
       </Paper>
 
-      <Divider className={classes.DividerCss} />
-
-      <Paper elevation={2} sx={{ display: { xs: 'none', md: 'block' }, marginTop: '2px' }}>
+      <Paper id={name} elevation={elevationTable} sx={{ display: { xs: 'none', md: 'block' }, marginTop: '10px' }}>
         <Grid
           container
           direction={'row'}
           sx={{ display: 'grid', gridTemplateColumns: filterActive ? '2fr 1fr ' : 'auto', gridColumnGap: '10px' }}
         >
-          <TableContainer sx={{ overflowX: 'auto', maxHeight: '630px' }} className='table-responsive'>
+          <TableContainer
+            sx={{
+              overflowX: 'auto',
+              maxHeight: maxHeight === 0 || maxHeight === '' || maxHeight === undefined ? '630px' : maxHeight,
+              minHeight: minHeight === 0 || minHeight === '' || minHeight === undefined ? '580px' : minHeight,
+            }}
+            className='table-responsive'
+          >
             <RawTable>
               <TableHead>
                 {headerGroups.map((headerGroup) => {
@@ -468,10 +451,9 @@ export function Table<T extends Record<string, unknown>>({
               </TableBody>
             </RawTable>
           </TableContainer>
-
           {/* here the filter component is always in the right place*/}
           {filterActive ? (
-            <Paper elevation={2}>
+            <Paper elevation={elevationTable}>
               <Box
                 component='div'
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingX: 1 }}
@@ -479,7 +461,7 @@ export function Table<T extends Record<string, unknown>>({
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <FilterIcon className={classes.tableFilterAltOutlinedIcon} style={{ flexDirection: 'row-reverse' }} />
-                  <StyledH2>Filtres</StyledH2>
+                  <StyledH2>Filtre(s)</StyledH2>
                 </Box>
 
                 <CrossIcon
@@ -509,8 +491,8 @@ export function Table<T extends Record<string, unknown>>({
       <Paper sx={{ display: { xl: 'none', md: 'none' } }}>
         {/* MOBILE EXPANDABLE LIST OF CARDS */}
         <CollapsibleTable props={instance} />
+        <TablePagination<T> instance={instance} />
       </Paper>
-      {/* <TablePagination<T> instance={instance} /> */}
     </Paper>
   );
 }

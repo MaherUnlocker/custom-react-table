@@ -13,7 +13,12 @@ import { useStyles } from './TableStyle';
 export interface DynamicTableProps {
   url?: string;
   onClick?: (row: any) => void;
+  setDataIsUpdated?: React.Dispatch<React.SetStateAction<boolean | number>>;
+  dataIsUpdated?: boolean | number;
   name?: string;
+  minHeight?: number | string;
+  maxHeight?: number | string;
+
   canGroupBy?: boolean;
   canSort?: boolean;
   canSelect?: boolean;
@@ -23,6 +28,7 @@ export interface DynamicTableProps {
   showColumnIcon?: boolean;
   canExpand?: boolean;
   canDeleteOrDuplicate?: boolean;
+  elevationTable?: number;
   filterActive?: boolean;
   actionColumn?: React.ReactNode;
   customJsxSideFilterButton?: React.ReactNode;
@@ -67,7 +73,12 @@ export function DynamicTable({
   setLocalFilterActive,
   customJsxSideFilterButton,
   onClick,
+  elevationTable,
   setSelectedRows,
+  setDataIsUpdated,
+  dataIsUpdated,
+  minHeight,
+  maxHeight,
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = useState<apiResultProps>();
 
@@ -87,7 +98,9 @@ export function DynamicTable({
         setLoading(false);
       });
   }
-
+  if (elevationTable === undefined) {
+    elevationTable = 0;
+  }
   const apiResultColumns = useMemo(
     () =>
       apiResult
@@ -213,7 +226,8 @@ export function DynamicTable({
 
   useEffect(() => {
     fetchData(url!);
-  }, [url]);
+    setDataIsUpdated!(false);
+  }, [url, dataIsUpdated, setDataIsUpdated]);
 
   if (loading) return <LoadingDataAnimation />;
   if (error) return <LoadingErrorAnimation />;
@@ -236,6 +250,9 @@ export function DynamicTable({
       setLocalFilterActive={setLocalFilterActive}
       customJsxSideFilterButton={customJsxSideFilterButton}
       onClick={onClick}
+      elevationTable={elevationTable}
+      minHeight={minHeight}
+      maxHeight={maxHeight}
     />
   );
 }

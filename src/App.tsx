@@ -1,4 +1,4 @@
-import {DynamicTable} from './Table/DynamicTable';
+import { DynamicTable } from './Table/DynamicTable';
 import React from 'react';
 import { VerticalDotsIcon } from '@aureskonnect/react-ui';
 // eslint-disable-next-line
@@ -63,6 +63,8 @@ arrayOfCustomColumns.push(
 export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
+  const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
+  console.log(dataIsUpdated);
 
   return (
     <DynamicTable
@@ -75,11 +77,12 @@ export default function App(): JSX.Element {
       // --->here for add cusom component in the end of table
       actionColumn={SelectAccountDropdown}
       // --->here you can add component side Filter Button
-      customJsxSideFilterButton={<FilterSideComponent />}
+      // customJsxSideFilterButton={<FilterSideComponent />}
       // --->here for grouping columns with same name
       // canGroupBy
       // --->here for sorting table
       canSort
+      showColumnIcon
       // --->here for resising with of column
       canResize
       // --->here for row and subrows
@@ -100,6 +103,14 @@ export default function App(): JSX.Element {
       // --->here  if you dont have any other click in row you can use to get clicked row details
 
       onClick={(row: any) => console.log(row.original)}
+      // when you update your backend set dataIsUpdated to true to render table
+      setDataIsUpdated={setDataIsUpdated}
+      dataIsUpdated={dataIsUpdated}
+      // if you need your table is elevated in his parent
+      elevationTable={2}
+      //this for let you modify the height of the table and min height you can put number or string
+      minHeight='200px'
+      maxHeight={'90vh'}
     />
 
     //  <p>Selected Rows: {selectedRows.length}</p>

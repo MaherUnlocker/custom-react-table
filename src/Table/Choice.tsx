@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ChoiceIcon(props: React.SVGProps<SVGSVGElement>) {
+export default function ChoiceIcon(props: React.SVGProps<SVGSVGElement>):JSX.Element {
   return (
     <svg xmlns='http://www.w3.org/2000/svg' width={24.007} height={21.893} {...props}>
       <g data-name='Groupe 18578' fill='#2b2828'>

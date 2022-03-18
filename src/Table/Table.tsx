@@ -26,14 +26,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-import {
-  CrossIcon,
-  FilterIcon,
-  StyledCheckbox,
-  StyledH2,
-  StyledLabel,
-  StyledSelectInput,
-} from '@aureskonnect/react-ui';
+import { CrossIcon, FilterIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
 import {
   HeaderCheckbox,
   RawTable,
@@ -329,6 +322,7 @@ export function Table<T extends Record<string, unknown>>({
       <Paper id={name} elevation={elevationTable} sx={{ display: { xs: 'none', md: 'block' }, marginTop: '10px' }}>
         <Grid
           container
+          id="tablecontainer"
           direction={'row'}
           sx={{ display: 'grid', gridTemplateColumns: filterActive ? '2fr 1fr ' : 'auto', gridColumnGap: '10px' }}
         >

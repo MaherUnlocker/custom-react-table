@@ -13,14 +13,14 @@ export function ColumnHidePageCustom<T extends Record<string, unknown>>({
 }: ColumnHidePageProps<T>): ReactElement | null {
   const classes = useStyles();
   const [isVisible, setIsVisible] = React.useState(false);
-  const { allColumns, toggleHideAllColumns, toggleHideColumn, allColumnsHidden } = instance;
+  const { allColumns, toggleHideAllColumns, toggleHideColumn } = instance;
   const hideableColumns = allColumns.filter(
     (column) => !(column.id === '_selector') && !(column.id === 'expander') && !(column.id === 'hidecolumns')
   );
 
-  let uncheckedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
+  const uncheckedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
   const onlyOneOptionLeft = uncheckedCount + 1 >= hideableColumns.length;
-
+  // eslint-disable-next-line
   function toggleAllColumnsVisibility() {
     console.log('uncheckedCount:', { uncheckedCount });
     if (uncheckedCount === 0) {

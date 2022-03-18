@@ -223,11 +223,13 @@ export function DynamicTable({
     return modifiedColumns;
     // eslint-disable-next-line
   }, [apiResultColumns]);
-
+  const data = React.useMemo(() => apiResult?.data, [apiResult]);
   useEffect(() => {
     fetchData(url!);
-    setDataIsUpdated!(false);
-  }, [url, dataIsUpdated, setDataIsUpdated]);
+    setDataIsUpdated !== undefined && setDataIsUpdated(false);
+
+    // eslint-disable-next-line
+  }, [url, dataIsUpdated]);
 
   if (loading) return <LoadingDataAnimation />;
   if (error) return <LoadingErrorAnimation />;
@@ -237,7 +239,7 @@ export function DynamicTable({
       name={name}
       columns={columns}
       setSelectedRows={setSelectedRows}
-      data={apiResult?.data}
+      data={data}
       canGroupBy={canGroupBy}
       canSort={canSort}
       canSelect={canSelect}

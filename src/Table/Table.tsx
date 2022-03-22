@@ -47,12 +47,14 @@ import { fuzzyTextFilter, numericTextFilter } from './filters';
 import ChoiceIcon from './Choice';
 import CollapsibleTable from './CollapsibleTable';
 import { ColumnHidePageCustom } from './ColumnHidePageCustom';
+import DefaultGlobalFilter from './filters/defaultGlobalFilter';
 import { DynamicTableProps } from './DynamicTable';
 import { FilterChipBar } from './FilterChipBar';
 import { FilterPageCustom } from './FilterPageCustom';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { ResizeHandle } from './ResizeHandle';
+import SvgNoData from './SvgNoData';
 import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
@@ -222,10 +224,12 @@ export function Table<T extends Record<string, unknown>>({
         id: 'hidecolumns',
         disableResizing: true,
         disableGroupBy: true,
+        accessor: 'hidecolumns',
         minWidth: 60,
         width: 60,
         maxWidth: 100,
-
+        canFilter: false,
+        disableFilters: true,
         Header: () => (
           <div className='dropdown'>
             <div id='dropdownHideColomuns' data-bs-toggle='dropdown'>
@@ -267,6 +271,7 @@ export function Table<T extends Record<string, unknown>>({
   if (actionColumn !== undefined) {
     localHooks.push(customHooks as any);
   }
+  const filterOptions = { filteredIds: [] };
 
   const instance = useTable<T>(
     {
@@ -274,11 +279,13 @@ export function Table<T extends Record<string, unknown>>({
       columns,
       filterTypes,
       defaultColumn,
+      getSubRows: (row: any) => row.subRows,
+      globalFilter: (rows, columnIds, filterValue) => DefaultGlobalFilter(rows, columnIds, filterValue, filterOptions),
+
       initialState,
     },
     ...localHooks
   );
-  console.log({ instance });
   const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
   const debouncedState = useDebounce(state, 200);
   useMountedLayoutEffect(() => {
@@ -298,6 +305,7 @@ export function Table<T extends Record<string, unknown>>({
   const cellClickHandler = (cell: Cell<T>) => () => {
     onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
   };
+
   return (
     <Paper elevation={elevationTable}>
       <Paper
@@ -322,7 +330,7 @@ export function Table<T extends Record<string, unknown>>({
       <Paper id={name} elevation={elevationTable} sx={{ display: { xs: 'none', md: 'block' }, marginTop: '10px' }}>
         <Grid
           container
-          id="tablecontainer"
+          id='tablecontainer'
           direction={'row'}
           sx={{ display: 'grid', gridTemplateColumns: filterActive ? '2fr 1fr ' : 'auto', gridColumnGap: '10px' }}
         >
@@ -397,53 +405,58 @@ export function Table<T extends Record<string, unknown>>({
                 })}
               </TableHead>
               <Divider className={classes.DividerCss} />
-              <TableBody {...getTableBodyProps()}>
-                {page.map((row) => {
-                  prepareRow(row);
-                  const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
+              <TableBody {...getTableBodyProps()} className={page.length === 0 ? classes.SvgNoDataCss : ''}>
+                {page.length !== 0
+                  ? page.map((row) => {
+                      prepareRow(row);
+                      const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
 
-                  return (
-                    <TableRow
-                      key={rowKey}
-                      {...getRowProps}
-                      className={cx({
-                        rowSelected: row.isSelected,
-                        clickable: onClick,
-                      })}
-                    >
-                      {row.cells.map((cell) => {
-                        const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
+                      return (
+                        <TableRow
+                          key={rowKey}
+                          {...getRowProps}
+                          className={cx({
+                            rowSelected: row.isSelected,
+                            clickable: onClick,
+                          })}
+                        >
+                          {row.cells.map((cell) => {
+                            const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
 
-                        return (
-                          <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
-                            {cell.isGrouped ? (
-                              <>
-                                <TableSortLabel
-                                  classes={{
-                                    iconDirectionAsc: classes.iconDirectionAsc,
-                                    iconDirectionDesc: classes.iconDirectionDesc,
-                                  }}
-                                  active
-                                  direction={row.isExpanded ? 'desc' : 'asc'}
-                                  IconComponent={KeyboardArrowUp}
-                                  {...row.getToggleRowExpandedProps()}
-                                  className={classes.cellIcon}
-                                />{' '}
-                                {cell.render('Cell', { editable: false })} ({row.subRows.length})
-                              </>
-                            ) : cell.isAggregated ? (
-                              cell.render('Aggregated')
-                            ) : cell.isPlaceholder ? null : (
-                              cell.render('Cell')
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+                            return (
+                              <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
+                                {cell.isGrouped ? (
+                                  <>
+                                    <TableSortLabel
+                                      classes={{
+                                        iconDirectionAsc: classes.iconDirectionAsc,
+                                        iconDirectionDesc: classes.iconDirectionDesc,
+                                      }}
+                                      active
+                                      direction={row.isExpanded ? 'desc' : 'asc'}
+                                      IconComponent={KeyboardArrowUp}
+                                      {...row.getToggleRowExpandedProps()}
+                                      className={classes.cellIcon}
+                                    />{' '}
+                                    {cell.render('Cell', { editable: false })} ({row.subRows.length})
+                                  </>
+                                ) : cell.isAggregated ? (
+                                  cell.render('Aggregated')
+                                ) : cell.isPlaceholder ? null : (
+                                  cell.render('Cell')
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })
+                  : null}
               </TableBody>
             </RawTable>
+            <div className={page.length === 0 ? classes.SvgNoDataCss : 'd-none'}>
+              <SvgNoData />
+            </div>
           </TableContainer>
           {/* here the filter component is always in the right place*/}
           {filterActive ? (

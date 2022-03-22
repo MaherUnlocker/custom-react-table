@@ -2,27 +2,38 @@ import { DynamicTable } from './Table/DynamicTable';
 import React from 'react';
 import { VerticalDotsIcon } from '@aureskonnect/react-ui';
 // eslint-disable-next-line
-function SelectAccountDropdown(props: any) {
-  return (
-    <div className='w-100'>
-      <div className='dropdown'>
-        <VerticalDotsIcon
-          height={25}
-          width={25}
-          id='dropdownMenuButton1'
-          data-bs-toggle='dropdown'
-          // className=" dropdown-toggle"
-        />
-        <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-          <div className='dropdown-item'>Accéder à la carte</div>
-          <div className='dropdown-item'>Voir la liste des boutiques</div>
-        </div>
-      </div>
-    </div>
-  );
+function SelectAccountDropdown(original: any) {
+  return null;
+  // <div className='w-100'>
+  //   <div className='dropdown'>
+  //     <VerticalDotsIcon
+  //       height={25}
+  //       width={25}
+  //       id='dropdownMenuButton1'
+  //       data-bs-toggle='dropdown'
+  //       onClick={(e) => {
+  //         // alert(original.selectedRow.original);
+  //         e.stopPropagation();
+  //       }}
+  //       // className=" dropdown-toggle"
+  //     />
+  //     <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+  //       <div
+  //         className='dropdown-item'
+  //         onClick={(e) => {
+  //           alert(original.selectedRow.original);
+  //           e.stopPropagation();
+  //         }}
+  //       >
+  //         Accéder à la carte
+  //       </div>
+  //       <div className='dropdown-item'>Voirffffff la liste des boutiques</div>
+  //     </div>
+  //   </div>
+  // </div>
 }
 
-function SelectAccountDropdown2(props: any) {
+function SelectAccountDropdown2({ row }: any) {
   return (
     <div className='w-100 d-flex justify-content-center'>
       <div className='dropdown'>
@@ -43,8 +54,18 @@ function SelectAccountDropdown2(props: any) {
   );
 }
 
-function FilterSideComponent(): JSX.Element {
-  return <button className='mx-3'>Custom Component</button>;
+function FilterSideComponent(original: any): JSX.Element {
+  return (
+    <button
+      className='mx-3'
+      onClick={(e) => {
+        alert('original.selectedRow.original');
+        e.stopPropagation();
+      }}
+    >
+      Custom Component
+    </button>
+  );
 }
 
 interface customColumnProps {
@@ -57,22 +78,20 @@ interface customColumnProps {
 let arrayOfCustomColumns: customColumnProps[] = [];
 arrayOfCustomColumns.push(
   { indexOFColumn: 4, columnName: 'column1', customJsx: SelectAccountDropdown2 },
-  { indexOFColumn: 2, columnName: 'column2', customJsx: SelectAccountDropdown }
+  { indexOFColumn: 2, columnName: 'column2', customJsx: FilterSideComponent }
 );
 
 export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
-  console.log(dataIsUpdated);
 
   return (
     <DynamicTable
       //put your backed api url it's obligation  to get your date from api
       // name="'mah'"
       url='http://localhost:4000/client'
-      // url='http://localhost:4000/cards'
-
+      // url='http://localhost:4000/products'
       //optionnal props
       // --->here for add cusom component in the end of table
       actionColumn={SelectAccountDropdown}
@@ -86,7 +105,7 @@ export default function App(): JSX.Element {
       // --->here for resising with of column
       canResize
       // --->here for row and subrows
-      // canExpand
+      canExpand
       // --->here showing checkbox in the begin of RowTable with return you the checked rows
       // canSelect
       // setSelectedRows={setSelectedRows}
@@ -102,15 +121,15 @@ export default function App(): JSX.Element {
       // arrayOfCustomColumns={arrayOfCustomColumns}
       // --->here  if you dont have any other click in row you can use to get clicked row details
 
-      onClick={(row: any) => console.log(row.original)}
+      // onClick={(row: any) => alert('row.original')}
       // when you update your backend set dataIsUpdated to true to render table
       setDataIsUpdated={setDataIsUpdated}
       dataIsUpdated={dataIsUpdated}
       // if you need your table is elevated in his parent
-      elevationTable={2}
+      elevationTable={3}
       //this for let you modify the height of the table and min height you can put number or string
-      minHeight='200px'
-      maxHeight={'90vh'}
+      minHeight='70vh'
+      maxHeight='80vh'
     />
 
     //  <p>Selected Rows: {selectedRows.length}</p>

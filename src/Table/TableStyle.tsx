@@ -30,6 +30,7 @@ export const useStyles = makeStyles({
     zIndex: 200,
     borderTop: '0',
     marginTop: '0',
+    marginBottom: '2',
     paddingTop: '0',
   },
   tableHeadRow: {
@@ -165,8 +166,9 @@ export const useStyles = makeStyles({
     paddingLeft: '0 !important',
     paddingTop: '0 !important',
     height: '45px !important',
-    backgroundColor: '#F8F8FB ',
+    backgroundColor: ' var(--unnamed-color-ffffff) 0% 0% no-repeat padding-box ',
     alignItems: 'center',
+    minHeight: '64px',
   },
   DividerCss: {
     background: '#F7F7FA 0% 0% no-repeat padding-box',
@@ -180,6 +182,13 @@ export const useStyles = makeStyles({
     alignItems: 'center!important',
     border: '0',
     height: '100%',
+  },
+  cardHeaderCss: {
+    padding: '0 ',
+    backgroundColor: 'white',
+    boxShadow: 'rgb(209 197 197) 0px 1px 4px',
+    borderRadius: '5px !important',
+    marginBottom: '4px !important',
   },
 });
 

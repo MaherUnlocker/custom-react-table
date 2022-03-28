@@ -17,7 +17,8 @@ const useStyles = makeStyles({
   cell_short: {
     lineHeight: '1.5rem',
     fontWeight: '700!important',
-    width: 100,
+    // width: 100,
+    border: '0 !important',
   },
 });
 
@@ -65,8 +66,8 @@ function MobileRow(props: any): React.ReactElement {
         </TableCell>
       </TableRow>
 
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+      <TableRow style={{ marginTop: '2px' }}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 0 }} colSpan={6}>
           <Collapse in={open} timeout='auto' unmountOnExit>
             <Box sx={{ marginLeft: 0, marginRight: 0 }}>
               <Table aria-label={row.id}>
@@ -107,7 +108,9 @@ function MobileRow(props: any): React.ReactElement {
                             <TableCell scope='key' variant='body' className={classes.cell_short}>
                               {headerGroup.id}
                             </TableCell>
-                            <TableCell scope='key'>{dataRow[headerGroup.id]}</TableCell>
+                            <TableCell scope='key' style={{ border: 0 }}>
+                              {dataRow[headerGroup.id]}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -125,9 +128,9 @@ function MobileRow(props: any): React.ReactElement {
 export default function CollapsibleTable(props: any): React.ReactElement {
   const { headerGroups, page } = props.props;
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} style={{ minHeight: '200', maxHeight: '99vh', overflowX: 'hidden' }}>
       <Table aria-label='collapsible table' stickyHeader>
-        <TableHead>
+        <TableHead style={{ zIndex: '200', position: 'sticky', borderTop: '0', top: '0' }}>
           <TableRow>
             {headerGroups[0]?.headers
 

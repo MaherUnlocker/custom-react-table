@@ -85,64 +85,65 @@ export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
-
   return (
-    <DynamicTable
-      //put your backed api url it's obligation  to get your date from api
-      // name="'mah'"
-      url='http://localhost:4000/client'
-      // url='http://localhost:4000/products'
-      //optionnal props
-      // --->here for add cusom component in the end of table
-      actionColumn={SelectAccountDropdown}
-      // --->here you can add component side Filter Button
-      // customJsxSideFilterButton={<FilterSideComponent />}
-      // --->here for grouping columns with same name
-      // canGroupBy
-      // --->here for sorting table
-      canSort
-      showColumnIcon
-      // --->here for resising with of column
-      canResize
-      // --->here for row and subrows
-      canExpand
-      // --->here showing checkbox in the begin of RowTable with return you the checked rows
-      // canSelect
-      // setSelectedRows={setSelectedRows}
-      // --->here showing golobal filter input on the top of table
-      showGlobalFilter
-      // --->here showing  filter button  on the top of table
-      showFilter
-      filterActive={filterActive}
-      setLocalFilterActive={setLocalFilterActive}
-      // --->here add action header with delete and duplicate
-      canDeleteOrDuplicate
-      // --->here you can add any column to the table in the specified place with custom name and customjsx
-      // arrayOfCustomColumns={arrayOfCustomColumns}
-      // --->here  if you dont have any other click in row you can use to get clicked row details
+    <>
+      <DynamicTable
+        //put your backed api url it's obligation  to get your date from api
+        // name="'mah'"
+        // url='http://192.168.2.8:4000/categories'
+        url='http://localhost:4000/client'
+        // url='http://localhost:4000/products'
+        //optionnal props
+        // --->here for add cusom component in the end of table
+        actionColumn={SelectAccountDropdown}
+        // --->here you can add component side Filter Button
+        // customJsxSideFilterButton={<FilterSideComponent />}
+        // --->here for grouping columns with same name
 
-      // onClick={(row: any) => alert('row.original')}
-      // when you update your backend set dataIsUpdated to true to render table
-      setDataIsUpdated={setDataIsUpdated}
-      dataIsUpdated={dataIsUpdated}
-      // if you need your table is elevated in his parent
-      elevationTable={3}
-      //this for let you modify the height of the table and min height you can put number or string
-      minHeight='70vh'
-      maxHeight='80vh'
-    />
+        // canGroupBy
+        // --->here for sorting table
+        canSort
+        showColumnIcon
+        // --->here for resising with of column
+        canResize
+        // --->here for row and subrows
+        canExpand
+        // --->here showing checkbox in the begin of RowTable with return you the checked rows
+        canSelect
+        setSelectedRows={setSelectedRows}
+        // --->here showing golobal filter input on the top of table
+        showGlobalFilter
+        // --->here showing  filter button  on the top of table
+        showFilter
+        filterActive={filterActive}
+        setLocalFilterActive={setLocalFilterActive}
+        // --->here add action header with delete and duplicate
+        canDeleteOrDuplicate
+        // --->here you can add any column to the table in the specified place with custom name and customjsx
+        // arrayOfCustomColumns={arrayOfCustomColumns}
+        // --->here  if you dont have any other click in row you can use to get clicked row details
 
-    //  <p>Selected Rows: {selectedRows.length}</p>
-    // <pre>
-    //   <code>
-    //     {JSON.stringify(
-    //       {
-    //         selectedRows,
-    //       },
-    //       null,
-    //       2
-    //     )}
-    //   </code>
-    // </pre>
+        // onClick={(row: any) => alert('row.original')}
+        // when you update your backend set dataIsUpdated to true to render table
+        setDataIsUpdated={setDataIsUpdated}
+        dataIsUpdated={dataIsUpdated}
+        elevationTable={0} //this for let you modify the height of the table and min height you can put number or string
+        minHeight='70vh'
+        maxHeight='80vh'
+      />
+
+      <p>Selected Rows: {selectedRows.length}</p>
+      <pre>
+        <code>
+          {JSON.stringify(
+            {
+              selectedRows,
+            },
+            null,
+            2
+          )}
+        </code>
+      </pre>
+    </>
   );
 }

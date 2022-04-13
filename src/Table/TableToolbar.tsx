@@ -1,14 +1,14 @@
-import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
 import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
+import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
+import { TableInstance } from 'react-table';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
+import classnames from 'classnames';
 
 import { ColumnHidePage } from './ColumnHidePage';
 import GlobalFilter from './filters/GlobalFilter';
-import { StyledButton } from '@aureskonnect/react-ui';
-import { TableInstance } from 'react-table';
 import { TableMouseEventHandler } from '../../types/react-table-config';
-import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
-import classnames from 'classnames';
+import { StyledButton } from '../components/assets/StyledButton';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({

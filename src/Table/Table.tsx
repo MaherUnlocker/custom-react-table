@@ -1,5 +1,12 @@
+import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
 import { Box, Grid, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
 import { Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+// import _concat from 'lodash.concat';
+import _uniqby from 'lodash.uniqby';
+// import _without from 'lodash.without';
+import cx from 'classnames';
 import {
   Cell,
   CellProps,
@@ -24,7 +31,6 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-import { CrossIcon, FilterIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
 import {
   HeaderCheckbox,
   RawTable,
@@ -38,7 +44,7 @@ import {
   TableRow,
   useStyles,
 } from './TableStyle';
-import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
+
 import { camelToWords, useDebounce, useLocalStorage } from '../utils';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
 
@@ -51,17 +57,17 @@ import { FilterChipBar } from './FilterChipBar';
 import FilterModalMobile from './FilterModalMobile';
 import { FilterPageCustom } from './FilterPageCustom';
 import { IsMobileView } from './isMobileView';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+
 import { ResizeHandle } from './ResizeHandle';
 import SvgNoData from './SvgNoData';
 import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
-// import _concat from 'lodash.concat';
-import _uniqby from 'lodash.uniqby';
-// import _without from 'lodash.without';
-import cx from 'classnames';
+import { StyledLabel } from '../components/assets/StyledLabel';
+import { StyledSelectInput } from '../components/assets/StyledSelectInput';
+import { FilterIcon } from '../components/assets/FilterIcon';
+import { CrossIcon } from '../components/assets/CrossIcon';
+import { StyledH2 } from '../components/assets/StyledH2';
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T>, DynamicTableProps {
   onAdd?: (instance: TableInstance<T>) => MouseEventHandler;
@@ -208,6 +214,7 @@ export function Table<T extends Record<string, unknown>>({
   elevationTable,
   minHeight,
   maxHeight,
+  updateMyData,
   ...props
 }: PropsWithChildren<TableProperties<T>>): ReactElement {
   const classes = useStyles();
@@ -244,7 +251,7 @@ export function Table<T extends Record<string, unknown>>({
 
         Cell(cell: any) {
           const ActionColumnComponent = actionColumn as React.ElementType;
-          return <ActionColumnComponent selectedRow={cell.row} />;
+          return <ActionColumnComponent selectedRow={cell.row.original} />;
         },
       },
     ]);
@@ -271,14 +278,18 @@ export function Table<T extends Record<string, unknown>>({
   if (actionColumn !== undefined) {
     localHooks.push(customHooks as any);
   }
+  if (updateMyData !== undefined) {
+    localHooks.push(updateMyData);
+  }
   const filterOptions = { filteredIds: [] };
-
+  const [skipPageReset, setSkipPageReset] = React.useState(true);
   const instance = useTable<T>(
     {
       ...props,
       columns,
       filterTypes,
       defaultColumn,
+      autoResetPage: !skipPageReset,
       getSubRows: (row: any) => row.subRows,
       globalFilter: (rows, columnIds, filterValue) => DefaultGlobalFilter(rows, columnIds, filterValue, filterOptions),
 

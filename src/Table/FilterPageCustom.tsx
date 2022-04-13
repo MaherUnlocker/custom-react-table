@@ -1,19 +1,17 @@
-import {
-  DiskIcon,
-  StyledButton,
-  StyledIconButton,
-  StyledLabel,
-  StyledSelectInput,
-  VerticalDotsIcon,
-} from '@aureskonnect/react-ui';
 import React, { ReactElement, useCallback, useRef } from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
-
 import { Box } from '@mui/material';
+
 import { FilterChipBarCollapsible } from './FilterChipBarCollapsible';
 import { IsMobileView } from './isMobileView';
 import { TableInstance } from 'react-table';
 import { useLocalStorage } from '../utils';
+import { DiskIcon } from '../components/assets/DiskIcon';
+import { StyledButton } from '../components/assets/StyledButton';
+import { StyledIconButton } from '../components/assets/StyledIconButton';
+import { StyledLabel } from '../components/assets/StyledLabel';
+import { StyledSelectInput } from '../components/assets/StyledSelectInput';
+import { VerticalDotsIcon } from '../components/assets/VerticalDotsIcon';
 
 const useStyles = makeStyles(
   createStyles({
@@ -133,7 +131,6 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
             options={savedFilters.length > 0 ? savedFilters : []}
             placeholder={savedFilters.length > 0 ? 'Sélectionner ...' : 'Aucune'}
             onChange={handleSavedFiltersSelect}
-            allowCreateWhileLoading
           />
         </div>
 

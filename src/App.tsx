@@ -1,6 +1,7 @@
-import { DynamicTable } from './Table/DynamicTable';
 import React from 'react';
-import { VerticalDotsIcon } from '@aureskonnect/react-ui';
+import { DynamicTable } from './Table/DynamicTable';
+
+
 // eslint-disable-next-line
 function SelectAccountDropdown(original: any) {
   return null;
@@ -33,7 +34,8 @@ function SelectAccountDropdown(original: any) {
   // </div>
 }
 
-function SelectAccountDropdown2({ row }: any) {
+function SelectAccountDropdown2(rowData: any) {
+  console.log(rowData);
   return (
     <div className='w-100 d-flex justify-content-center'>
       <div className='dropdown'>
@@ -53,13 +55,15 @@ function SelectAccountDropdown2({ row }: any) {
     </div>
   );
 }
+type updateMyDataPropsType = { rowIndex: number; columnId: number; value: any };
 
-function FilterSideComponent(original: any): JSX.Element {
+function FilterSideComponent(row: any, column: any, data: any): JSX.Element {
+  // console.log(row, column, data);
   return (
     <button
       className='mx-3'
       onClick={(e) => {
-        alert('original.selectedRow.original');
+        // alert('original.selectedRow.original');
         e.stopPropagation();
       }}
     >
@@ -77,7 +81,7 @@ interface customColumnProps {
 // eslint-disable-next-line
 let arrayOfCustomColumns: customColumnProps[] = [];
 arrayOfCustomColumns.push(
-  { indexOFColumn: 4, columnName: 'column1', customJsx: SelectAccountDropdown2 },
+  { indexOFColumn: 4, columnName: 'click', customJsx: SelectAccountDropdown2 },
   { indexOFColumn: 2, columnName: 'column2', customJsx: FilterSideComponent }
 );
 
@@ -85,22 +89,41 @@ export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
+  const [skipPageReset, setSkipPageReset] = React.useState(false);
+
+  const updateMyData = ({ rowIndex, columnId, value }: updateMyDataPropsType) => {
+    // We also turn on the flag to not reset the page
+    setSkipPageReset(true);
+    //  setRowData((old) =>
+    //    old.map((row, index) => {
+    //      if (index === rowIndex) {
+    //        return {
+    //          ...old[rowIndex],
+    //          [columnId]: value,
+    //        };
+    //      }
+    //      return row;
+    //    })
+    //  );
+  };
   return (
     <>
       <DynamicTable
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
-        // url='http://192.168.2.8:4000/categories'
-        url='http://localhost:4000/client'
-        // url='http://localhost:4000/products'
+
+        url='http://localhost:8080/api_etk_article_bd/v1//profiles/0/cards'
+        // url='http://localhost:4000/client'
+
         //optionnal props
         // --->here for add cusom component in the end of table
-        actionColumn={SelectAccountDropdown}
+        actionColumn={SelectAccountDropdown2}
         // --->here you can add component side Filter Button
         // customJsxSideFilterButton={<FilterSideComponent />}
-        // --->here for grouping columns with same name
 
+        // --->here for grouping columns with same name
         // canGroupBy
+
         // --->here for sorting table
         canSort
         showColumnIcon

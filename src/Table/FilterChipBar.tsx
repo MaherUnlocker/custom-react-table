@@ -1,9 +1,8 @@
-import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
 import React, { ReactElement, useCallback } from 'react';
+import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
 import { createStyles, makeStyles } from '@mui/styles';
-
 import { Chip } from '@mui/material';
-import { CrossIcon } from '@aureskonnect/react-ui';
+import { CrossIcon } from '../components/assets/CrossIcon';
 
 const useStyles = makeStyles(
   createStyles({

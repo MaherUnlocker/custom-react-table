@@ -1,14 +1,17 @@
-import './index.css';
-
-import { AngleSmallRightIcon, DuplicateIcon, TrashIcon } from '@aureskonnect/react-ui';
-import { FilterValue, IdType, Row, customColumnProps } from 'react-table';
 import React, { useEffect, useMemo, useState } from 'react';
+import { FilterValue, IdType, Row, customColumnProps } from 'react-table';
+import axios from 'axios';
 
 import LoadingDataAnimation from '../components/LoadingDataAnimation';
 import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
 import { Table } from './Table';
-import axios from 'axios';
 import { useStyles } from './TableStyle';
+
+import DropDown from './DropDown';
+import './index.css';
+import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
+import { DuplicateIcon } from '../components/assets/DuplicateIcon';
+import { TrashIcon } from '../components/assets/TrashIcon';
 
 export interface DynamicTableProps {
   url?: string;
@@ -35,6 +38,7 @@ export interface DynamicTableProps {
   customJsxSideFilterButton?: React.ReactNode;
   arrayOfCustomColumns?: customColumnProps[] | undefined;
   setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>>;
+  updateMyData?: any;
 }
 
 type DataType = {
@@ -83,6 +87,7 @@ export function DynamicTable({
   dataIsUpdated,
   minHeight,
   maxHeight,
+  updateMyData,
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = useState<apiResultProps>();
 
@@ -146,9 +151,37 @@ export function DynamicTable({
     duplicatedData.data = [...firstPart, duplicateRow, ...secondPart];
     setApiResult(duplicatedData);
   }
+  type CellPropsType = {
+    value: any;
+    row: { index: number };
+    column: { id: number };
+    updateMyData: any;
+  };
 
   const columns: any = useMemo(() => {
     let modifiedColumns: any = apiResultColumns;
+    modifiedColumns.push({
+      Header: 'Gender',
+      accessor: 'gender',
+      Cell: ({ value: initialValue, row: { index }, column: { id }, updateMyData }: CellPropsType) => {
+        const onItemClick = (value: any) => {
+          console.log('value', value);
+          updateMyData(index, id, value);
+        };
+
+        return (
+          <DropDown
+            options={[
+              { label: 'Male', value: 'male' },
+              { label: 'Female', value: 'female' },
+            ]}
+            title={'Select Gender'}
+            selectedValue={initialValue}
+            onItemClick={onItemClick}
+          />
+        );
+      },
+    });
 
     if (canExpand) {
       modifiedColumns = [
@@ -268,6 +301,7 @@ export function DynamicTable({
       elevationTable={elevationTable}
       minHeight={minHeight}
       maxHeight={maxHeight}
+      updateMyData={updateMyData}
     />
   );
 }

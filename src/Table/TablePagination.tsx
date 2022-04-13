@@ -1,13 +1,9 @@
-import {
-  AngleDoubleSmallLeftIcon,
-  AngleDoubleSmallRightIcon,
-  AngleSmallLeftIcon,
-  AngleSmallRightIcon,
-} from '@aureskonnect/react-ui';
 import React, { PropsWithChildren, ReactElement, useCallback } from 'react';
-
 import { TableInstance } from 'react-table';
-
+import { AngleDoubleSmallLeftIcon } from '../components/assets/AngleDoubleSmallLeftIcon';
+import { AngleDoubleSmallRightIcon } from '../components/assets/AngleDoubleSmallRightIcon';
+import { AngleSmallLeftIcon } from '../components/assets/AngleSmallLeftIcon';
+import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
 interface TablePaginationActionsProps {
   count: number;
   page: number;

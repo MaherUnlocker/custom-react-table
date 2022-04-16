@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel, Popover, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { TableInstance } from 'react-table';
 const useStyles = makeStyles(
   createStyles({
@@ -50,7 +50,7 @@ export function ColumnHidePage<T extends Record<string, unknown>>({
   anchorEl,
   onClose,
   show,
-}: ColumnHidePageProps<T>): ReactElement | null {
+}: ColumnHidePageProps<T>): React.ReactElement | null {
   const classes = useStyles({});
   const { allColumns, toggleHideColumn } = instance;
   const hideableColumns = allColumns.filter(

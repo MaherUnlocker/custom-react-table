@@ -1,6 +1,5 @@
 import { DynamicTable } from './Table/DynamicTable';
 import React from 'react';
-import { VerticalDotsIcon } from '@aureskonnect/react-ui';
 // eslint-disable-next-line
 function SelectAccountDropdown(original: any) {
   return null;

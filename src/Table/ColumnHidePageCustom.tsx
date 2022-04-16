@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
-
+import React from 'react';
 import { Divider } from '@mui/material';
 import { TableInstance } from 'react-table';
+
 import { useStyles } from './TableStyle';
 
 type ColumnHidePageProps<T extends Record<string, unknown>> = {
@@ -10,7 +10,7 @@ type ColumnHidePageProps<T extends Record<string, unknown>> = {
 
 export function ColumnHidePageCustom<T extends Record<string, unknown>>({
   instance,
-}: ColumnHidePageProps<T>): ReactElement | null {
+}: ColumnHidePageProps<T>): React.ReactElement | null {
   const classes = useStyles();
   const [isVisible, setIsVisible] = React.useState(false);
   const { allColumns, toggleHideAllColumns, toggleHideColumn } = instance;

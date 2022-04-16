@@ -1,12 +1,10 @@
-import {
-  AngleDoubleSmallLeftIcon,
-  AngleDoubleSmallRightIcon,
-  AngleSmallLeftIcon,
-  AngleSmallRightIcon,
-} from '@aureskonnect/react-ui';
-import React, { PropsWithChildren, ReactElement, useCallback } from 'react';
-
+import React from 'react';
 import { TableInstance } from 'react-table';
+
+import { AngleDoubleSmallLeftIcon } from '../components/assets/AngleDoubleSmallLeftIcon';
+import { AngleDoubleSmallRightIcon } from '../components/assets/AngleDoubleSmallRightIcon';
+import { AngleSmallLeftIcon } from '../components/assets/AngleSmallLeftIcon';
+import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -17,7 +15,7 @@ interface TablePaginationActionsProps {
 
 export function TablePagination<T extends Record<string, unknown>>({
   instance,
-}: PropsWithChildren<{ instance: TableInstance<T> }>): ReactElement | null {
+}: React.PropsWithChildren<{ instance: TableInstance<T> }>): React.ReactElement | null {
   const {
     state: { pageIndex, pageSize, rowCount = instance.rows.length },
     gotoPage,
@@ -28,7 +26,7 @@ export function TablePagination<T extends Record<string, unknown>>({
     canNextPage,
     setPageSize,
   } = instance;
-  const handleChangePage = useCallback(
+  const handleChangePage = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
       if (newPage === pageIndex + 1) {
         nextPage();

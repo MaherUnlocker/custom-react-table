@@ -1,8 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 
-import { SVGProps } from 'react';
-
-const SvgNoData = (props: SVGProps<SVGSVGElement>): JSX.Element => (
+const SvgNoData = (props: React.SVGProps<SVGSVGElement>): JSX.Element => (
   <svg xmlns='http://www.w3.org/2000/svg' width={247.734} height={256.229} {...props}>
     <g fill='#a7a7a7'>
       <path

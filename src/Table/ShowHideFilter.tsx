@@ -1,7 +1,8 @@
+import React from 'react';
 import { Checkbox, FormControlLabel, Popover } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import React, { ReactElement } from 'react';
 import { TableInstance } from 'react-table';
+
 const useStyles = makeStyles(
   createStyles({
     columnsPopOver: {
@@ -50,7 +51,7 @@ export function ShowHideFilterPage<T extends Record<string, unknown>>({
   anchorEl,
   onClose,
   show,
-}: ShowHideFilterProps<T>): ReactElement | null {
+}: ShowHideFilterProps<T>): React.ReactElement | null {
   const classes = useStyles({});
   const { allColumns, toggleHideColumn } = instance;
   const hideableColumns = allColumns.filter(

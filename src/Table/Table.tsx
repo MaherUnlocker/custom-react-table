@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box, Grid, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
 import { Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
 import {
@@ -24,7 +25,6 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-import { CrossIcon, FilterIcon, StyledH2, StyledLabel, StyledSelectInput } from '@aureskonnect/react-ui';
 import {
   HeaderCheckbox,
   RawTable,
@@ -38,7 +38,6 @@ import {
   TableRow,
   useStyles,
 } from './TableStyle';
-import React, { CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect } from 'react';
 import { camelToWords, useDebounce, useLocalStorage } from '../utils';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
 
@@ -53,20 +52,24 @@ import { FilterPageCustom } from './FilterPageCustom';
 import { IsMobileView } from './isMobileView';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import _uniqby from 'lodash.uniqby';
+import cx from 'classnames';
+
 import { ResizeHandle } from './ResizeHandle';
-import SvgNoData from './SvgNoData';
+import SvgNoData from '../components/assets/SvgNoData';
 import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
-// import _concat from 'lodash.concat';
-import _uniqby from 'lodash.uniqby';
-// import _without from 'lodash.without';
-import cx from 'classnames';
+import { CrossIcon } from '../components/assets/CrossIcon';
+import { FilterIcon } from '../components/assets/FilterIcon';
+import { StyledH2 } from '../components/assets/StyledH2';
+import { StyledLabel } from '../components/assets/StyledLabel';
+import { StyledSelectInput } from '../components/assets/StyledSelectInput';
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T>, DynamicTableProps {
-  onAdd?: (instance: TableInstance<T>) => MouseEventHandler;
-  onDelete?: (instance: TableInstance<T>) => MouseEventHandler;
-  onEdit?: (instance: TableInstance<T>) => MouseEventHandler;
+  onAdd?: (instance: TableInstance<T>) => React.MouseEventHandler;
+  onDelete?: (instance: TableInstance<T>) => React.MouseEventHandler;
+  onEdit?: (instance: TableInstance<T>) => React.MouseEventHandler;
   onClick?: (row: Row<T>) => void;
 }
 
@@ -83,7 +86,7 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   const [, setValue] = React.useState(filterValue || '');
 
   // ensure that reset loads the new value
-  useEffect(() => {
+  React.useEffect(() => {
     setValue(filterValue || '');
   }, [filterValue]);
 
@@ -123,8 +126,8 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
     <React.Fragment>
       <StyledLabel htmlFor={column.id}>{render('Header')}</StyledLabel>
       <StyledSelectInput
-        id={render('Header')}
-        name={render('Header')}
+        id={column.id}
+        name={column.id}
         options={unique}
         placeholder='Sélectionner ...'
         onChange={handleSelectOnChangeEvent}
@@ -209,7 +212,7 @@ export function Table<T extends Record<string, unknown>>({
   minHeight,
   maxHeight,
   ...props
-}: PropsWithChildren<TableProperties<T>>): ReactElement {
+}: React.PropsWithChildren<TableProperties<T>>): React.ReactElement {
   const classes = useStyles();
   if (name === undefined || name === null) {
     name = 'mytable';
@@ -289,7 +292,7 @@ export function Table<T extends Record<string, unknown>>({
   const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
   const debouncedState = useDebounce(state, 200);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState;
     setInitialState({
       sortBy,
@@ -375,7 +378,7 @@ export function Table<T extends Record<string, unknown>>({
                             {headerGroup.headers.map((column) => {
                               const style = {
                                 textAlign: column.align ? column.align : 'left ',
-                              } as CSSProperties;
+                              } as React.CSSProperties;
                               const {
                                 key: headerKey,
                                 role: headerRole,

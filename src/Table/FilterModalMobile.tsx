@@ -1,10 +1,11 @@
-import { FilterIcon, StyledH2 } from '@aureskonnect/react-ui';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-
-import { Box } from '@mui/material';
-import { FilterPageCustom } from './FilterPageCustom';
 import React from 'react';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Box } from '@mui/material';
+
+import { FilterPageCustom } from './FilterPageCustom';
 import { useStyles } from './TableStyle';
+import { FilterIcon } from '../components/assets/FilterIcon';
+import { StyledH2 } from '../components/assets/StyledH2';
 
 type FilterModalMobileProps = {
   instance: any;

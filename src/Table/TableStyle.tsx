@@ -1,6 +1,5 @@
+import React from 'react';
 import { Checkbox, styled } from '@mui/material';
-import React, { CSSProperties } from 'react';
-
 import MuiTableBody from '@mui/material/TableBody';
 import MuiTableCell from '@mui/material/TableCell';
 import MuiTableHead from '@mui/material/TableHead';
@@ -11,9 +10,8 @@ import { TableCellProps } from '@mui/material/TableCell/TableCell';
 import { TableHeadTypeMap } from '@mui/material/TableHead/TableHead';
 import { TableRowTypeMap } from '@mui/material/TableRow/TableRow';
 import { TableTypeMap } from '@mui/material/Table/Table';
-//import { palette } from '@mui/system';
-import cx from 'classnames';
 import { makeStyles } from '@mui/styles';
+import cx from 'classnames';
 
 export const useStyles = makeStyles({
   rawTable: {
@@ -196,7 +194,7 @@ export const useStyles = makeStyles({
 const areEqual = (prevProps: any, nextProps: any) =>
   prevProps.checked === nextProps.checked && prevProps.indeterminate === nextProps.indeterminate;
 
-type CN = { className?: string; style?: CSSProperties };
+type CN = { className?: string; style?: React.CSSProperties };
 
 export const RawTable: React.FC<Partial<TableTypeMap> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();

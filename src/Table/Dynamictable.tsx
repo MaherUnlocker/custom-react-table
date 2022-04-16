@@ -1,14 +1,16 @@
 import './index.css';
 
-import { AngleSmallRightIcon, DuplicateIcon, TrashIcon } from '@aureskonnect/react-ui';
+import React, { useState } from 'react';
 import { FilterValue, IdType, Row, customColumnProps } from 'react-table';
-import React, { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
 
 import LoadingDataAnimation from '../components/LoadingDataAnimation';
 import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
 import { Table } from './Table';
-import axios from 'axios';
 import { useStyles } from './TableStyle';
+import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
+import { DuplicateIcon } from '../components/assets/DuplicateIcon';
+import { TrashIcon } from '../components/assets/TrashIcon';
 
 export interface DynamicTableProps {
   url?: string;
@@ -86,8 +88,8 @@ export function DynamicTable({
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = useState<apiResultProps>();
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<null | any>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<null | any>(null);
   const classes = useStyles();
   async function fetchData(url: string) {
     await axios
@@ -107,7 +109,7 @@ export function DynamicTable({
     elevationTable = 0;
   }
 
-  const apiResultColumns = useMemo(
+  const apiResultColumns = React.useMemo(
     () =>
       apiResult !== undefined && apiResult.structure !== undefined && Array.isArray(apiResult?.structure)
         ? apiResult.structure
@@ -147,7 +149,7 @@ export function DynamicTable({
     setApiResult(duplicatedData);
   }
 
-  const columns: any = useMemo(() => {
+  const columns: any = React.useMemo(() => {
     let modifiedColumns: any = apiResultColumns;
 
     if (canExpand) {
@@ -236,7 +238,7 @@ export function DynamicTable({
     // eslint-disable-next-line
   }, [apiResultColumns]);
   const data = React.useMemo(() => (apiResult?.data !== undefined ? apiResult?.data : []), [apiResult]);
-  useEffect(() => {
+  React.useEffect(() => {
     fetchData(url!);
     setDataIsUpdated !== undefined && setDataIsUpdated(false);
 

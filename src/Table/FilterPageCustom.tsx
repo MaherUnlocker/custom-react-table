@@ -1,19 +1,17 @@
-import {
-  DiskIcon,
-  StyledButton,
-  StyledIconButton,
-  StyledLabel,
-  StyledSelectInput,
-  VerticalDotsIcon,
-} from '@aureskonnect/react-ui';
-import React, { ReactElement, useCallback, useRef } from 'react';
+import React from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
-
 import { Box } from '@mui/material';
+
 import { FilterChipBarCollapsible } from './FilterChipBarCollapsible';
 import { IsMobileView } from './isMobileView';
 import { TableInstance } from 'react-table';
 import { useLocalStorage } from '../utils';
+import { StyledButton } from '../components/assets/StyledButton';
+import { StyledIconButton } from '../components/assets/StyledIconButton';
+import { StyledLabel } from '../components/assets/StyledLabel';
+import { StyledSelectInput } from '../components/assets/StyledSelectInput';
+import VerticalDotsIcon from '../components/assets/VerticalDotsIcon';
+import { DiskIcon } from '../components/assets/DiskIcon';
 
 const useStyles = makeStyles(
   createStyles({
@@ -67,14 +65,14 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   onClose,
   filterActive,
   setLocalFilterActive,
-}: FilterPageCustomProps<T>): ReactElement {
+}: FilterPageCustomProps<T>): React.ReactElement {
   const classes = useStyles({});
   const {
     allColumns,
     setAllFilters,
     state: { filters },
   } = instance;
-  const heightRef = useRef(null);
+  const heightRef = React.useRef(null);
   // eslint-disable-next-line
   const [showMore, setShowMore] = React.useState(() => false);
   // eslint-disable-next-line
@@ -91,7 +89,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
       setCurrentHeight(document.getElementById('maher')!.offsetHeight!);
     }
   }, []);
-  const handleSavedFiltersClick = useCallback(() => {
+  const handleSavedFiltersClick = React.useCallback(() => {
     const found = savedFilters.find((f: any) => f.label === designationFilter);
     if (found) {
       savedFilters[savedFilters.findIndex((f: any) => f.label === designationFilter)] = {
@@ -103,7 +101,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
     }
   }, [designationFilter, filters, setSavedFilters, savedFilters]);
 
-  const handleSavedFiltersSelect = useCallback(
+  const handleSavedFiltersSelect = React.useCallback(
     (selectedValue: any) => {
       setDesignationFilter(selectedValue.label);
       const indexofSelected = savedFilters.findIndex((f: any) => f.label === selectedValue.label);
@@ -133,7 +131,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
             options={savedFilters.length > 0 ? savedFilters : []}
             placeholder={savedFilters.length > 0 ? 'Sélectionner ...' : 'Aucune'}
             onChange={handleSavedFiltersSelect}
-            allowCreateWhileLoading
+            // allowCreateWhileLoading
           />
         </div>
 

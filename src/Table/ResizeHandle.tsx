@@ -1,14 +1,14 @@
-import React, { ReactElement } from 'react';
-
+import React from 'react';
 import { ColumnInstance } from 'react-table';
 import cx from 'classnames';
+
 import { useStyles } from './TableStyle';
 
 export const ResizeHandle = <T extends Record<string, unknown>>({
   column,
 }: {
   column: ColumnInstance<T>;
-}): ReactElement => {
+}): React.ReactElement => {
   const classes = useStyles();
   return (
     <div

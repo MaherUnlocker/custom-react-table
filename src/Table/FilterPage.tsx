@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactElement, useCallback } from 'react';
+import React from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 
 import { Popover } from '@mui/material';
@@ -55,15 +55,15 @@ export function FilterPage<T extends Record<string, unknown>>({
   const classes = useStyles({});
   const { allColumns, setAllFilters } = instance;
 
-  const onSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = React.useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       onClose();
     },
     [onClose]
   );
 
-  // const resetFilters = useCallback(() => {
+  // const resetFilters = React.useCallback(() => {
   //   setAllFilters([]);
   // }, [setAllFilters]);
 

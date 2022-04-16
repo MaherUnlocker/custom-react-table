@@ -1,14 +1,14 @@
-import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
-import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
-import { createStyles, makeStyles } from '@mui/styles';
-
-import { ColumnHidePage } from './ColumnHidePage';
-import GlobalFilter from './filters/GlobalFilter';
-import { StyledButton } from '@aureskonnect/react-ui';
+import React from 'react';
 import { TableInstance } from 'react-table';
-import { TableMouseEventHandler } from '../../types/react-table-config';
+import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
+import { createStyles, makeStyles } from '@mui/styles';
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import classnames from 'classnames';
+
+import { TableMouseEventHandler } from '../../types/react-table-config';
+import GlobalFilter from './filters/GlobalFilter';
+import { ColumnHidePage } from './ColumnHidePage';
+import { StyledButton } from '../components/assets/StyledButton';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +47,7 @@ type InstanceActionButton<T extends Record<string, unknown>> = {
 
 type ActionButton = {
   icon?: JSX.Element;
-  onClick?: MouseEventHandler;
+  onClick?: React.MouseEventHandler;
   enabled?: boolean;
   label: string;
   variant?: 'right' | 'left';
@@ -59,14 +59,14 @@ export const InstanceLabeledActionButton = <T extends Record<string, unknown>>({
   onClick,
   label,
   enabled = () => true,
-}: InstanceActionButton<T>): ReactElement => (
+}: InstanceActionButton<T>): React.ReactElement => (
   <Button variant='contained' color='primary' onClick={onClick(instance)} disabled={!enabled(instance)}>
     {icon}
     {label}
   </Button>
 );
 
-export const LabeledActionButton = ({ icon, onClick, label, enabled = true }: ActionButton): ReactElement => (
+export const LabeledActionButton = ({ icon, onClick, label, enabled = true }: ActionButton): React.ReactElement => (
   <Button variant='contained' color='primary' onClick={onClick} disabled={!enabled}>
     {icon}
     {label}
@@ -80,10 +80,10 @@ export const InstanceSmallIconActionButton = <T extends Record<string, unknown>>
   label,
   enabled = () => true,
   variant,
-}: InstanceActionButton<T>): ReactElement => {
+}: InstanceActionButton<T>): React.ReactElement => {
   const classes = useStyles({});
   return (
-    <Tooltip title={label} aria-label={label}>
+    <Tooltip title={label !== '' ? label : ' '} aria-label={label}>
       <span>
         <IconButton
           className={classnames({
@@ -107,7 +107,7 @@ export const SmallIconActionButton = ({
   label,
   enabled = true,
   variant,
-}: ActionButton): ReactElement => {
+}: ActionButton): React.ReactElement => {
   const classes = useStyles({});
   return (
     <Tooltip title={label} aria-label={label}>
@@ -149,24 +149,24 @@ export function TableToolbar<T extends Record<string, unknown>>({
   filterActive,
   setLocalFilterActive,
   customJsxSideFilterButton,
-}: PropsWithChildren<TableToolbarProps<T>>): ReactElement | null {
+}: React.PropsWithChildren<TableToolbarProps<T>>): React.ReactElement | null {
   const { columns } = instance;
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
-  const [columnsOpen, setColumnsOpen] = useState(false);
-  const [, setFilterOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<Element | undefined>(undefined);
+  const [columnsOpen, setColumnsOpen] = React.useState(false);
+  const [, setFilterOpen] = React.useState(false);
 
   const hideableColumns = columns.filter((column) => !(column.id === '_selector'));
 
-  const handleColumnsClick = useCallback(
-    (event: MouseEvent) => {
+  const handleColumnsClick = React.useCallback(
+    (event: React.MouseEvent) => {
       setAnchorEl(event.currentTarget);
       setColumnsOpen(true);
     },
     [setAnchorEl, setColumnsOpen]
   );
 
-  const handleClose = useCallback(() => {
+  const handleClose = React.useCallback(() => {
     setColumnsOpen(false);
     setFilterOpen(false);
     setAnchorEl(undefined);

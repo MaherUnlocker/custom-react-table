@@ -1,9 +1,10 @@
+import React from 'react';
 import { Chip, Collapse } from '@mui/material';
 import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
-import React, { ReactElement, useCallback } from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 
-import { CrossIcon } from '@aureskonnect/react-ui';
+import { CrossIcon } from '../components/assets/CrossIcon';
+
 
 const useStyles = makeStyles(
   createStyles({
@@ -49,7 +50,7 @@ const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) =
 export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
   instance,
   showMore,
-}: FilterChipBarProps<T>): ReactElement | null {
+}: FilterChipBarProps<T>): React.ReactElement | null {
   const classes = useStyles({});
   const {
     allColumns,
@@ -58,14 +59,14 @@ export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
     state: { filters },
   } = instance;
 
-  const handleDelete = useCallback(
+  const handleDelete = React.useCallback(
     (id: string | number) => {
       setFilter(id as IdType<T>, undefined);
     },
     [setFilter]
   );
 
-  const resetFilters = useCallback(() => {
+  const resetFilters = React.useCallback(() => {
     setAllFilters([]);
   }, [setAllFilters]);
 

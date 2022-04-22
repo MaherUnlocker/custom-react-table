@@ -1,17 +1,18 @@
-import React from 'react';
 import { Checkbox, styled } from '@mui/material';
+
 import MuiTableBody from '@mui/material/TableBody';
 import MuiTableCell from '@mui/material/TableCell';
 import MuiTableHead from '@mui/material/TableHead';
 import MuiTableRow from '@mui/material/TableRow';
 import MuiTableTable from '@mui/material/Table';
+import React from 'react';
 import { TableBodyTypeMap } from '@mui/material/TableBody/TableBody';
 import { TableCellProps } from '@mui/material/TableCell/TableCell';
 import { TableHeadTypeMap } from '@mui/material/TableHead/TableHead';
 import { TableRowTypeMap } from '@mui/material/TableRow/TableRow';
 import { TableTypeMap } from '@mui/material/Table/Table';
-import { makeStyles } from '@mui/styles';
 import cx from 'classnames';
+import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles({
   rawTable: {
@@ -180,12 +181,11 @@ export const useStyles = makeStyles({
     alignItems: 'center!important',
     border: '0',
     height: '100%',
+   
   },
   cardHeaderCss: {
     padding: '0 ',
     backgroundColor: 'white',
-    // boxShadow: 'rgb(209 197 197) 0px 1px 4px',
-    // borderRadius: '5px !important',
     marginBottom: '4px !important',
     border: '1px solid rgba(0,0,0,.125)',
   },

@@ -1,6 +1,7 @@
-import React from 'react';
 import { Checkbox, FormControlLabel, Popover } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
+
+import React from 'react';
 import { TableInstance } from 'react-table';
 
 const useStyles = makeStyles(
@@ -55,9 +56,15 @@ export function ShowHideFilterPage<T extends Record<string, unknown>>({
   const classes = useStyles({});
   const { allColumns, toggleHideColumn } = instance;
   const hideableColumns = allColumns.filter(
-    (column) => !(column.id === '_selector') && !(column.id === 'expander') && !(column.id === 'hidecolumns')
+    (column) =>
+      !(column.id === '_selector') &&
+      !(column.id === 'expander') &&
+      !(column.id === 'hidecolumns')
   );
-  const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
+  const checkedCount = hideableColumns.reduce(
+    (acc, val) => acc + (val.isVisible ? 0 : 1),
+    0
+  );
 
   const onlyOneOptionLeft = checkedCount + 1 >= hideableColumns.length;
   function FilterFormControl({ visibleColumns }: { visibleColumns: any[] }) {
@@ -81,7 +88,8 @@ export function ShowHideFilterPage<T extends Record<string, unknown>>({
             onChange={() => {
               column.active = !column.active;
               !column.active
-                ? (document.getElementsByName(column.id)[0].style.display = 'none')
+                ? (document.getElementsByName(column.id)[0].style.display =
+                    'none')
                 : (document.getElementsByName(column.id)[0].style.display = '');
               setColumns((prevState: typeof columns) => {
                 let index = prevState.indexOf(column);
@@ -114,7 +122,11 @@ export function ShowHideFilterPage<T extends Record<string, unknown>>({
       >
         <div className={(classes.columnsPopOver, classes.grid, classes.cell)}>
           <div style={{ display: 'grid' }}>
-            <FilterFormControl visibleColumns={allColumns.filter((it) => it.canFilter && it.isVisible)} />
+            <FilterFormControl
+              visibleColumns={allColumns.filter(
+                (it) => it.canFilter && it.isVisible
+              )}
+            />
           </div>
         </div>
       </Popover>

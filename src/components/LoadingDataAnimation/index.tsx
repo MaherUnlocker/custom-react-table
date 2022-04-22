@@ -1,10 +1,20 @@
-import './Loading.css';
-
 import React from 'react';
+import styled from 'styled-components';
+
+const StyledLoading = styled('div')`
+  display: flex !important;
+  flex-direction: row !important;
+  margin-top: 20% !important;
+  justify-content: center !important;
+  z-index: 1050 !important; ;
+`;
+
+
+
 
 export default function LoadingDataAnimation(): JSX.Element {
   return (
-    <div className='centeranimation'>
+    <StyledLoading>
       <div className='spinner-grow text-primary' role='status'>
         <span className='sr-only'></span>
       </div>
@@ -29,6 +39,6 @@ export default function LoadingDataAnimation(): JSX.Element {
       <div className='spinner-grow text-dark' role='status'>
         <span className='sr-only'></span>
       </div>
-    </div>
+    </StyledLoading>
   );
 }

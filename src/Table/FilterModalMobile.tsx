@@ -1,11 +1,11 @@
-import React from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { Box } from '@mui/material';
 
-import { FilterPageCustom } from './FilterPageCustom';
-import { useStyles } from './TableStyle';
+import { Box } from '@mui/material';
 import { FilterIcon } from '../components/assets/FilterIcon';
+import { FilterPageCustom } from './FilterPageCustom';
+import React from 'react';
 import { StyledH2 } from '../components/assets/StyledH2';
+import { useStyles } from './TableStyle';
 
 type FilterModalMobileProps = {
   instance: any;
@@ -27,14 +27,30 @@ export default function FilterModalMobile({
       style={{ margin: '0 ', padding: '0 ', height: '100%' }}
       scrollable
     >
-      <ModalHeader className='text-capitalize' toggle={() => setLocalFilterActive(!filterActive)}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <FilterIcon className={classes.tableFilterAltOutlinedIcon} style={{ flexDirection: 'row-reverse' }} />
+      <ModalHeader
+        className="text-capitalize"
+        toggle={() => setLocalFilterActive(!filterActive)}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <FilterIcon
+            className={classes.tableFilterAltOutlinedIcon}
+            style={{ flexDirection: 'row-reverse' }}
+          />
           <StyledH2>Filtre(s)</StyledH2>
         </Box>
       </ModalHeader>
       <ModalBody style={{ margin: '0 ', padding: '0 ', height: '100%' }}>
-        <FilterPageCustom instance={instance} setLocalFilterActive={setLocalFilterActive} filterActive={filterActive} />
+        <FilterPageCustom
+          instance={instance}
+          setLocalFilterActive={setLocalFilterActive}
+          filterActive={filterActive}
+        />
       </ModalBody>
     </Modal>
   );

@@ -1,1 +1,0 @@
-declare module "material-ui-next-responsive-table"

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Grid, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
 import { Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
 import {
@@ -44,27 +43,27 @@ import { fuzzyTextFilter, numericTextFilter } from './filters';
 import ChoiceIcon from './Choice';
 import CollapsibleTable from './CollapsibleTable';
 import { ColumnHidePageCustom } from './ColumnHidePageCustom';
+import { CrossIcon } from '../components/assets/CrossIcon';
 import DefaultGlobalFilter from './filters/defaultGlobalFilter';
 import { DynamicTableProps } from './DynamicTable';
 import { FilterChipBar } from './FilterChipBar';
+import { FilterIcon } from '../components/assets/FilterIcon';
 import FilterModalMobile from './FilterModalMobile';
 import { FilterPageCustom } from './FilterPageCustom';
 import { IsMobileView } from './isMobileView';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import _uniqby from 'lodash.uniqby';
-import cx from 'classnames';
-
+import React from 'react';
 import { ResizeHandle } from './ResizeHandle';
+import { StyledH2 } from '../components/assets/StyledH2';
+import { StyledLabel } from '../components/assets/StyledLabel';
+import { StyledSelectInput } from '../components/assets/StyledSelectInput';
 import SvgNoData from '../components/assets/SvgNoData';
 import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
-import { CrossIcon } from '../components/assets/CrossIcon';
-import { FilterIcon } from '../components/assets/FilterIcon';
-import { StyledH2 } from '../components/assets/StyledH2';
-import { StyledLabel } from '../components/assets/StyledLabel';
-import { StyledSelectInput } from '../components/assets/StyledSelectInput';
+import _uniqby from 'lodash.uniqby';
+import cx from 'classnames';
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T>, DynamicTableProps {
   onAdd?: (instance: TableInstance<T>) => React.MouseEventHandler;
@@ -359,6 +358,15 @@ export function Table<T extends Record<string, unknown>>({
                     paddingRight: '0!important',
                     paddingLeft: '0!important',
                     overflowX: 'auto',
+                    overflowY: page.length === 0 ? 'hidden' : 'auto',
+                    display: 'block',
+                    width: '100%',
+                    WebkitOverflowScrolling: 'touch',
+                    MsOverflowStyle: '-ms-autohiding-scrollbar',
+                    flex: '1 1 auto',
+                    paddingBottom: '1rem',
+                    marginTop: '0 !important',
+                    paddingTop: '0 !important',
                     maxHeight: maxHeight === 0 || maxHeight === '' || maxHeight === undefined ? '630px' : maxHeight,
                     minHeight: minHeight === 0 || minHeight === '' || minHeight === undefined ? '580px' : minHeight,
                   }}
@@ -463,7 +471,10 @@ export function Table<T extends Record<string, unknown>>({
                                             {...row.getToggleRowExpandedProps()}
                                             className={classes.cellIcon}
                                           />{' '}
-                                          {cell.render('Cell', { editable: false })} ({row.subRows.length})
+                                          {cell.render('Cell', {
+                                            editable: false,
+                                          })}{' '}
+                                          ({row.subRows.length})
                                         </>
                                       ) : cell.isAggregated ? (
                                         cell.render('Aggregated')
@@ -512,7 +523,12 @@ export function Table<T extends Record<string, unknown>>({
                 className={`${classes.FiltersCss} ${classes.cardHeaderCss}`}
               >
                 <Box
-                  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingLeft: '10px' }}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingLeft: '10px',
+                  }}
                 >
                   <FilterIcon className={classes.tableFilterAltOutlinedIcon} style={{ flexDirection: 'row-reverse' }} />
                   <StyledH2>Filtre(s)</StyledH2>
@@ -572,7 +588,13 @@ export function Table<T extends Record<string, unknown>>({
           </CardHeader>
           <CardBody
             id={name}
-            style={{ marginRight: '0', marginLeft: '0', padding: 0, paddingTop: '4px ', minHeight: '100vh' }}
+            style={{
+              marginRight: '0',
+              marginLeft: '0',
+              padding: 0,
+              paddingTop: '4px ',
+              minHeight: '100vh',
+            }}
           >
             <CollapsibleTable props={instance} />
           </CardBody>

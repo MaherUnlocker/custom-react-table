@@ -1,17 +1,18 @@
-import './index.css';
+import 'regenerator-runtime/runtime';
 
-import React, { useState } from 'react';
 import { FilterValue, IdType, Row, customColumnProps } from 'react-table';
-import axios from 'axios';
 
-import LoadingDataAnimation from '../components/LoadingDataAnimation';
-import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
-import { Table } from './Table';
-import { useStyles } from './TableStyle';
 import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
 import { DuplicateIcon } from '../components/assets/DuplicateIcon';
+import LoadingDataAnimation from '../components/LoadingDataAnimation';
+import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
+import React from 'react';
+import { Table } from './Table';
 import { TrashIcon } from '../components/assets/TrashIcon';
+import axios from 'axios';
+import { useStyles } from './TableStyle';
 
+// import './index.css';
 export interface DynamicTableProps {
   url?: string;
   onClick?: (row: any) => void;
@@ -48,7 +49,11 @@ export type apiResultProps = {
   data: DataType[];
 };
 
-function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
+function filterGreaterThan(
+  rows: Array<Row<any>>,
+  id: Array<IdType<any>>,
+  filterValue: FilterValue
+) {
   return rows.filter((row) => {
     const rowValue = row.values[id[0]];
     return rowValue >= filterValue;
@@ -86,7 +91,7 @@ export function DynamicTable({
   minHeight,
   maxHeight,
 }: DynamicTableProps): React.ReactElement {
-  const [apiResult, setApiResult] = useState<apiResultProps>();
+  const [apiResult, setApiResult] = React.useState<apiResultProps>();
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<null | any>(null);
@@ -111,7 +116,9 @@ export function DynamicTable({
 
   const apiResultColumns = React.useMemo(
     () =>
-      apiResult !== undefined && apiResult.structure !== undefined && Array.isArray(apiResult?.structure)
+      apiResult !== undefined &&
+      apiResult.structure !== undefined &&
+      Array.isArray(apiResult?.structure)
         ? apiResult.structure
             .filter((key) => key !== 'subRows')
             .map((key) => {
@@ -122,7 +129,9 @@ export function DynamicTable({
                   accessor: key,
                   disableFilters: true,
                   canFilter: false,
-                  Cell: (value: any) => <img src={value.cell.value} className='w-50' alt='' />,
+                  Cell: (value: any) => (
+                    <img src={value.cell.value} className="w-50" alt="" />
+                  ),
                 };
               }
 
@@ -144,7 +153,10 @@ export function DynamicTable({
     const duplicatedData: any = { ...apiResult };
     const duplicateRow = duplicatedData?.data[index];
     const firstPart = duplicatedData?.data.slice(0, index + 1);
-    const secondPart = duplicatedData?.data.slice(index + 1, duplicatedData.data.length);
+    const secondPart = duplicatedData?.data.slice(
+      index + 1,
+      duplicatedData.data.length
+    );
     duplicatedData.data = [...firstPart, duplicateRow, ...secondPart];
     setApiResult(duplicatedData);
   }
@@ -179,7 +191,11 @@ export function DynamicTable({
                 })}
               >
                 {row.isExpanded ? (
-                  <AngleSmallRightIcon height={25} width={25} className={classes.iconDirectionAsc} />
+                  <AngleSmallRightIcon
+                    height={25}
+                    width={25}
+                    className={classes.iconDirectionAsc}
+                  />
                 ) : (
                   <AngleSmallRightIcon height={25} width={25} />
                 )}
@@ -195,7 +211,9 @@ export function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
-          Cell: (cell: any) => <elm.customJsx selectedRow={cell.row.original} />,
+          Cell: (cell: any) => (
+            <elm.customJsx selectedRow={cell.row.original} />
+          ),
         })
       );
     }
@@ -237,7 +255,10 @@ export function DynamicTable({
     return modifiedColumns;
     // eslint-disable-next-line
   }, [apiResultColumns]);
-  const data = React.useMemo(() => (apiResult?.data !== undefined ? apiResult?.data : []), [apiResult]);
+  const data = React.useMemo(
+    () => (apiResult?.data !== undefined ? apiResult?.data : []),
+    [apiResult]
+  );
   React.useEffect(() => {
     fetchData(url!);
     setDataIsUpdated !== undefined && setDataIsUpdated(false);
@@ -246,7 +267,12 @@ export function DynamicTable({
   }, [url, dataIsUpdated]);
 
   if (loading) return <LoadingDataAnimation />;
-  if (error || apiResult === undefined || apiResult?.structure === undefined || apiResult?.structure.length === 0)
+  if (
+    error ||
+    apiResult === undefined ||
+    apiResult?.structure === undefined ||
+    apiResult?.structure.length === 0
+  )
     return <LoadingErrorAnimation />;
 
   return (

@@ -1,5 +1,3 @@
-import './Loading.css';
-
 import Alert from '@mui/material/Alert';
 import React from 'react';
 

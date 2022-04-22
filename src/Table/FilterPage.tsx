@@ -1,7 +1,7 @@
-import React from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 
 import { Popover } from '@mui/material';
+import React from 'react';
 import { TableInstance } from 'react-table';
 
 const useStyles = makeStyles(
@@ -90,7 +90,7 @@ export function FilterPage<T extends Record<string, unknown>>({
 
               .filter((it) => it.canFilter)
               .map((column) => (
-                <div key={column.id} className='d-flex mt-2'>
+                <div key={column.id} className="d-flex mt-2">
                   {column.render('Filter')}
                 </div>
               ))}

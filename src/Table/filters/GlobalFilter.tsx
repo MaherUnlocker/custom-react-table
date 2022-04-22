@@ -1,7 +1,7 @@
 import React from 'react';
+import { StyledSearchInput } from '../../components/assets/StyledSearchInput';
 import { useAsyncDebounce } from 'react-table';
 
-import { StyledSearchInput } from '../../components/assets/StyledSearchInput';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 type GlobalFilterProps = {
   preGlobalFilteredRows: any;

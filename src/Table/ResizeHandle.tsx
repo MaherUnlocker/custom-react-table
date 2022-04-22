@@ -1,7 +1,6 @@
-import React from 'react';
 import { ColumnInstance } from 'react-table';
+import React from 'react';
 import cx from 'classnames';
-
 import { useStyles } from './TableStyle';
 
 export const ResizeHandle = <T extends Record<string, unknown>>({

@@ -1,5 +1,6 @@
 import { DynamicTable } from './Table/DynamicTable';
 import React from 'react';
+import { stringify } from 'querystring';
 // eslint-disable-next-line
 function SelectAccountDropdown(original: any) {
   return null;
@@ -32,7 +33,9 @@ function SelectAccountDropdown(original: any) {
   // </div>
 }
 
-function SelectAccountDropdown2({ row }: any) {
+function SelectAccountDropdown2(original: any) {
+  // console.log(original);
+  const [open, setOpen] = React.useState(false);
   return (
     <div className='w-100 d-flex justify-content-center'>
       <div className='dropdown'>
@@ -41,11 +44,20 @@ function SelectAccountDropdown2({ row }: any) {
           data-bs-toggle='dropdown'
           // className=" dropdown-toggle"
         >
-          test
+          {open ? <div>One</div> : 'colum1'}
         </button>
         <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
           {[1, 2, 3].map((elm) => {
-            return <div>elm</div>;
+            return (
+              <div
+                onClick={() => {
+                  alert(stringify(original.selectedRow));
+                  setOpen(true);
+                }}
+              >
+                elm
+              </div>
+            );
           })}
         </div>
       </div>
@@ -54,11 +66,12 @@ function SelectAccountDropdown2({ row }: any) {
 }
 
 function FilterSideComponent(original: any): JSX.Element {
+  // console.log(original);
   return (
     <button
       className='mx-3'
       onClick={(e) => {
-        alert('original.selectedRow.original');
+        alert(stringify(original.selectedRow));
         e.stopPropagation();
       }}
     >
@@ -76,8 +89,8 @@ interface customColumnProps {
 // eslint-disable-next-line
 let arrayOfCustomColumns: customColumnProps[] = [];
 arrayOfCustomColumns.push(
-  { indexOFColumn: 4, columnName: 'column1', customJsx: SelectAccountDropdown2 },
-  { indexOFColumn: 2, columnName: 'column2', customJsx: FilterSideComponent }
+  { indexOFColumn: 2, columnName: 'column1', customJsx: SelectAccountDropdown2 },
+  { indexOFColumn: 4, columnName: 'column2', customJsx: FilterSideComponent }
 );
 
 export default function App(): JSX.Element {
@@ -119,7 +132,7 @@ export default function App(): JSX.Element {
         // --->here add action header with delete and duplicate
         canDeleteOrDuplicate
         // --->here you can add any column to the table in the specified place with custom name and customjsx
-        // arrayOfCustomColumns={arrayOfCustomColumns}
+        arrayOfCustomColumns={arrayOfCustomColumns}
         // --->here  if you dont have any other click in row you can use to get clicked row details
 
         // onClick={(row: any) => alert('row.original')}

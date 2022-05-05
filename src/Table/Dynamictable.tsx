@@ -11,6 +11,7 @@ import { Table } from './Table';
 import { TrashIcon } from '../components/assets/TrashIcon';
 import axios from 'axios';
 import { useStyles } from './TableStyle';
+import { IsMobileView } from './isMobileView';
 
 // import './index.css';
 export interface DynamicTableProps {
@@ -49,11 +50,7 @@ export type apiResultProps = {
   data: DataType[];
 };
 
-function filterGreaterThan(
-  rows: Array<Row<any>>,
-  id: Array<IdType<any>>,
-  filterValue: FilterValue
-) {
+function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
   return rows.filter((row) => {
     const rowValue = row.values[id[0]];
     return rowValue >= filterValue;
@@ -113,16 +110,21 @@ export function DynamicTable({
   if (elevationTable === undefined) {
     elevationTable = 0;
   }
-
+  const isMobile = IsMobileView();
   const apiResultColumns = React.useMemo(
     () =>
-      apiResult !== undefined &&
-      apiResult.structure !== undefined &&
-      Array.isArray(apiResult?.structure)
+      apiResult !== undefined && apiResult.structure !== undefined && Array.isArray(apiResult?.structure)
         ? apiResult.structure
             .filter((key) => key !== 'subRows')
             .map((key) => {
-              if (key === 'image' || key === 'picture') {
+              if (
+                key.toLowerCase().includes('image') ||
+                key.toLowerCase().includes('picture') ||
+                key.toLowerCase().includes('logo') ||
+                key.toLowerCase().includes('icon') ||
+                key.toLowerCase().includes('pic') ||
+                key.toLowerCase().includes('img')
+              ) {
                 return {
                   id: key,
                   Header: key,
@@ -130,7 +132,7 @@ export function DynamicTable({
                   disableFilters: true,
                   canFilter: false,
                   Cell: (value: any) => (
-                    <img src={value.cell.value} className="w-50" alt="" />
+                    <img src={value.cell.value} className={!isMobile ? 'w-50' : 'w-50 h-50'} alt='' />
                   ),
                 };
               }
@@ -153,10 +155,7 @@ export function DynamicTable({
     const duplicatedData: any = { ...apiResult };
     const duplicateRow = duplicatedData?.data[index];
     const firstPart = duplicatedData?.data.slice(0, index + 1);
-    const secondPart = duplicatedData?.data.slice(
-      index + 1,
-      duplicatedData.data.length
-    );
+    const secondPart = duplicatedData?.data.slice(index + 1, duplicatedData.data.length);
     duplicatedData.data = [...firstPart, duplicateRow, ...secondPart];
     setApiResult(duplicatedData);
   }
@@ -191,11 +190,7 @@ export function DynamicTable({
                 })}
               >
                 {row.isExpanded ? (
-                  <AngleSmallRightIcon
-                    height={25}
-                    width={25}
-                    className={classes.iconDirectionAsc}
-                  />
+                  <AngleSmallRightIcon height={25} width={25} className={classes.iconDirectionAsc} />
                 ) : (
                   <AngleSmallRightIcon height={25} width={25} />
                 )}
@@ -211,9 +206,7 @@ export function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
-          Cell: (cell: any) => (
-            <elm.customJsx selectedRow={cell.row.original} />
-          ),
+          Cell: (cell: any) => <elm.customJsx selectedRow={cell.row.original} />,
         })
       );
     }
@@ -221,8 +214,8 @@ export function DynamicTable({
       modifiedColumns = [
         ...modifiedColumns,
         {
-          Header: 'Actions',
-          id: 'Actions',
+          Header: '_Actions',
+          id: '_Actions',
           accessor: (str: any) => 'delete',
           canFilter: false,
           disableFilters: true,
@@ -255,10 +248,7 @@ export function DynamicTable({
     return modifiedColumns;
     // eslint-disable-next-line
   }, [apiResultColumns]);
-  const data = React.useMemo(
-    () => (apiResult?.data !== undefined ? apiResult?.data : []),
-    [apiResult]
-  );
+  const data = React.useMemo(() => (apiResult?.data !== undefined ? apiResult?.data : []), [apiResult]);
   React.useEffect(() => {
     fetchData(url!);
     setDataIsUpdated !== undefined && setDataIsUpdated(false);
@@ -267,12 +257,7 @@ export function DynamicTable({
   }, [url, dataIsUpdated]);
 
   if (loading) return <LoadingDataAnimation />;
-  if (
-    error ||
-    apiResult === undefined ||
-    apiResult?.structure === undefined ||
-    apiResult?.structure.length === 0
-  )
+  if (error || apiResult === undefined || apiResult?.structure === undefined || apiResult?.structure.length === 0)
     return <LoadingErrorAnimation />;
 
   return (

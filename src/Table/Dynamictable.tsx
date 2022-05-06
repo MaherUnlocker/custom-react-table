@@ -110,7 +110,6 @@ export function DynamicTable({
   if (elevationTable === undefined) {
     elevationTable = 0;
   }
-  const isMobile = IsMobileView();
   const apiResultColumns = React.useMemo(
     () =>
       apiResult !== undefined && apiResult.structure !== undefined && Array.isArray(apiResult?.structure)
@@ -131,9 +130,7 @@ export function DynamicTable({
                   accessor: key,
                   disableFilters: true,
                   canFilter: false,
-                  Cell: (value: any) => (
-                    <img src={value.cell.value} className={!isMobile ? 'w-50' : 'w-50 h-50'} alt='' />
-                  ),
+                  Cell: (value: any) => <img src={value.cell.value} className='w-50' alt='' />,
                 };
               }
 

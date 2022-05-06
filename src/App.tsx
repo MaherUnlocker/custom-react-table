@@ -37,7 +37,7 @@ function SelectAccountDropdown2(original: any) {
   // console.log(original);
   const [open, setOpen] = React.useState(false);
   return (
-    <div className='w-100 d-flex justify-content-center'>
+    <div className='w-100 '>
       <div className='dropdown'>
         <button
           id='dropdownMenuButton1'
@@ -47,9 +47,10 @@ function SelectAccountDropdown2(original: any) {
           {open ? <div>One</div> : 'colum1'}
         </button>
         <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-          {[1, 2, 3].map((elm) => {
+          {[1, 2, 3].map((elm, index) => {
             return (
               <div
+                key={index}
                 onClick={() => {
                   alert(stringify(original.selectedRow));
                   setOpen(true);
@@ -66,14 +67,13 @@ function SelectAccountDropdown2(original: any) {
 }
 
 function FilterSideComponent(original: any): JSX.Element {
-  // console.log(original);
   return (
     <button
-      className='mx-3'
       onClick={(e) => {
         alert(stringify(original.selectedRow));
         e.stopPropagation();
       }}
+      // style={{ width: '500px' }}
     >
       Custom Component
     </button>
@@ -103,26 +103,26 @@ export default function App(): JSX.Element {
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
         // url='http://192.168.2.8:4000/categories'
-        url='http://localhost:4000/client'
-        // url='http://localhost:4000/products'
+        url='http://192.168.2.14:4000/client'
+        // url='http://192.168.2.14:4000/products'
         //optionnal props
         // --->here for add cusom component in the end of table
         actionColumn={SelectAccountDropdown}
         // --->here you can add component side Filter Button
-        // customJsxSideFilterButton={<FilterSideComponent />}
+        customJsxSideFilterButton={<FilterSideComponent />}
         // --->here for grouping columns with same name
 
         // canGroupBy
         // --->here for sorting table
         canSort
-        showColumnIcon
+        // showColumnIcon
         // --->here for resising with of column
         canResize
         // --->here for row and subrows
         canExpand
         // --->here showing checkbox in the begin of RowTable with return you the checked rows
-        canSelect
-        setSelectedRows={setSelectedRows}
+        // canSelect
+        // setSelectedRows={setSelectedRows}
         // --->here showing golobal filter input on the top of table
         showGlobalFilter
         // --->here showing  filter button  on the top of table

@@ -13,6 +13,7 @@
     "axios": "0.26.1",
     "bootstrap": "4.6.0",
     "classnames": "^2.3.1",
+    "framer-motion": "^6.3.3",
     "lodash.concat": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.uniqby": "^4.7.0",

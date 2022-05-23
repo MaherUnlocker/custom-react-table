@@ -140,7 +140,7 @@ const getStyles = (props: any, disableResizing = false, align = 'left') => [
   props,
   {
     style: {
-      justifyContent: 'center',
+      justifyContent: 'start',
       alignItems: 'center',
       display: 'flex',
     },
@@ -523,7 +523,6 @@ export function Table<T extends Record<string, unknown>>({
                   maxHeight: '64px !important',
                   justifyContent: 'space-between',
                 }}
-                // className={classes.FiltersCss}
                 className={`${classes.FiltersCss} ${classes.cardHeaderCss}`}
               >
                 <Box

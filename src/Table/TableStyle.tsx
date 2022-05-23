@@ -69,6 +69,9 @@ export const useStyles = makeStyles({
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.07)',
     },
+    '&:nth-child(even)': {
+      backgroundColor: 'hsl(0, 0%, 98%,1)',
+    },
 
     borderBottom: '1px rgb(239, 239, 239)',
     '&:last-child': {
@@ -94,7 +97,7 @@ export const useStyles = makeStyles({
     verticalAlign: 'inherit',
     color: 'rgba(0, 0, 0, 0.87)',
     display: 'flex',
-    justifyContent: 'start',
+    justifyContent: 'center',
     alignItems: 'center',
 
     // borderRight: '1px solid rgba(224, 224, 224, 1)',

@@ -1,7 +1,5 @@
 import React from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { makeStyles } from '@mui/styles';
-import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -23,7 +21,7 @@ const variants = {
 };
 
 function MobileRow(props: any): React.ReactElement {
-  const { row, headerGroups, cellClickHandler, cellProps } = props;
+  const { row, cellProps } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -45,13 +43,12 @@ function MobileRow(props: any): React.ReactElement {
               cell.column.id !== 'rating' &&
               cell.column.id !== 'subRows' &&
               cell.column.id !== 'hidecolumns' &&
-              cell.column.id !== 'expander' &&
-              cell.column.id !== '_Actions'
+              cell.column.id !== 'expander'
           )
           .slice(0, 3)
 
           .map((cell: any) => {
-            const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
+            const { key: cellKey } = cell.getCellProps(cellProps);
 
             return <TableCell key={`cell ${cellKey}`}> {cell.render('Cell')}</TableCell>;
           })}
@@ -83,12 +80,11 @@ function MobileRow(props: any): React.ReactElement {
                         cell.column.id !== 'rating' &&
                         cell.column.id !== 'subRows' &&
                         cell.column.id !== 'hidecolumns' &&
-                        cell.column.id !== 'expander' &&
-                        cell.column.id !== '_Actions'
+                        cell.column.id !== 'expander'
                     )
                     .slice(3)
                     .map((cell: any) => {
-                      const { key: cellKey, role: cellRole, ...getCellProps } = cell.getCellProps(cellProps);
+                      const { key: cellKey } = cell.getCellProps(cellProps);
 
                       return (
                         <TableRow
@@ -151,37 +147,31 @@ export default function CollapsibleTable(instance: any, cellClickHandler: any): 
               gridTemplateColumns: 'repeat(4, 1fr)',
             }}
           >
-            {headerGroups.map((headerGroup: any, index: number) => {
-              return (
-                <React.Fragment key={`headerKey${index}`}>
-                  {headerGroup.headers
-                    .filter(
-                      (column: any) =>
-                        // column.id !== '_selector' &&
-                        column.id !== 'rating' &&
-                        column.id !== 'subRows' &&
-                        column.id !== 'hidecolumns' &&
-                        column.id !== 'expander' &&
-                        column.id !== '_Actions'
-                    )
-                    .slice(0, 3)
-                    .map((column: any) => {
-                      const style = {
-                        textAlign: column.align ? column.align : 'left ',
-                      } as React.CSSProperties;
-                      const {
-                        key: headerKey,
-                        role: headerRole,
-                        ...getHeaderProps
-                      } = column.getHeaderProps(headerProps);
-                      return <TableCell key={headerKey}>{column.render('Header')}</TableCell>;
-                    })}
-                  <TableCell key='actions' align='right'>
-                    actions
-                  </TableCell>
-                </React.Fragment>
-              );
-            })}
+            {headerGroups.map((headerGroup: any, index: number) => (
+              <React.Fragment key={`headerKey${index}`}>
+                {headerGroup.headers
+                  .filter(
+                    (column: any) =>
+                      // column.id !== '_selector' &&
+                      column.id !== 'rating' &&
+                      column.id !== 'subRows' &&
+                      column.id !== 'hidecolumns' &&
+                      column.id !== 'expander' &&
+                      column.id !== '_Actions'
+                  )
+                  .slice(0, 3)
+                  .map((column: any) => {
+                    const style = {
+                      textAlign: column.align ? column.align : 'left ',
+                    } as React.CSSProperties;
+                    const { key: headerKey } = column.getHeaderProps(headerProps);
+                    return <TableCell key={headerKey}>{column.render('Header')}</TableCell>;
+                  })}
+                <TableCell key='actions' align='right'>
+                  actions
+                </TableCell>
+              </React.Fragment>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>

@@ -189,7 +189,9 @@ const selectionHook = (hooks: Hooks<any>) => {
   ]);
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const headerProps = <T extends Record<string, unknown>>(
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   props: any,
   { column }: Meta<T, { column: HeaderGroup<T> }>
 ) => getStyles(props, column && column.disableResizing, column && column.align);

@@ -11,7 +11,6 @@ import { Table } from './Table';
 import { TrashIcon } from '../components/assets/TrashIcon';
 import axios from 'axios';
 import { useStyles } from './TableStyle';
-import { IsMobileView } from './isMobileView';
 
 // import './index.css';
 export interface DynamicTableProps {
@@ -148,6 +147,11 @@ export function DynamicTable({
     [apiResult]
   );
 
+  const deleteRow = (index: number) => {
+    const dataCopy: any = { ...apiResult };
+    dataCopy.data.splice(index, 1);
+    setApiResult(dataCopy);
+  };
   function duplicateRow(index: number) {
     const duplicatedData: any = { ...apiResult };
     const duplicateRow = duplicatedData?.data[index];
@@ -220,15 +224,7 @@ export function DynamicTable({
           disableSortBy: true,
           Cell: ({ row }: any) => (
             <React.Fragment>
-              <TrashIcon
-                width={25}
-                height={25}
-                onClick={() => {
-                  const dataCopy: any = { ...apiResult };
-                  dataCopy.data.splice(row.index, 1);
-                  setApiResult(dataCopy);
-                }}
-              />
+              <TrashIcon width={25} height={25} onClick={() => deleteRow(row.index)} />
               <DuplicateIcon
                 width={25}
                 height={25}

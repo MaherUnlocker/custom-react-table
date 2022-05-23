@@ -60,8 +60,10 @@ export const useStyles = makeStyles({
     // borderBottom: '1px solid #555B6D',
   },
   tableBody: {},
+
   tableRow: {
     color: 'inherit',
+    maxHeight: 60,
     outline: 0,
     verticalAlign: 'middle',
     '&:hover': {
@@ -92,8 +94,9 @@ export const useStyles = makeStyles({
     verticalAlign: 'inherit',
     color: 'rgba(0, 0, 0, 0.87)',
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'start',
     alignItems: 'center',
+
     // borderRight: '1px solid rgba(224, 224, 224, 1)',
     // '&:last-child': {
     //   borderRight: 'none',

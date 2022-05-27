@@ -47,9 +47,11 @@ export const useStyles = makeStyles({
   tableHeadCell: {
     padding: '16px 1px 16px 16px',
     fontSize: '0.875rem',
-    textAlign: 'center',
+    // textAlign: 'center',
     maxHeight: 45,
     verticalAlign: 'inherit',
+    justifyContent: 'start !important',
+    display: 'flex',
     // color: theme.palette.text.primary,
     fontWeight: '700 !important',
     lineHeight: '1.5rem',

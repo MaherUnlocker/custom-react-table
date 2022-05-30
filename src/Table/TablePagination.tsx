@@ -89,7 +89,7 @@ export function TablePagination<T extends Record<string, unknown>>({
           <AngleSmallLeftIcon height={20} width={20} />
         </button>
         <span className='d-flex align-items-center'>
-          Page {pageIndex + 1} sur {pageOptions.length}
+          Page {pageIndex + 1} {t('of')} {pageOptions.length}
         </span>
         <button className='btn' onClick={handleNextButtonClick} disabled={!canNextPage}>
           <AngleSmallRightIcon height={20} width={20} />

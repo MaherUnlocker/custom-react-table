@@ -16,7 +16,6 @@ const resources = {
 };
 const initLanguage = localStorage.getItem('i18nextLng');
 const lng = initLanguage?.slice(0, 2);
-console.log('🚀 ~ file: i18n.ts ~ line 19 ~ lng', lng);
 
 i18n
   .use(detector)

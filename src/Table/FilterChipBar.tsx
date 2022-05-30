@@ -1,9 +1,11 @@
+import React from 'react';
+
 import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
 import { createStyles, makeStyles } from '@mui/styles';
-
+import { useTranslation } from 'react-i18next';
 import { Chip } from '@mui/material';
+
 import { CrossIcon } from '../components/assets/CrossIcon';
-import React from 'react';
 
 const useStyles = makeStyles(
   createStyles({
@@ -47,6 +49,7 @@ const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) =
 export function FilterChipBar<T extends Record<string, unknown>>({
   instance,
 }: FilterChipBarProps<T>): React.ReactElement | null {
+  const { t } = useTranslation();
   const classes = useStyles({});
   const {
     allColumns,
@@ -78,7 +81,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
         }}
         onClick={() => resetFilters()}
       >
-        Effacer tous
+        {t('Delete all')}
       </span>
       {filters &&
         allColumns.map((column) => {

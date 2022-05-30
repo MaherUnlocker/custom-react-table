@@ -6,7 +6,7 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@ggascoigne/namor": "^2.0.4",
-    "@maherunlocker/custom-react-table-responsive": "^2.0.0",
+    "@maherunlocker/custom-react-table": "^2.2.4",
     "@mui/icons-material": "^5.6.1",
     "@mui/material": "^5.6.1",
     "@mui/styles": "^5.6.1",
@@ -14,6 +14,8 @@
     "bootstrap": "4.6.0",
     "classnames": "^2.3.1",
     "framer-motion": "^6.3.3",
+    "i18next": "^19.4.4",
+    "i18next-browser-languagedetector": "^4.1.1",
     "lodash.concat": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.uniqby": "^4.7.0",
@@ -21,9 +23,10 @@
     "match-sorter": "^6.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-i18next": "^11.16.9",
     "react-json-view": "^1.21.3",
     "react-select": "^5.3.0",
-    "react-table": "^7.7.0",
+    "react-table": "^7.8.0",
     "reactstrap": "^8.10.1",
     "styled-components": "^5.3.5",
     "tss-react": "^3.6.1"
@@ -43,7 +46,7 @@
     "@types/react": "^17.0.13",
     "@types/react-dom": "^17.0.8",
     "@types/react-select": "^5.0.1",
-    "@types/react-table": "^7.7.10",
+    "@types/react-table": "^7.7.12",
     "@types/reactstrap": "^8.7.2",
     "@types/styled-components": "^5.1.25",
     "@types/testing-library__jest-dom": "^5.14.3",
@@ -74,7 +77,13 @@
     "test": "react-scripts test"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-unused-vars": [
+        "error"
+      ]
+    },
+    "settings": {}
   },
   "browserslist": {
     "production": [

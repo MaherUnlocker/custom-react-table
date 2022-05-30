@@ -1,9 +1,12 @@
+import React from 'react';
+
+import { useTranslation } from 'react-i18next';
+import { TableInstance } from 'react-table';
+
 import { AngleDoubleSmallLeftIcon } from '../components/assets/AngleDoubleSmallLeftIcon';
 import { AngleDoubleSmallRightIcon } from '../components/assets/AngleDoubleSmallRightIcon';
 import { AngleSmallLeftIcon } from '../components/assets/AngleSmallLeftIcon';
 import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
-import React from 'react';
-import { TableInstance } from 'react-table';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -42,6 +45,7 @@ export function TablePagination<T extends Record<string, unknown>>({
 
   function TablePaginationActions(props: TablePaginationActionsProps) {
     const { count, page, rowsPerPage, onPageChange } = props;
+    const { t } = useTranslation();
 
     const handleFirstPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       onPageChange(event, 0);
@@ -62,12 +66,13 @@ export function TablePagination<T extends Record<string, unknown>>({
     return (
       <div className='d-flex justify-content-end  pagination'>
         <div className='d-flex align-items-center'>
-          Lignes par page
+          {t('Rows per page')}
           <select
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
             }}
+            style={{ marginRight: '32px', marginLeft: '8px' }}
           >
             {[10, 20, 30, 40, 50, 250].map((pageSize) => (
               <option key={pageSize} value={pageSize}>

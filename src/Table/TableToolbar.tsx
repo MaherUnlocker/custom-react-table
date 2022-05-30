@@ -1,14 +1,15 @@
+import React from 'react';
 import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
+import { useTranslation } from 'react-i18next';
+import { TableInstance } from 'react-table';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
+import classnames from 'classnames';
 
 import { ColumnHidePage } from './ColumnHidePage';
 import GlobalFilter from './filters/GlobalFilter';
-import React from 'react';
 import { StyledButton } from '../components/assets/StyledButton';
-import { TableInstance } from 'react-table';
 import { TableMouseEventHandler } from '../../types/react-table-config';
-import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
-import classnames from 'classnames';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -151,6 +152,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
   customJsxSideFilterButton,
 }: React.PropsWithChildren<TableToolbarProps<T>>): React.ReactElement | null {
   const { columns } = instance;
+  const { t } = useTranslation();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<Element | undefined>(undefined);
   const [columnsOpen, setColumnsOpen] = React.useState(false);
@@ -206,7 +208,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
               }}
               label='Filter by columns'
             >
-              Filtre(s)
+              {t('Filter(s)')}
             </StyledButton>
           </React.Fragment>
         ) : null}

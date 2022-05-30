@@ -11,6 +11,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { motion } from 'framer-motion/dist/framer-motion';
+import { useTranslation } from 'react-i18next';
+
 import { useStyles } from './TableStyle';
 import { headerProps } from './Table';
 import SvgNoData from '../components/assets/SvgNoData';
@@ -126,6 +128,7 @@ function MobileRow(props: any): React.ReactElement {
 }
 // eslint-disable-next-line
 export default function CollapsibleTable(instance: any, cellClickHandler: any): React.ReactElement {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { headerGroups, page, prepareRow } = instance.props;
   return (
@@ -161,14 +164,11 @@ export default function CollapsibleTable(instance: any, cellClickHandler: any): 
                   )
                   .slice(0, 3)
                   .map((column: any) => {
-                    const style = {
-                      textAlign: column.align ? column.align : 'left ',
-                    } as React.CSSProperties;
                     const { key: headerKey } = column.getHeaderProps(headerProps);
                     return <TableCell key={headerKey}>{column.render('Header')}</TableCell>;
                   })}
                 <TableCell key='actions' align='right'>
-                  actions
+                  {t('Actions')}
                 </TableCell>
               </React.Fragment>
             ))}

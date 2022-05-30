@@ -1,5 +1,12 @@
+import React from 'react';
+
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Box, Grid, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
 import { Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
+import _uniqby from 'lodash.uniqby';
+import cx from 'classnames';
+import { useTranslation } from 'react-i18next';
 import {
   Cell,
   CellProps,
@@ -39,7 +46,6 @@ import {
 } from './TableStyle';
 import { camelToWords, useDebounce, useLocalStorage } from '../utils';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
-
 import ChoiceIcon from './Choice';
 import CollapsibleTable from './CollapsibleTable';
 import { ColumnHidePageCustom } from './ColumnHidePageCustom';
@@ -51,9 +57,6 @@ import { FilterIcon } from '../components/assets/FilterIcon';
 import FilterModalMobile from './FilterModalMobile';
 import { FilterPageCustom } from './FilterPageCustom';
 import { IsMobileView } from './isMobileView';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import React from 'react';
 import { ResizeHandle } from './ResizeHandle';
 import { StyledH2 } from '../components/assets/StyledH2';
 import { StyledLabel } from '../components/assets/StyledLabel';
@@ -62,8 +65,6 @@ import SvgNoData from '../components/assets/SvgNoData';
 import { TablePagination } from './TablePagination';
 import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
-import _uniqby from 'lodash.uniqby';
-import cx from 'classnames';
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T>, DynamicTableProps {
   onAdd?: (instance: TableInstance<T>) => React.MouseEventHandler;
@@ -216,6 +217,7 @@ export function Table<T extends Record<string, unknown>>({
   maxHeight,
   ...props
 }: React.PropsWithChildren<TableProperties<T>>): React.ReactElement {
+  const { t } = useTranslation();
   const classes = useStyles();
   if (name === undefined || name === null) {
     name = 'mytable';
@@ -228,7 +230,7 @@ export function Table<T extends Record<string, unknown>>({
       {
         id: 'hidecolumns',
         accessor: 'hidecolumns',
-        disableResizing: true,
+        disableResizing: false,
         disableGroupBy: true,
         disableFilters: true,
         disableSortBy: true,
@@ -237,7 +239,7 @@ export function Table<T extends Record<string, unknown>>({
         width: 60,
         maxWidth: 100,
         Header: () => (
-          <div className='dropdown'>
+          <div className='dropdown '>
             <div id='dropdownHideColomuns' data-bs-toggle='dropdown'>
               <ChoiceIcon height={25} width={25} />
             </div>
@@ -534,7 +536,7 @@ export function Table<T extends Record<string, unknown>>({
                   }}
                 >
                   <FilterIcon className={classes.tableFilterAltOutlinedIcon} style={{ flexDirection: 'row-reverse' }} />
-                  <StyledH2>Filtre(s)</StyledH2>
+                  <StyledH2>{t('Filtre(s)')}</StyledH2>
                 </Box>
 
                 <CrossIcon

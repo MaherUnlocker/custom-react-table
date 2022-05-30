@@ -1,17 +1,21 @@
-import { createStyles, makeStyles } from '@mui/styles';
+import React from 'react';
 
+import { TableInstance } from 'react-table';
+import { createStyles, makeStyles } from '@mui/styles';
+import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
+
 import { DiskIcon } from '../components/assets/DiskIcon';
 import { FilterChipBarCollapsible } from './FilterChipBarCollapsible';
 import { IsMobileView } from './isMobileView';
-import React from 'react';
 import { StyledButton } from '../components/assets/StyledButton';
 import { StyledIconButton } from '../components/assets/StyledIconButton';
 import { StyledLabel } from '../components/assets/StyledLabel';
-import { StyledSelectInput } from '../components/assets/StyledSelectInput';
-import { TableInstance } from 'react-table';
 import VerticalDotsIcon from '../components/assets/VerticalDotsIcon';
 import { useLocalStorage } from '../utils';
+import { SelectComponent } from './SelectComponent';
+import { TrashIcon } from '../components/assets/TrashIcon';
+import { PencilIcon } from '../components/assets/PencilIcon';
 
 const useStyles = makeStyles(
   createStyles({
@@ -66,12 +70,15 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   filterActive,
   setLocalFilterActive,
 }: FilterPageCustomProps<T>): React.ReactElement {
+  const { t } = useTranslation();
   const classes = useStyles({});
+  const isMobile = IsMobileView();
   const {
     allColumns,
     setAllFilters,
     state: { filters },
   } = instance;
+
   const heightRef = React.useRef(null);
   // eslint-disable-next-line
   const [showMore, setShowMore] = React.useState(() => false);
@@ -82,6 +89,54 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
 
   const [savedFilters, setSavedFilters] = useLocalStorage(`SavedFilters`, []);
   const [designationFilter, setDesignationFilter] = React.useState('');
+  const [oldFilterName, setOldFilterName] = React.useState('');
+
+  const handleSaveFiltersClick = React.useCallback(() => {
+    if (filters.length > 0) {
+      const found = savedFilters.find((f: any) => f.label === designationFilter);
+
+      found
+        ? (savedFilters[savedFilters.findIndex((f: any) => f.label === designationFilter)] = {
+            label: designationFilter,
+            value: filters,
+          })
+        : setSavedFilters([...savedFilters, { label: designationFilter, value: filters }]);
+    }
+  }, [designationFilter, filters, setSavedFilters, savedFilters]);
+  const handleModifyFilter = React.useCallback(() => {
+    const found = savedFilters.find((f: any) => f.label === oldFilterName);
+    found &&
+      (savedFilters[savedFilters.findIndex((f: any) => f.label === oldFilterName)] = {
+        label: oldFilterName,
+        value: filters,
+      });
+  }, [filters, savedFilters, oldFilterName]);
+
+  const handleSavedFiltersSelect = React.useCallback(
+    (selectedValue: any) => {
+      setDesignationFilter(selectedValue.label);
+      const indexofSelected = savedFilters.findIndex((f: any) => f.label === selectedValue.label);
+      indexofSelected > -1
+        ? (function () {
+            setAllFilters(savedFilters[indexofSelected].value);
+            setOldFilterName(selectedValue.label);
+          })()
+        : setAllFilters([]);
+    },
+    [savedFilters, setAllFilters]
+  );
+
+  function handleDeleteFilter() {
+    const found = savedFilters.find((f: any) => f.label === designationFilter);
+    found &&
+      savedFilters.splice(
+        savedFilters.findIndex((f: any) => f.label === designationFilter),
+        1
+      );
+    setSavedFilters(savedFilters);
+    setAllFilters([]);
+    setDesignationFilter('');
+  }
 
   React.useEffect(() => {
     if (heightRef.current !== null) {
@@ -89,29 +144,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
       setCurrentHeight(document.getElementById('maher')!.offsetHeight!);
     }
   }, []);
-  const handleSavedFiltersClick = React.useCallback(() => {
-    const found = savedFilters.find((f: any) => f.label === designationFilter);
-    if (found) {
-      savedFilters[savedFilters.findIndex((f: any) => f.label === designationFilter)] = {
-        label: designationFilter,
-        value: filters,
-      };
-    } else {
-      setSavedFilters([...savedFilters, { label: designationFilter, value: filters }]);
-    }
-  }, [designationFilter, filters, setSavedFilters, savedFilters]);
 
-  const handleSavedFiltersSelect = React.useCallback(
-    (selectedValue: any) => {
-      setDesignationFilter(selectedValue.label);
-      const indexofSelected = savedFilters.findIndex((f: any) => f.label === selectedValue.label);
-      if (indexofSelected) {
-        setAllFilters(savedFilters[indexofSelected].value);
-      }
-    },
-    [savedFilters, setAllFilters]
-  );
-  const isMobile = IsMobileView();
   return (
     <div className={(classes.columnsPopOver, classes.grid, classes.cell)} style={{ marginLeft: 5, marginRight: 5 }}>
       <StyledLabel
@@ -122,22 +155,17 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
           marginTop: 10,
         }}
       >
-        Filtres enregistrés
+        {t('Saved filters')}
       </StyledLabel>
 
       <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ width: ' 100%', marginTop: 10 }}>
-          <StyledLabel htmlFor='savedFilter'>Sélectionner un filtre</StyledLabel>
-          <StyledSelectInput
-            onInputChange={(e: string) => {
-              setDesignationFilter(e);
-            }}
-            inputValue={designationFilter}
-            id='savedFilter'
-            name='savedFilter'
+          <StyledLabel htmlFor='savedFilter'>{t('Select a filter')}</StyledLabel>
+
+          <SelectComponent
             options={savedFilters.length > 0 ? savedFilters : []}
-            placeholder={savedFilters.length > 0 ? 'Sélectionner ...' : 'Aucune'}
-            onChange={handleSavedFiltersSelect}
+            setDesignationFilter={setDesignationFilter}
+            handleSavedFiltersSelect={handleSavedFiltersSelect}
           />
         </div>
 
@@ -150,11 +178,10 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
               border: '1px solid',
               borderRadius: '6px',
             }}
-            onClick={handleSavedFiltersClick}
+            onClick={handleSaveFiltersClick}
           >
             <DiskIcon height={20} width={20} />
           </StyledIconButton>
-
           <StyledIconButton
             icon='VerticalDotsIcon'
             style={{
@@ -164,7 +191,17 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
               borderRadius: '6px',
             }}
           >
-            <VerticalDotsIcon height={20} width={20} />
+            <VerticalDotsIcon height={20} width={20} className='dropdown' id='filteraction' data-bs-toggle='dropdown' />
+            <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+              <div className='dropdown-item d-flex align-items-center' onClick={() => handleModifyFilter()}>
+                <PencilIcon className='mx-2' style={{ cursor: 'pointer' }} height={20} width={20} onClick={() => {}} />
+                {t('Modify')}
+              </div>
+              <div className='dropdown-item d-flex align-items-center' onClick={handleDeleteFilter}>
+                <TrashIcon style={{ cursor: 'pointer' }} height={20} width={20} onClick={() => {}} className='mx-2' />
+                {t('Delete')}
+              </div>
+            </div>
           </StyledIconButton>
         </Box>
       </Box>
@@ -177,7 +214,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
           marginTop: 10,
         }}
       >
-        Filtrer
+        {t('Filter')}
       </StyledLabel>
 
       {Object.keys(instance.state.filters).length > 0 ? (
@@ -186,7 +223,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
         </Box>
       ) : (
         <StyledButton rounded variant='light' style={{ width: '100%' }}>
-          Aucun filtre actif
+          {t('No active filter')}
         </StyledButton>
       )}
 

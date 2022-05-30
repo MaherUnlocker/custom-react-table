@@ -1,40 +1,43 @@
 import { DynamicTable } from './Table/DynamicTable';
+
+//import { DynamicTable } from '@maherunlocker/custom-react-table';
 import React from 'react';
 import { stringify } from 'querystring';
+import VerticalDotsIcon from './components/assets/VerticalDotsIcon';
 // eslint-disable-next-line
 function SelectAccountDropdown(original: any) {
-  return null;
-  // <div className='w-100'>
-  //   <div className='dropdown'>
-  //     <VerticalDotsIcon
-  //       height={25}
-  //       width={25}
-  //       id='dropdownMenuButton1'
-  //       data-bs-toggle='dropdown'
-  //       onClick={(e) => {
-  //         // alert(original.selectedRow.original);
-  //         e.stopPropagation();
-  //       }}
-  //       // className=" dropdown-toggle"
-  //     />
-  //     <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-  //       <div
-  //         className='dropdown-item'
-  //         onClick={(e) => {
-  //           alert(original.selectedRow.original);
-  //           e.stopPropagation();
-  //         }}
-  //       >
-  //         Accéder à la carte
-  //       </div>
-  //       <div className='dropdown-item'>Voirffffff la liste des boutiques</div>
-  //     </div>
-  //   </div>
-  // </div>
+  return (
+    <div className='w-100'>
+      <div className='dropdown'>
+        <VerticalDotsIcon
+          height={25}
+          width={25}
+          id='dropdownMenuButton1'
+          data-bs-toggle='dropdown'
+          onClick={(e) => {
+            // alert(original.selectedRow.original);
+            e.stopPropagation();
+          }}
+          // className=" dropdown-toggle"
+        />
+        <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+          <div
+            className='dropdown-item'
+            onClick={(e) => {
+              alert(original.selectedRow.original);
+              e.stopPropagation();
+            }}
+          >
+            Accéder à la carte
+          </div>
+          <div className='dropdown-item'>Voirffffff la liste des boutiques</div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function SelectAccountDropdown2(original: any) {
-  // console.log(original);
   const [open, setOpen] = React.useState(false);
   return (
     <div className='w-100 '>
@@ -47,19 +50,17 @@ function SelectAccountDropdown2(original: any) {
           {open ? <div>One</div> : 'colum1'}
         </button>
         <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-          {[1, 2, 3].map((elm, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => {
-                  alert(stringify(original.selectedRow));
-                  setOpen(true);
-                }}
-              >
-                elm
-              </div>
-            );
-          })}
+          {[1, 2, 3].map((elm, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                alert(stringify(original.selectedRow));
+                setOpen(true);
+              }}
+            >
+              elm
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -89,7 +90,7 @@ interface customColumnProps {
 // eslint-disable-next-line
 let arrayOfCustomColumns: customColumnProps[] = [];
 arrayOfCustomColumns.push(
-  { indexOFColumn: 2, columnName: 'column1', customJsx: SelectAccountDropdown2 },
+  { indexOFColumn: 99, columnName: 'action', customJsx: SelectAccountDropdown2 },
   { indexOFColumn: 4, columnName: 'column2', customJsx: FilterSideComponent }
 );
 
@@ -98,11 +99,11 @@ export default function App(): JSX.Element {
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
   return (
-    <>
+    <React.Suspense fallback={null}>
       <DynamicTable
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
-        // url='http://192.168.2.8:4000/categories'
+        // url='http://192.168.2.14:4000/categories'
         url='http://192.168.2.14:4000/client'
         // url='http://192.168.2.14:4000/products'
         //optionnal props
@@ -121,8 +122,8 @@ export default function App(): JSX.Element {
         // --->here for row and subrows
         canExpand
         // --->here showing checkbox in the begin of RowTable with return you the checked rows
-        // canSelect
-        // setSelectedRows={setSelectedRows}
+        canSelect
+        setSelectedRows={setSelectedRows}
         // --->here showing golobal filter input on the top of table
         showGlobalFilter
         // --->here showing  filter button  on the top of table
@@ -156,6 +157,6 @@ export default function App(): JSX.Element {
           )}
         </code>
       </pre>
-    </>
+    </React.Suspense>
   );
 }

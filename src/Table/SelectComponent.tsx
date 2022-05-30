@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Select from 'react-select';
 
 type optionType = {
@@ -16,9 +17,12 @@ export function SelectComponent({
   setDesignationFilter,
   handleSavedFiltersSelect,
 }: selectComponentType): JSX.Element {
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = React.useState('');
-  const [value, setValue] = React.useState(options[0]); //{ label: '', value: '' });
+  const [value, setValue] = React.useState({ label: options.length > 0 ? t('Select...') : t('None'), value: '' });
+  // const [value, setValue] = React.useState(options[0]); //{ label: '', value: '' });
   const onInputChange = (option: any, { action }: any) => {
+    console.log('🚀 ~ file: SelectComponent.tsx ~ line 24 ~ onInputChange ~ option', option);
     if (action === 'input-change') {
       const optionLength = option.length;
       const inputValueLength = inputValue.length;
@@ -31,7 +35,9 @@ export function SelectComponent({
       const newValue: any =
         optionLength < inputValueLength
           ? myObject
-          : { value: value.value + option[option.length - 1], label: value.label + option[option.length - 1] };
+          : options.length > 0
+          ? { value: value.value + option[option.length - 1], label: value.label + option[option.length - 1] }
+          : myObject;
 
       setValue(newValue);
 
@@ -46,13 +52,14 @@ export function SelectComponent({
     setDesignationFilter(option);
     handleSavedFiltersSelect(option);
   };
+  console.log('🚀 ~ file: SelectComponent.tsx ~ line 53 ~ onChange ~ value', value);
 
   return (
     <div className='App'>
       <Select
         id='savedFilter'
         name='savedFilter'
-        placeholder={options.length > 0 ? 'Sélectionner ...' : 'Aucune'}
+        placeholder={options.length > 0 ? "t('Select...')" : t('None')}
         options={options}
         onChange={onChange}
         onInputChange={onInputChange}

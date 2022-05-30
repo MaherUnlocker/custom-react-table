@@ -129,7 +129,7 @@ export function DynamicTable({
                   accessor: key,
                   disableFilters: true,
                   canFilter: false,
-                  Cell: (value: any) => <img src={value.cell.value} className='w-50' alt='' />,
+                  Cell: (value: any) => <img src={value.cell.value} style={{ height: '50px' }} alt='' />,
                 };
               }
 
@@ -163,7 +163,6 @@ export function DynamicTable({
 
   const columns: any = React.useMemo(() => {
     let modifiedColumns: any = apiResultColumns;
-
     if (canExpand) {
       modifiedColumns = [
         {
@@ -207,7 +206,15 @@ export function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
-          Cell: (cell: any) => <elm.customJsx selectedRow={cell.row.original} />,
+          Cell: (cell: any) => (
+            <elm.customJsx
+              selectedRow={{
+                ...cell.row.original,
+                selectedRows:
+                  cell.selectedFlatRows.length > 0 ? cell.selectedFlatRows.map((select: any) => select.original) : [],
+              }}
+            />
+          ),
         })
       );
     }

@@ -1,4 +1,5 @@
 import { Divider } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { TableInstance } from 'react-table';
 import { useStyles } from './TableStyle';
@@ -10,6 +11,7 @@ type ColumnHidePageProps<T extends Record<string, unknown>> = {
 export function ColumnHidePageCustom<T extends Record<string, unknown>>({
   instance,
 }: ColumnHidePageProps<T>): React.ReactElement | null {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [isVisible, setIsVisible] = React.useState(false);
   const { allColumns, toggleHideAllColumns, toggleHideColumn } = instance;
@@ -24,14 +26,6 @@ export function ColumnHidePageCustom<T extends Record<string, unknown>>({
 
   const uncheckedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
   const onlyOneOptionLeft = uncheckedCount + 1 >= hideableColumns.length;
-  // eslint-disable-next-line
-  function toggleAllColumnsVisibility() {
-    if (uncheckedCount === 0) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
-  }
 
   React.useEffect(() => {
     if (uncheckedCount === 0) {
@@ -51,7 +45,7 @@ export function ColumnHidePageCustom<T extends Record<string, unknown>>({
             color: '#495057 ',
           }}
         >
-          Afficher tous:
+          {t('Show all :')}
         </label>
         <input
           type='checkbox'

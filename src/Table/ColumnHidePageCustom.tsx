@@ -33,6 +33,14 @@ export function ColumnHidePageCustom<T extends Record<string, unknown>>({
     }
   }
 
+  React.useEffect(() => {
+    if (uncheckedCount === 0) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  }, [uncheckedCount]);
+
   return hideableColumns.length > 1 ? (
     <div className='d-flex flex-column'>
       <div key='showall' className='   mx-2 d-flex align-items-center justify-content-between'>
@@ -72,7 +80,6 @@ export function ColumnHidePageCustom<T extends Record<string, unknown>>({
             // {...column.getToggleHiddenProps()}
             onChange={() => {
               toggleHideColumn(column.id, column.isVisible);
-              setIsVisible(uncheckedCount === 0 ? true : false);
             }}
             disabled={column.isVisible && onlyOneOptionLeft}
             checked={column.isVisible}

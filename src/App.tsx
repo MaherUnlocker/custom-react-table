@@ -145,7 +145,7 @@ export default function App(): JSX.Element {
         maxHeight='80vh'
       />
 
-      <p>Selected Rows: {selectedRows.length}</p>
+      {/* <p>Selected Rows: {selectedRows.length}</p>
       <pre>
         <code>
           {JSON.stringify(
@@ -156,7 +156,7 @@ export default function App(): JSX.Element {
             2
           )}
         </code>
-      </pre>
+      </pre> */}
     </React.Suspense>
   );
 }

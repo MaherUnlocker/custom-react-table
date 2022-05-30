@@ -22,7 +22,6 @@ export function SelectComponent({
   const [value, setValue] = React.useState({ label: options.length > 0 ? t('Select...') : t('None'), value: '' });
   // const [value, setValue] = React.useState(options[0]); //{ label: '', value: '' });
   const onInputChange = (option: any, { action }: any) => {
-    console.log('🚀 ~ file: SelectComponent.tsx ~ line 24 ~ onInputChange ~ option', option);
     if (action === 'input-change') {
       const optionLength = option.length;
       const inputValueLength = inputValue.length;
@@ -52,20 +51,17 @@ export function SelectComponent({
     setDesignationFilter(option);
     handleSavedFiltersSelect(option);
   };
-  console.log('🚀 ~ file: SelectComponent.tsx ~ line 53 ~ onChange ~ value', value);
 
   return (
-    <div className='App'>
-      <Select
-        id='savedFilter'
-        name='savedFilter'
-        placeholder={options.length > 0 ? "t('Select...')" : t('None')}
-        options={options}
-        onChange={onChange}
-        onInputChange={onInputChange}
-        inputValue={inputValue}
-        value={value}
-      />
-    </div>
+    <Select
+      id='savedFilter'
+      name='savedFilter'
+      placeholder={options.length > 0 ? "t('Select...')" : t('None')}
+      options={options}
+      onChange={onChange}
+      onInputChange={onInputChange}
+      inputValue={inputValue}
+      value={value}
+    />
   );
 }

@@ -113,7 +113,6 @@ export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
       </React.Fragment>
     );
   }
-
   return Object.keys(filters).length > 0 ? (
     <div className={classes.chipZone}>
       <span

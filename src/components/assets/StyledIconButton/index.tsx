@@ -20,8 +20,8 @@ export const StyledIconButton = styled(StyledButton)<StyledIconButtonPropsType>`
   }
   padding: 10px;
   margin: 10px;
-  min-width: 45px;
-  min-height: 45px;
+  min-width: 30px;
+  min-height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;

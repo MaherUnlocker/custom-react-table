@@ -4,6 +4,9 @@ import { DynamicTable } from './Table/DynamicTable';
 import React from 'react';
 import { stringify } from 'querystring';
 import VerticalDotsIcon from './components/assets/VerticalDotsIcon';
+import { I18nextProvider } from 'react-i18next';
+import i18next from './i18n';
+import './index.css';
 // eslint-disable-next-line
 function SelectAccountDropdown(original: any) {
   return (
@@ -37,50 +40,6 @@ function SelectAccountDropdown(original: any) {
   );
 }
 
-function SelectAccountDropdown2(original: any) {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <div className='w-100 '>
-      <div className='dropdown'>
-        <button
-          id='dropdownMenuButton1'
-          data-bs-toggle='dropdown'
-          // className=" dropdown-toggle"
-        >
-          {open ? <div>One</div> : 'colum1'}
-        </button>
-        <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-          {[1, 2, 3].map((elm, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                alert(stringify(original.selectedRow));
-                setOpen(true);
-              }}
-            >
-              elm
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FilterSideComponent(original: any): JSX.Element {
-  return (
-    <button
-      onClick={(e) => {
-        alert(stringify(original.selectedRow));
-        e.stopPropagation();
-      }}
-      // style={{ width: '500px' }}
-    >
-      Custom Component
-    </button>
-  );
-}
-
 interface customColumnProps {
   indexOFColumn: number;
   columnName: string;
@@ -88,18 +47,72 @@ interface customColumnProps {
 }
 
 // eslint-disable-next-line
-let arrayOfCustomColumns: customColumnProps[] = [];
-arrayOfCustomColumns.push(
-  { indexOFColumn: 99, columnName: 'action', customJsx: SelectAccountDropdown2 },
-  { indexOFColumn: 4, columnName: 'column2', customJsx: FilterSideComponent }
-);
 
 export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
+
+  const [disableElment, setDesableElment] = React.useState(false);
+  function SelectAccountDropdown2(original: any) {
+    const [open, setOpen] = React.useState(false);
+    return (
+      <div className={disableElment ? 'w-100 disabledbutton' : 'w-100'}>
+        <div className='dropdown'>
+          <button
+            id='dropdownMenuButton1'
+            data-bs-toggle='dropdown'
+            // className=" dropdown-toggle"
+          >
+            {open ? <div>One</div> : 'colum1'}
+          </button>
+          <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+            {[1, 2, 3].map((elm, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  // alert(stringify(original.selectedRow));
+                  setDataIsUpdated(true);
+                  setDesableElment(true);
+                  // setOpen(true);
+                }}
+              >
+                elm
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function FilterSideComponent(original: any): JSX.Element {
+    return (
+      <span
+        style={{ boxShadow: '0px 0px 4px' }}
+        className='badge border border-dark rounded-circle badge-light p-2  rounded'
+      >
+        3
+      </span>
+    );
+  }
+
+  let arrayOfCustomColumns: customColumnProps[] = [];
+  arrayOfCustomColumns.push(
+    { indexOFColumn: 99, columnName: 'action', customJsx: SelectAccountDropdown2 },
+    { indexOFColumn: 4, columnName: '_', customJsx: FilterSideComponent }
+  );
   return (
-    <React.Suspense fallback={null}>
+    // <React.Suspense fallback={null}>
+    <I18nextProvider i18n={i18next}>
+      <button
+        onClick={() => {
+          setDataIsUpdated(true);
+          setDesableElment(false);
+        }}
+      >
+        data
+      </button>
       <DynamicTable
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
@@ -157,6 +170,7 @@ export default function App(): JSX.Element {
           )}
         </code>
       </pre> */}
-    </React.Suspense>
+    </I18nextProvider>
+    // </React.Suspense>
   );
 }

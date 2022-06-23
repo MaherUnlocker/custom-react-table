@@ -102,6 +102,7 @@ export default function App(): JSX.Element {
     { indexOFColumn: 99, columnName: 'action', customJsx: SelectAccountDropdown2 },
     { indexOFColumn: 4, columnName: '_', customJsx: FilterSideComponent }
   );
+  const mydata: any = null;
   return (
     // <React.Suspense fallback={null}>
     <I18nextProvider i18n={i18next}>
@@ -156,6 +157,7 @@ export default function App(): JSX.Element {
         elevationTable={0} //this for let you modify the height of the table and min height you can put number or string
         minHeight='70vh'
         maxHeight='80vh'
+        requestHeader={{ 'Accept-Language': 'es' }}
       />
 
       {/* <p>Selected Rows: {selectedRows.length}</p>

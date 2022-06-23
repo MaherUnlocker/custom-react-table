@@ -1,21 +1,18 @@
 import 'regenerator-runtime/runtime';
+import React from 'react';
 
 import { FilterValue, IdType, Row, customColumnProps } from 'react-table';
+import axios from 'axios';
 
 import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
 import { DuplicateIcon } from '../components/assets/DuplicateIcon';
 import LoadingDataAnimation from '../components/LoadingDataAnimation';
 import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
-import React from 'react';
 import { Table } from './Table';
 import { TrashIcon } from '../components/assets/TrashIcon';
-import axios from 'axios';
 import { useStyles } from './TableStyle';
-import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
-
-// import './index.css';
 export interface DynamicTableProps {
   url?: string;
   onClick?: (row: any) => void;
@@ -41,6 +38,7 @@ export interface DynamicTableProps {
   customJsxSideFilterButton?: React.ReactNode;
   arrayOfCustomColumns?: customColumnProps[] | undefined;
   setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>>;
+  requestHeader?: Record<string, string>;
 }
 
 type DataType = {
@@ -52,7 +50,11 @@ export type apiResultProps = {
   data: DataType[];
 };
 
-function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
+function filterGreaterThan(
+  rows: Array<Row<any>>,
+  id: Array<IdType<any>>,
+  filterValue: FilterValue
+) {
   return rows.filter((row) => {
     const rowValue = row.values[id[0]];
     return rowValue >= filterValue;
@@ -89,6 +91,7 @@ export function DynamicTable({
   dataIsUpdated,
   minHeight,
   maxHeight,
+  requestHeader,
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = React.useState<apiResultProps>();
 
@@ -97,7 +100,9 @@ export function DynamicTable({
   const classes = useStyles();
   async function fetchData(url: string) {
     await axios
-      .get(url)
+      .get(url, {
+        headers: requestHeader,
+      })
       .then((response: { data: apiResultProps }) => {
         setApiResult(response.data);
       })
@@ -114,7 +119,9 @@ export function DynamicTable({
   }
   const apiResultColumns = React.useMemo(
     () =>
-      apiResult !== undefined && apiResult.structure !== undefined && Array.isArray(apiResult?.structure)
+      apiResult !== undefined &&
+      apiResult.structure !== undefined &&
+      Array.isArray(apiResult?.structure)
         ? apiResult.structure
             .filter((key) => key !== 'subRows')
             .map((key) => {
@@ -132,7 +139,13 @@ export function DynamicTable({
                   accessor: key,
                   disableFilters: true,
                   canFilter: false,
-                  Cell: (value: any) => <img src={value.cell.value} style={{ height: '50px' }} alt='' />,
+                  Cell: (value: any) => (
+                    <img
+                      src={value.cell.value}
+                      style={{ height: '50px' }}
+                      alt=""
+                    />
+                  ),
                 };
               }
 
@@ -159,7 +172,10 @@ export function DynamicTable({
     const duplicatedData: any = { ...apiResult };
     const duplicateRow = duplicatedData?.data[index];
     const firstPart = duplicatedData?.data.slice(0, index + 1);
-    const secondPart = duplicatedData?.data.slice(index + 1, duplicatedData.data.length);
+    const secondPart = duplicatedData?.data.slice(
+      index + 1,
+      duplicatedData.data.length
+    );
     duplicatedData.data = [...firstPart, duplicateRow, ...secondPart];
     setApiResult(duplicatedData);
   }
@@ -193,7 +209,11 @@ export function DynamicTable({
                 })}
               >
                 {row.isExpanded ? (
-                  <AngleSmallRightIcon height={25} width={25} className={classes.iconDirectionAsc} />
+                  <AngleSmallRightIcon
+                    height={25}
+                    width={25}
+                    className={classes.iconDirectionAsc}
+                  />
                 ) : (
                   <AngleSmallRightIcon height={25} width={25} />
                 )}
@@ -214,7 +234,11 @@ export function DynamicTable({
               selectedRow={{
                 ...cell.row.original,
                 selectedRows:
-                  cell.selectedFlatRows.length > 0 ? cell.selectedFlatRows.map((select: any) => select.original) : [],
+                  cell.selectedFlatRows.length > 0
+                    ? cell.selectedFlatRows.map(
+                        (select: any) => select.original
+                      )
+                    : [],
               }}
             />
           ),
@@ -234,7 +258,11 @@ export function DynamicTable({
           disableSortBy: true,
           Cell: ({ row }: any) => (
             <React.Fragment>
-              <TrashIcon width={25} height={25} onClick={() => deleteRow(row.index)} />
+              <TrashIcon
+                width={25}
+                height={25}
+                onClick={() => deleteRow(row.index)}
+              />
               <DuplicateIcon
                 width={25}
                 height={25}
@@ -251,7 +279,10 @@ export function DynamicTable({
     return modifiedColumns;
     // eslint-disable-next-line
   }, [apiResultColumns]);
-  const data = React.useMemo(() => (apiResult?.data !== undefined ? apiResult?.data : []), [apiResult]);
+  const data = React.useMemo(
+    () => (apiResult?.data !== undefined ? apiResult?.data : []),
+    [apiResult]
+  );
   React.useEffect(() => {
     fetchData(url!);
     setDataIsUpdated !== undefined && setDataIsUpdated(false);
@@ -260,33 +291,37 @@ export function DynamicTable({
   }, [url, dataIsUpdated]);
 
   if (loading) return <LoadingDataAnimation />;
-  if (error || apiResult === undefined || apiResult?.structure === undefined || apiResult?.structure.length === 0)
+  if (
+    error ||
+    apiResult === undefined ||
+    apiResult?.structure === undefined ||
+    apiResult?.structure.length === 0
+  )
     return <LoadingErrorAnimation />;
 
   return (
-    <React.Fragment>
-      <Table
-        name={name}
-        columns={columns}
-        setSelectedRows={setSelectedRows}
-        data={data as any}
-        canGroupBy={canGroupBy}
-        canSort={canSort}
-        canSelect={canSelect}
-        canResize={canResize}
-        actionColumn={actionColumn}
-        showGlobalFilter={showGlobalFilter}
-        showFilter={showFilter}
-        showColumnIcon={showColumnIcon}
-        filterActive={filterActive}
-        setLocalFilterActive={setLocalFilterActive}
-        customJsxSideFilterButton={customJsxSideFilterButton}
-        onClick={onClick}
-        elevationTable={elevationTable}
-        minHeight={minHeight}
-        maxHeight={maxHeight}
-      />
-      <ToastContainer />
-    </React.Fragment>
+    // <I18nextProvider i18n={i18nConfig}>
+    <Table
+      name={name}
+      columns={columns}
+      setSelectedRows={setSelectedRows}
+      data={data as any}
+      canGroupBy={canGroupBy}
+      canSort={canSort}
+      canSelect={canSelect}
+      canResize={canResize}
+      actionColumn={actionColumn}
+      showGlobalFilter={showGlobalFilter}
+      showFilter={showFilter}
+      showColumnIcon={showColumnIcon}
+      filterActive={filterActive}
+      setLocalFilterActive={setLocalFilterActive}
+      customJsxSideFilterButton={customJsxSideFilterButton}
+      onClick={onClick}
+      elevationTable={elevationTable}
+      minHeight={minHeight}
+      maxHeight={maxHeight}
+    />
+    // </I18nextProvider>
   );
 }

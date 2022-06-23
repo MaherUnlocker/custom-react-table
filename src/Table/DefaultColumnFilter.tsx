@@ -1,12 +1,12 @@
 import React from 'react';
-
 import _uniqby from 'lodash.uniqby';
-import { FilterProps } from 'react-table';
 import { useTranslation } from 'react-i18next';
+import { FilterProps } from 'react-table';
 
-import { StyledSelectInput } from '../components/assets/StyledSelectInput';
-import { StyledLabel } from '../components/assets/StyledLabel';
 import { findFirstColumn } from './Table';
+import { StyledLabel } from '../components/assets/StyledLabel';
+import { StyledSelectInput } from '../components/assets/StyledSelectInput';
+import NoOptionsMessage from './NoOptionsMessage';
 
 export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   columns,
@@ -30,7 +30,10 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
         .filter((cel: any) => {
           const { key: cellKey } = cel.getCellProps();
           // eslint-disable-next-line
-          return (cellKey as string).replace(/([^\_]*\_){2}/, '') === (column.id as string);
+          return (
+            (cellKey as string).replace(/([^\_]*\_){2}/, '') ===
+            (column.id as string)
+          );
         })
         // eslint-disable-next-line
         .map((cell: any) => {
@@ -61,15 +64,16 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
     <React.Fragment>
       <StyledLabel htmlFor={column.id}>{render('Header')}</StyledLabel>
       <StyledSelectInput
-        menuPlacement='auto'
-        menuPosition='fixed'
+        menuPlacement="auto"
+        menuPosition="fixed"
         id={column.id}
         name={column.id}
         options={unique}
-        placeholder={unique.length > 0 ? t('Select...') : t('None')}
+        placeholder={unique.length > 0 ? 'Sélectionner...' : 'Aucune'}
         onChange={handleSelectOnChangeEvent}
+        // onInputChange={handleSelectOnChangeEvent}
         autoFocus={isFirstColumn}
-        isClearable
+        components={{ NoOptionsMessage }}
       />
     </React.Fragment>
   );

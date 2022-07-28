@@ -31,6 +31,7 @@ export interface DynamicTableProps {
   minHeight?: number | string;
   maxHeight?: number | string;
 
+  customSelect?: boolean;
   canGroupBy?: boolean;
   canSort?: boolean;
   canSelect?: boolean;
@@ -82,6 +83,7 @@ export function DynamicTable({
   canResize,
   canExpand,
   canSelect,
+  customSelect,
   showGlobalFilter,
   showFilter,
   showColumnIcon,
@@ -313,6 +315,7 @@ export function DynamicTable({
         elevationTable={elevationTable}
         minHeight={minHeight}
         maxHeight={maxHeight}
+        customSelect={customSelect}
       />
     </DynamicTableContext.Provider>
     // </I18nextProvider>

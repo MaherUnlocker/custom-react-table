@@ -3,7 +3,7 @@ import React from 'react';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Box, Grid, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
-import { Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
+import { Card, CardBody, CardFooter, CardHeader, Row } from 'reactstrap';
 import cx from 'classnames';
 import { useTranslation } from 'react-i18next';
 import {
@@ -131,6 +131,8 @@ export function Table<T extends Record<string, unknown>>({
   canGroupBy,
   canSort,
   canSelect,
+  setSelectedRows,
+  customSelect,
   canResize,
   actionColumn,
   showGlobalFilter,
@@ -139,7 +141,6 @@ export function Table<T extends Record<string, unknown>>({
   filterActive,
   setLocalFilterActive,
   customJsxSideFilterButton,
-  setSelectedRows,
   selectedRows,
   elevationTable,
   minHeight,
@@ -151,8 +152,6 @@ export function Table<T extends Record<string, unknown>>({
   if (name === undefined || name === null) {
     name = 'mytable';
   }
-  const [selectedRowsTest, setSelectedRowsTest] = React.useState<any[]>([]);
-  console.log('🚀 ~ file: Table.tsx ~ line 155 ~ selectedRowsTest', selectedRowsTest);
   const [initialState, setInitialState] = useLocalStorage(`tableState2:${name}`, {});
   const selectionHook = (hooks: Hooks<any>) => {
     hooks.allColumns.push((columns) => [
@@ -195,7 +194,8 @@ export function Table<T extends Record<string, unknown>>({
           <ControlledCheckbox
             row={row}
             dispatchSelectedRows={instance.dispatch}
-            //setSelectedRows={handleCheckboxClick}
+            selectedFlatRows={instance.selectedFlatRows}
+            isAllRowsSelected={instance.isAllRowsSelected}
             selectedRows={instance.state.customSelectedRows}
           />
         ),
@@ -338,7 +338,7 @@ export function Table<T extends Record<string, unknown>>({
 
       initialState: { ...initialState, customSelectedRows: [] },
       stateReducer: (newState, action, prevState) => {
-        console.log(action, newState, newState.customSelectedRows);
+        console.log({ prevState }, { action }, { newState }, newState.customSelectedRows);
         switch (action.type) {
           case 'customSelectRow':
             return {
@@ -349,6 +349,11 @@ export function Table<T extends Record<string, unknown>>({
             return {
               ...newState,
               customSelectedRows: [...newState.customSelectedRows.filter((elm: any) => elm.id !== action.payload)],
+            };
+          case 'customSelectAll':
+            return {
+              ...newState,
+              customSelectedRows: [action.payload],
             };
           default:
             return newState;
@@ -362,16 +367,8 @@ export function Table<T extends Record<string, unknown>>({
   const debouncedState = useDebounce(state, 200);
 
   React.useEffect(() => {
-    const {
-      sortBy,
-      filters,
-      pageSize,
-      columnResizing,
-      hiddenColumns,
-      selectedRowIds,
-      selectedRowsTest,
-      customSelectedRows,
-    } = debouncedState;
+    const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds, customSelectedRows } =
+      debouncedState;
     setInitialState({
       sortBy,
       filters,
@@ -380,22 +377,26 @@ export function Table<T extends Record<string, unknown>>({
       hiddenColumns,
       selectedRowIds,
       customSelectedRows,
-      selectedRowsTest,
     });
 
-    // if (setSelectedRows !== undefined) {
-    //   setSelectedRows!(selectedFlatRows.map((row: any) => row.original));
-    // }
+    if (setSelectedRows !== undefined) {
+      if (instance.isAllRowsSelected) {
+        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+        // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
+      } else if (customSelect !== undefined) {
+        setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+      } else {
+        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+      }
+    }
 
     // eslint-disable-next-line
-  }, [setInitialState, debouncedState, selectedRowsTest]);
-  const handleCheckboxClick = () => {
-    // payload is the item which we are appending to the array
-    instance.dispatch({ type: 'customSelect', payload: 1 });
-  };
+  }, [setInitialState, debouncedState, state.customSelectedRows]);
+
   const cellClickHandler = (cell: Cell<T>) => () => {
     onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
   };
+  console.log('🚀 ~ file: Table.tsx ~ line 395 ~ handleCheckboxClick ~ instance', instance);
 
   const isMobile = IsMobileView();
   return (

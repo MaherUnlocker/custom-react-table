@@ -8,20 +8,34 @@ type ControlledCheckboxPropsType = {
   //dispatchSelectedRows: any;
   dispatchSelectedRows: TableDispatch<any>;
   selectedRows: any[];
+  selectedFlatRows: any[];
+  isAllRowsSelected: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default function ControlledCheckbox({ row, dispatchSelectedRows, selectedRows }: ControlledCheckboxPropsType) {
-  console.log('🚀 ~ file: ControlledCheckbox.tsx ~ line 16 ~ ControlledCheckbox ~ row', row);
-  const [checked, setChecked] = React.useState(selectedRows.filter((elm: any) => elm.id === row.id).length > 0);
+export default function ControlledCheckbox({
+  row,
+  dispatchSelectedRows,
+  selectedRows,
+  selectedFlatRows,
+  isAllRowsSelected,
+}: ControlledCheckboxPropsType) {
+  const [checked, setChecked] = React.useState(
+    isAllRowsSelected ? true : selectedRows.filter((elm: any) => elm.id === row.id).length > 0
+  );
 
   const singleClickHandler = (e: React.UIEvent<HTMLElement>) => {
-    selectedRows.filter((elm: any) => elm.id === row.id).length > 0
-      ? dispatchSelectedRows({
-          type: 'customUnSelectRow',
-          payload: row.id,
-        })
-      : dispatchSelectedRows({ type: 'customSelectRow', payload: row });
+    if (isAllRowsSelected) {
+      dispatchSelectedRows({ type: 'customSelectAll', payload: selectedFlatRows });
+    } else {
+      selectedRows.filter((elm: any) => elm.id === row.id).length > 0
+        ? dispatchSelectedRows({
+            type: 'customUnSelectRow',
+            payload: row.id,
+          })
+        : dispatchSelectedRows({ type: 'customSelectRow', payload: row });
+    }
+
     setChecked(!checked);
   };
   const doubleClickHandler = (e: React.UIEvent<HTMLElement>) => {

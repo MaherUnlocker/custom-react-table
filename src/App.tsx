@@ -7,37 +7,12 @@ import VerticalDotsIcon from './components/assets/VerticalDotsIcon';
 import { I18nextProvider } from 'react-i18next';
 import i18next from './i18n';
 import './index.css';
+import { useManyClickHandlers } from './components/useManyClickHandlers';
+import ControlledCheckbox from './components/ControlledCheckbox';
+
 // eslint-disable-next-line
 function SelectAccountDropdown(original: any) {
-  return (
-    <div className='w-100'>
-      <div className='dropdown'>
-        <VerticalDotsIcon
-          height={25}
-          width={25}
-          id='dropdownMenuButton1'
-          data-bs-toggle='dropdown'
-          onClick={(e) => {
-            // alert(original.selectedRow.original);
-            e.stopPropagation();
-          }}
-          // className=" dropdown-toggle"
-        />
-        <div className='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-          <div
-            className='dropdown-item'
-            onClick={(e) => {
-              alert(original.selectedRow.original);
-              e.stopPropagation();
-            }}
-          >
-            Accéder à la carte
-          </div>
-          <div className='dropdown-item'>Voirffffff la liste des boutiques</div>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 }
 
 interface customColumnProps {
@@ -48,9 +23,21 @@ interface customColumnProps {
 
 // eslint-disable-next-line
 
+const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref: any) => {
+  const defaultRef = React.useRef();
+  const resolvedRef = ref || defaultRef;
+
+  React.useEffect(() => {
+    resolvedRef.current.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  return <input type='checkbox' ref={resolvedRef} {...rest} />;
+});
+
 export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
+
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
 
   const [disableElment, setDesableElment] = React.useState(false);
@@ -99,10 +86,11 @@ export default function App(): JSX.Element {
 
   let arrayOfCustomColumns: customColumnProps[] = [];
   arrayOfCustomColumns.push(
-    { indexOFColumn: 99, columnName: 'action', customJsx: SelectAccountDropdown2 },
-    { indexOFColumn: 4, columnName: '_', customJsx: FilterSideComponent }
+    // { indexOFColumn: 0, columnName: 'checkbox', customJsx: IndeterminateCheckbox },
+    { indexOFColumn: 1, columnName: '_', customJsx: SelectAccountDropdown }
   );
   const mydata: any = null;
+
   return (
     // <React.Suspense fallback={null}>
     <I18nextProvider i18n={i18next}>
@@ -122,7 +110,7 @@ export default function App(): JSX.Element {
         // url='http://192.168.2.14:4000/products'
         //optionnal props
         // --->here for add cusom component in the end of table
-        actionColumn={SelectAccountDropdown}
+        actionColumn={() => null}
         // --->here you can add component side Filter Button
         customJsxSideFilterButton={<FilterSideComponent />}
         // --->here for grouping columns with same name
@@ -138,6 +126,7 @@ export default function App(): JSX.Element {
         // --->here showing checkbox in the begin of RowTable with return you the checked rows
         canSelect
         setSelectedRows={setSelectedRows}
+        selectedRows={selectedRows}
         // --->here showing golobal filter input on the top of table
         showGlobalFilter
         // --->here showing  filter button  on the top of table

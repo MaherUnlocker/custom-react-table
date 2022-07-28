@@ -14,12 +14,14 @@ type FilterModalMobileProps = {
   onClose?: () => void;
   setLocalFilterActive: any;
   filterActive?: boolean;
+  tableName: string;
 };
 
 export default function FilterModalMobile({
   instance,
   filterActive,
   setLocalFilterActive,
+  tableName,
 }: FilterModalMobileProps): JSX.Element {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -30,10 +32,7 @@ export default function FilterModalMobile({
       style={{ margin: '0 ', padding: '0 ', height: '100%' }}
       scrollable
     >
-      <ModalHeader
-        className="text-capitalize"
-        toggle={() => setLocalFilterActive(!filterActive)}
-      >
+      <ModalHeader className='text-capitalize' toggle={() => setLocalFilterActive(!filterActive)}>
         <Box
           sx={{
             display: 'flex',
@@ -41,10 +40,7 @@ export default function FilterModalMobile({
             justifyContent: 'space-between',
           }}
         >
-          <FilterIcon
-            className={classes.tableFilterAltOutlinedIcon}
-            style={{ flexDirection: 'row-reverse' }}
-          />
+          <FilterIcon className={classes.tableFilterAltOutlinedIcon} style={{ flexDirection: 'row-reverse' }} />
           <StyledH2> Filtre(s)</StyledH2>
         </Box>
       </ModalHeader>
@@ -53,6 +49,7 @@ export default function FilterModalMobile({
           instance={instance}
           setLocalFilterActive={setLocalFilterActive}
           filterActive={filterActive}
+          tableName={tableName}
         />
       </ModalBody>
     </Modal>

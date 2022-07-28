@@ -65,6 +65,7 @@ type FilterPageCustomProps<T extends Record<string, unknown>> = {
   show?: boolean;
   setLocalFilterActive: any;
   filterActive?: boolean;
+  tableName: string;
 };
 
 export function FilterPageCustom<T extends Record<string, unknown>>({
@@ -72,6 +73,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   onClose,
   filterActive,
   setLocalFilterActive,
+  tableName,
 }: FilterPageCustomProps<T>): React.ReactElement {
   // const { t } = useTranslation();
   const classes = useStyles({});
@@ -81,6 +83,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
     setAllFilters,
     state: { filters },
   } = instance;
+  console.log('🚀 ~ file: FilterPageCustom.tsx ~ line 86 ~ filters', filters);
 
   const heightRef = React.useRef(null);
   // eslint-disable-next-line
@@ -90,48 +93,40 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
 
   // for adding  selected filter
 
-  const [savedFilters, setSavedFilters] = useLocalStorage(`SavedFilters`, []);
+  const [savedFilters, setSavedFilters] = useLocalStorage(`${tableName}_SavedFilters`, []);
   const [designationFilter, setDesignationFilter] = React.useState('');
   // eslint-disable-next-line
   const [oldFilterName, setOldFilterName] = React.useState('');
 
   const handleSaveFiltersClick = React.useCallback(() => {
-    if (
-      designationFilter === null ||
-      designationFilter === undefined ||
-      designationFilter === ''
-    ) {
+    if (designationFilter === null || designationFilter === undefined || designationFilter === '') {
       ErrorToast('Merci de saisir une designation pour votre filtre');
       return;
     }
-    if (filters.length === 0) {
+    if (Object.keys(instance.state.filters).length === 0) {
       ErrorToast('Merci de  choisir au moins un  filtre');
       return;
     }
 
-    if (filters.length > 0) {
-      const found = savedFilters.find(
-        (f: any) => f.label === designationFilter
-      );
+    if (Object.keys(instance.state.filters).length > 0) {
+      const found = savedFilters.find((f: any) => f.label === designationFilter);
 
-      found
-        ? (savedFilters[
-            savedFilters.findIndex((f: any) => f.label === designationFilter)
-          ] = {
-            label: designationFilter,
-            value: filters,
-          })
-        : setSavedFilters([
-            ...savedFilters,
-            { label: designationFilter, value: filters },
-          ]);
-      found
-        ? SuccessToast('Filtre modifié  avec succès')
-        : SuccessToast('Filtre ajouté  avec succès');
+      if (found) {
+        savedFilters[savedFilters.findIndex((f: any) => f.label === designationFilter)] = {
+          label: designationFilter,
+          value: instance.state.filters,
+        };
+        setSavedFilters(savedFilters);
+        SuccessToast('Filtre modifié  avec succès');
+      } else {
+        setSavedFilters([...savedFilters, { label: designationFilter, value: instance.state.filters }]);
+        SuccessToast('Filtre ajouté  avec succès');
+      }
+
       // found ? SuccessToast(t('Filter successfully added')) : SuccessToast(t('Filter successfully added'));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [designationFilter, filters, setSavedFilters, savedFilters]);
+  }, [designationFilter, instance.state.filters, setSavedFilters, savedFilters]);
 
   // const handleModifyFilter = React.useCallback(() => {
   //   const found = savedFilters.find((f: any) => f.label === oldFilterName);
@@ -147,9 +142,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
     (selectedValue: any) => {
       if (selectedValue) {
         setDesignationFilter(selectedValue.label);
-        const indexofSelected = savedFilters.findIndex(
-          (f: any) => f.label === selectedValue.label
-        );
+        const indexofSelected = savedFilters.findIndex((f: any) => f.label === selectedValue.label);
         indexofSelected > -1
           ? (function () {
               setAllFilters(savedFilters[indexofSelected].value);
@@ -162,11 +155,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   );
 
   function handleDeleteFilter() {
-    if (
-      designationFilter === null ||
-      designationFilter === undefined ||
-      designationFilter === ''
-    ) {
+    if (designationFilter === null || designationFilter === undefined || designationFilter === '') {
       ErrorToast('Merci de selectionner un filtre pour la suppression');
       return;
     }
@@ -192,10 +181,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   }, []);
 
   return (
-    <div
-      className={(classes.columnsPopOver, classes.grid, classes.cell)}
-      style={{ marginLeft: 5, marginRight: 5 }}
-    >
+    <div className={(classes.columnsPopOver, classes.grid, classes.cell)} style={{ marginLeft: 5, marginRight: 5 }}>
       <StyledLabel
         style={{
           borderBottom: '2px solid',
@@ -207,12 +193,9 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
         Filtres enregistrés
         {/* {t('Saved filters')} */}
       </StyledLabel>
-      <Box
-        component="div"
-        sx={{ display: 'flex', justifyContent: 'space-between' }}
-      >
+      <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ width: ' 100%', marginTop: 10 }}>
-          <StyledLabel htmlFor="savedFilter">
+          <StyledLabel htmlFor='savedFilter'>
             {/* {t('Select a filter')} */}
             Sélectionner un filtre
           </StyledLabel>
@@ -230,9 +213,9 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
               designationFilter={designationFilter}
               setAllFilters={setAllFilters}
             />
-            <Box component="div" sx={{ display: 'flex', alignItems: 'end' }}>
+            <Box component='div' sx={{ display: 'flex', alignItems: 'end' }}>
               <StyledIconButton
-                icon="DiskIcon"
+                icon='DiskIcon'
                 style={{
                   margin: '0px 5px',
 
@@ -244,7 +227,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
                 <DiskIcon height={20} width={20} />
               </StyledIconButton>
               <StyledIconButton
-                icon="DiskIcon"
+                icon='DiskIcon'
                 style={{
                   margin: '0px 5px',
 
@@ -253,12 +236,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
                 }}
                 onClick={handleDeleteFilter}
               >
-                <TrashIcon
-                  style={{ cursor: 'pointer' }}
-                  height={20}
-                  width={20}
-                  className="mx-2"
-                />
+                <TrashIcon style={{ cursor: 'pointer' }} height={20} width={20} className='mx-2' />
               </StyledIconButton>
 
               {/* <StyledIconButton
@@ -315,22 +293,23 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
         {/* {t('Filter')} */}
       </StyledLabel>
       {Object.keys(instance.state.filters).length > 0 ? (
-        <Box id="maher" component="div" ref={heightRef}>
+        <Box id='maher' component='div' ref={heightRef}>
           <FilterChipBarCollapsible
             instance={instance}
             showMore={showMore}
             currentHeight={currentHeight}
+            setDesignationFilter={setDesignationFilter}
           />
         </Box>
       ) : (
-        <StyledButton rounded variant="light" style={{ width: '100%' }}>
+        <StyledButton rounded variant='light' style={{ width: '100%' }}>
           Aucun filtre actif
           {/* {t('No active filter')} */}
         </StyledButton>
       )}
       <Box
-        component="div"
-        id="listfilter"
+        component='div'
+        id='listfilter'
         style={{
           maxHeight: !isMobile ? 'calc(100vh - 350px)' : 'auto',
           overflow: 'auto',
@@ -342,6 +321,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
             (it) =>
               it.canFilter &&
               it.isVisible &&
+              it.id !== '_selector' &&
               it.id !== 'delete' &&
               it.id !== '_Actions' &&
               it.id !== 'expander' &&
@@ -350,7 +330,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
           .map((column) => (
             <div
               key={column.id}
-              className="my-2"
+              className='my-2'
               // sx={{ height: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
             >
               {column.render('Filter')}

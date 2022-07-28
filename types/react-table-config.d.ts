@@ -94,6 +94,7 @@ declare module 'react-table' {
     UseRowSelectState<D>,
     UseSortByState<D> {
     rowCount: number
+    customSelectedRows: any[]
   }
 
   export interface ColumnInterface<D extends Record<string, unknown> = Record<string, unknown>>
@@ -145,14 +146,11 @@ export type canSelectProps =
   | {
     canSelect: false;
   };
-export type canSelectProps =
-  | {
-    canSelect: true;
-    onChange: () => void;
-  }
-  | {
-    canSelect: false;
-  };
+
+export type DynamicTablePropsType = {
+  selectedRows: JSX.Element;
+  ActionColumnComponent: JSX.Element;
+};
 
 
 

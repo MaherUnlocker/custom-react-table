@@ -24,10 +24,7 @@ export function SelectComponent({
 }: selectComponentType): JSX.Element {
   // const { t } = useTranslation();
   const [selectInputRef, setSelectInputRef] = React.useState<any | null>(null);
-  const onInputChange = (
-    inputValue: string,
-    { action, prevInputValue }: InputActionMeta
-  ) => {
+  const onInputChange = (inputValue: string, { action, prevInputValue }: InputActionMeta) => {
     switch (action) {
       case 'input-change':
         setDesignationFilter(inputValue);
@@ -60,12 +57,12 @@ export function SelectComponent({
       ref={(ref: any) => {
         setSelectInputRef(ref);
       }}
-      menuPlacement="auto"
-      menuPosition="fixed"
+      menuPlacement='auto'
+      menuPosition='fixed'
       isClearable
       isSearchable
       onInputChange={onInputChange}
-      name="savefilterinput"
+      name='savefilterinput'
       options={options}
       placeholder={'Selectionner...'}
       onChange={onChange}

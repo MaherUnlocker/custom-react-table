@@ -118,6 +118,135 @@ const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any,
   return <input type='checkbox' ref={resolvedRef} {...rest} />;
 });
 
+const selectionHook = (hooks: Hooks<any>) => {
+  hooks.allColumns.push((columns) => [
+    // Let's make a column for selection
+    // {
+    //   id: '_selector',
+    //   disableResizing: true,
+    //   disableGroupBy: true,
+    //   minWidth: 45,
+    //   width: 45,
+    //   maxWidth: 45,
+    //   Aggregated: undefined,
+    //   // The header can use the table's getToggleAllRowsSelectedProps method
+    //   // to render a checkbox
+    //   Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
+    //     <HeaderCheckbox {...getToggleAllRowsSelectedProps()} />
+    //   ),
+    //   // The cell can use the individual row's getToggleRowSelectedProps method
+    //   // to the render a checkbox
+    //   Cell: ({ row }: CellProps<any>) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
+    // },
+    {
+      id: '_selector2',
+
+      disableResizing: true,
+      disableGroupBy: true,
+      minWidth: 45,
+      // width: 45,
+      // maxWidth: 45,
+      Aggregated: undefined,
+      // The header can use the table's getToggleAllRowsSelectedProps method
+      // to render a checkbox
+
+      Header: ({ row, dispatch, flatRows, isAllRowsSelected, state, toggleAllRowsSelected }: any) => (
+        <ControlledCheckbox
+          isHeader={true}
+          toggleAllRowsSelected={toggleAllRowsSelected}
+          row={row}
+          dispatchSelectedRows={dispatch}
+          selectedFlatRows={flatRows}
+          isAllRowsSelected={isAllRowsSelected}
+          selectedRows={state.customSelectedRows}
+        />
+      ),
+      // The cell can use the individual row's getToggleRowSelectedProps method
+      // to the render a checkbox
+      Cell: ({ row, dispatch, selectedFlatRows, isAllRowsSelected, state }: any) => {
+        console.log(isAllRowsSelected);
+        return (
+          <ControlledCheckbox
+            isHeader={false}
+            row={row}
+            dispatchSelectedRows={dispatch}
+            selectedFlatRows={selectedFlatRows}
+            isAllRowsSelected={isAllRowsSelected}
+            selectedRows={state.customSelectedRows}
+          />
+        );
+      },
+
+      // <RowCheckbox {...row.getToggleRowSelectedProps()} />,
+    },
+
+    // {
+    //   id: '_selector',
+    //   disableResizing: true,
+    //   disableGroupBy: true,
+    //   minWidth: 45,
+    //   width: 45,
+    //   maxWidth: 45,
+    //   Aggregated: undefined,
+    //   // The header can use the table's getToggleAllRowsSelectedProps method
+    //   // to render a checkbox
+    //   Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
+    //     <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+    //   ),
+    //   // The cell can use the individual row's getToggleRowSelectedProps method
+    //   // to the render a checkbox
+    //   Cell: ({ row, getToggleAllRowsSelectedProps }: any) => {
+    //     // eslint-disable-next-line
+    //     // Object.keys(initialState?.selectedRowIds!).filter((element) => {
+    //     //   console.log({ id: row.id, element });
+    //     //   return row.id === element;
+    //     // });
+
+    //     // eslint-disable-next-line
+    //     // initialState?.selectedRowIds &&
+    //     //   console.log(
+    //     //     Object.keys(initialState.selectedRowIds).filter((element) => {
+    //     //       console.log({ id: row.id, element });
+    //     //       return row.id === element;
+    //     //     }).length > 0
+    //     //   );
+    //     console.log('row.id');
+
+    //     return (
+    //       <div>
+    //         <IndeterminateCheckbox
+    //           indeterminate={row.isSomeSelected}
+    //           onChange={(e: any) => {
+    //             console.log(row.id);
+    //             // if (setSelectedRows) {
+
+    //             // const indexRow = selectedRows.map((elm) => elm.id).indexOf(row.id);
+    //             // // let indexRow = selectedRows.indexOf(({ id }: any) => id == row.id);
+    //             // console.log('indexRow', indexRow);
+    //             // if (indexRow === -1) {
+    //             //   setSelectedRows && setSelectedRows((previewState: any[]) => [...previewState, row]);
+    //             // } else {
+    //             //   setSelectedRows && setSelectedRows((previewState: any[]) => previewState.splice(indexRow, 1));
+    //             // }
+    //             // }
+    //             //  row.toggleRowSelected(e.target.checked);
+    //           }}
+    //           // checked={selectedRows.filter((selectedRow: any) => selectedRow.id === row.id).length > 0 ? true : false}
+    //           // checked={Object.keys(initialState?.selectedRowIds).filter((element) => row.id === element).length > 0}
+    //           // onChange={(e: any) => {
+    //           //   // setSelectedRowId(row.id);
+    //           //   row.toggleRowSelected();
+    //           // }}
+    //           // {...row.getToggleRowSelectedProps()}
+    //         />
+    //       </div>
+    //     );
+    //   },
+    // },
+    ...columns,
+  ]);
+};
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const headerProps = <T extends Record<string, unknown>>(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -153,122 +282,7 @@ export function Table<T extends Record<string, unknown>>({
     name = 'mytable';
   }
   const [initialState, setInitialState] = useLocalStorage(`tableState2:${name}`, {});
-  const selectionHook = (hooks: Hooks<any>) => {
-    hooks.allColumns.push((columns) => [
-      // Let's make a column for selection
-      {
-        id: '_selector',
-        disableResizing: true,
-        disableGroupBy: true,
-        minWidth: 45,
-        width: 45,
-        maxWidth: 45,
-        Aggregated: undefined,
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
-          <HeaderCheckbox {...getToggleAllRowsSelectedProps()} />
-        ),
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }: CellProps<any>) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
-      },
-      {
-        id: '_selector2',
 
-        disableResizing: true,
-        disableGroupBy: true,
-        minWidth: 45,
-        // width: 45,
-        // maxWidth: 45,
-        Aggregated: undefined,
-        // The header can use the table's getToggleAllRowsSelectedProps method
-        // to render a checkbox
-        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
-          <HeaderCheckbox {...getToggleAllRowsSelectedProps()} />
-        ),
-
-        // The cell can use the individual row's getToggleRowSelectedProps method
-        // to the render a checkbox
-        Cell: ({ row }: CellProps<any>) => (
-          <ControlledCheckbox
-            row={row}
-            dispatchSelectedRows={instance.dispatch}
-            selectedFlatRows={instance.selectedFlatRows}
-            isAllRowsSelected={instance.isAllRowsSelected}
-            selectedRows={instance.state.customSelectedRows}
-          />
-        ),
-
-        // <RowCheckbox {...row.getToggleRowSelectedProps()} />,
-      },
-
-      // {
-      //   id: '_selector',
-      //   disableResizing: true,
-      //   disableGroupBy: true,
-      //   minWidth: 45,
-      //   width: 45,
-      //   maxWidth: 45,
-      //   Aggregated: undefined,
-      //   // The header can use the table's getToggleAllRowsSelectedProps method
-      //   // to render a checkbox
-      //   Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
-      //     <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-      //   ),
-      //   // The cell can use the individual row's getToggleRowSelectedProps method
-      //   // to the render a checkbox
-      //   Cell: ({ row, getToggleAllRowsSelectedProps }: any) => {
-      //     // eslint-disable-next-line
-      //     // Object.keys(initialState?.selectedRowIds!).filter((element) => {
-      //     //   console.log({ id: row.id, element });
-      //     //   return row.id === element;
-      //     // });
-
-      //     // eslint-disable-next-line
-      //     // initialState?.selectedRowIds &&
-      //     //   console.log(
-      //     //     Object.keys(initialState.selectedRowIds).filter((element) => {
-      //     //       console.log({ id: row.id, element });
-      //     //       return row.id === element;
-      //     //     }).length > 0
-      //     //   );
-      //     console.log('row.id');
-
-      //     return (
-      //       <div>
-      //         <IndeterminateCheckbox
-      //           indeterminate={row.isSomeSelected}
-      //           onChange={(e: any) => {
-      //             console.log(row.id);
-      //             // if (setSelectedRows) {
-
-      //             // const indexRow = selectedRows.map((elm) => elm.id).indexOf(row.id);
-      //             // // let indexRow = selectedRows.indexOf(({ id }: any) => id == row.id);
-      //             // console.log('indexRow', indexRow);
-      //             // if (indexRow === -1) {
-      //             //   setSelectedRows && setSelectedRows((previewState: any[]) => [...previewState, row]);
-      //             // } else {
-      //             //   setSelectedRows && setSelectedRows((previewState: any[]) => previewState.splice(indexRow, 1));
-      //             // }
-      //             // }
-      //             //  row.toggleRowSelected(e.target.checked);
-      //           }}
-      //           // checked={selectedRows.filter((selectedRow: any) => selectedRow.id === row.id).length > 0 ? true : false}
-      //           // checked={Object.keys(initialState?.selectedRowIds).filter((element) => row.id === element).length > 0}
-      //           // onChange={(e: any) => {
-      //           //   // setSelectedRowId(row.id);
-      //           //   row.toggleRowSelected();
-      //           // }}
-      //           // {...row.getToggleRowSelectedProps()}
-      //         />
-      //       </div>
-      //     );
-      //   },
-      // },
-      ...columns,
-    ]);
-  };
   const customHooks = (hooks: Hooks<any>) => {
     hooks.allColumns.push((columns) => [
       ...columns,
@@ -353,7 +367,12 @@ export function Table<T extends Record<string, unknown>>({
           case 'customSelectAll':
             return {
               ...newState,
-              customSelectedRows: [action.payload],
+              customSelectedRows: action.payload,
+            };
+          case 'customUnSelectAll':
+            return {
+              ...newState,
+              customSelectedRows: [],
             };
           default:
             return newState;
@@ -363,7 +382,9 @@ export function Table<T extends Record<string, unknown>>({
     ...localHooks
   );
   const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
+
   console.log('customSelectedRows', state.customSelectedRows);
+
   const debouncedState = useDebounce(state, 200);
 
   React.useEffect(() => {
@@ -393,10 +414,24 @@ export function Table<T extends Record<string, unknown>>({
     // eslint-disable-next-line
   }, [setInitialState, debouncedState, state.customSelectedRows]);
 
+  React.useEffect(() => {
+    if (setSelectedRows !== undefined) {
+      if (instance.isAllRowsSelected) {
+        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+        // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
+      } else if (customSelect !== undefined) {
+        setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+      } else {
+        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+      }
+    }
+
+    // eslint-disable-next-line
+  }, [state.customSelectedRows]);
+
   const cellClickHandler = (cell: Cell<T>) => () => {
     onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
   };
-  console.log('🚀 ~ file: Table.tsx ~ line 395 ~ handleCheckboxClick ~ instance', instance);
 
   const isMobile = IsMobileView();
   return (

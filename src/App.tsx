@@ -126,6 +126,7 @@ export default function App(): JSX.Element {
         canExpand
         // --->here showing checkbox in the begin of RowTable with return you the checked rows
         canSelect
+        customSelect
         setSelectedRows={setSelectedRows}
         selectedRows={selectedRows}
         // --->here showing golobal filter input on the top of table

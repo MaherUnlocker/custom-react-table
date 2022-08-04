@@ -5,7 +5,6 @@ import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Box, Grid, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
 import { Card, CardBody, CardFooter, CardHeader, Row } from 'reactstrap';
 import cx from 'classnames';
-import { useTranslation } from 'react-i18next';
 import {
   Cell,
   CellProps,
@@ -41,7 +40,7 @@ import {
   TableRow,
   useStyles,
 } from './TableStyle';
-import { camelToWords, useDebounce, useLocalStorage } from '../utils';
+import { camelToWords, filterByReference, useDebounce, useLocalStorage } from '../utils';
 import { fuzzyTextFilter, numericTextFilter } from './filters';
 import ChoiceIcon from './Choice';
 import CollapsibleTable from './CollapsibleTable';
@@ -121,128 +120,73 @@ const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any,
 const selectionHook = (hooks: Hooks<any>) => {
   hooks.allColumns.push((columns) => [
     // Let's make a column for selection
-    // {
-    //   id: '_selector',
-    //   disableResizing: true,
-    //   disableGroupBy: true,
-    //   minWidth: 45,
-    //   width: 45,
-    //   maxWidth: 45,
-    //   Aggregated: undefined,
-    //   // The header can use the table's getToggleAllRowsSelectedProps method
-    //   // to render a checkbox
-    //   Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
-    //     <HeaderCheckbox {...getToggleAllRowsSelectedProps()} />
-    //   ),
-    //   // The cell can use the individual row's getToggleRowSelectedProps method
-    //   // to the render a checkbox
-    //   Cell: ({ row }: CellProps<any>) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
-    // },
-    {
-      id: '_selector2',
 
+    {
+      id: '_selector',
       disableResizing: true,
       disableGroupBy: true,
       minWidth: 45,
-      // width: 45,
-      // maxWidth: 45,
+      width: 45,
+      maxWidth: 45,
       Aggregated: undefined,
       // The header can use the table's getToggleAllRowsSelectedProps method
       // to render a checkbox
+      Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
+        <HeaderCheckbox {...getToggleAllRowsSelectedProps()} />
+      ),
+      // The cell can use the individual row's getToggleRowSelectedProps method
+      // to the render a checkbox
+      Cell: ({ row }: CellProps<any>) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
+    },
+    ...columns,
+  ]);
+};
 
+const customSelectionHook = (hooks: Hooks<any>) => {
+  hooks.allColumns.push((columns) => [
+    // Let's make a column for selection
+
+    {
+      id: '_selector',
+      disableResizing: true,
+      disableGroupBy: true,
+      minWidth: 45,
+      width: 45,
+      maxWidth: 45,
+      Aggregated: undefined,
+      // The header can use the table's getToggleAllRowsSelectedProps method
+      // to render a checkbox
       Header: ({ row, dispatch, flatRows, isAllRowsSelected, state, toggleAllRowsSelected }: any) => (
         <ControlledCheckbox
           isHeader={true}
           toggleAllRowsSelected={toggleAllRowsSelected}
           row={row}
+          allRows={flatRows}
           dispatchSelectedRows={dispatch}
           selectedFlatRows={flatRows}
           isAllRowsSelected={isAllRowsSelected}
           selectedRows={state.customSelectedRows}
+          indeterminate={
+            isAllRowsSelected || flatRows.length === state.customSelectedRows.length
+              ? false
+              : state.customSelectedRows.length > 0
+          }
         />
       ),
-      // The cell can use the individual row's getToggleRowSelectedProps method
-      // to the render a checkbox
-      Cell: ({ row, dispatch, selectedFlatRows, isAllRowsSelected, state }: any) => {
-        console.log(isAllRowsSelected);
-        return (
-          <ControlledCheckbox
-            isHeader={false}
-            row={row}
-            dispatchSelectedRows={dispatch}
-            selectedFlatRows={selectedFlatRows}
-            isAllRowsSelected={isAllRowsSelected}
-            selectedRows={state.customSelectedRows}
-          />
-        );
-      },
 
-      // <RowCheckbox {...row.getToggleRowSelectedProps()} />,
+      Cell: ({ row, dispatch, flatRows, isAllRowsSelected, state, toggleAllRowsSelected, selectedFlatRows }: any) => (
+        <ControlledCheckbox
+          isHeader={false}
+          row={row}
+          allRows={flatRows}
+          dispatchSelectedRows={dispatch}
+          selectedFlatRows={selectedFlatRows}
+          isAllRowsSelected={isAllRowsSelected}
+          selectedRows={state.customSelectedRows}
+          indeterminate={false}
+        />
+      ),
     },
-
-    // {
-    //   id: '_selector',
-    //   disableResizing: true,
-    //   disableGroupBy: true,
-    //   minWidth: 45,
-    //   width: 45,
-    //   maxWidth: 45,
-    //   Aggregated: undefined,
-    //   // The header can use the table's getToggleAllRowsSelectedProps method
-    //   // to render a checkbox
-    //   Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
-    //     <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-    //   ),
-    //   // The cell can use the individual row's getToggleRowSelectedProps method
-    //   // to the render a checkbox
-    //   Cell: ({ row, getToggleAllRowsSelectedProps }: any) => {
-    //     // eslint-disable-next-line
-    //     // Object.keys(initialState?.selectedRowIds!).filter((element) => {
-    //     //   console.log({ id: row.id, element });
-    //     //   return row.id === element;
-    //     // });
-
-    //     // eslint-disable-next-line
-    //     // initialState?.selectedRowIds &&
-    //     //   console.log(
-    //     //     Object.keys(initialState.selectedRowIds).filter((element) => {
-    //     //       console.log({ id: row.id, element });
-    //     //       return row.id === element;
-    //     //     }).length > 0
-    //     //   );
-    //     console.log('row.id');
-
-    //     return (
-    //       <div>
-    //         <IndeterminateCheckbox
-    //           indeterminate={row.isSomeSelected}
-    //           onChange={(e: any) => {
-    //             console.log(row.id);
-    //             // if (setSelectedRows) {
-
-    //             // const indexRow = selectedRows.map((elm) => elm.id).indexOf(row.id);
-    //             // // let indexRow = selectedRows.indexOf(({ id }: any) => id == row.id);
-    //             // console.log('indexRow', indexRow);
-    //             // if (indexRow === -1) {
-    //             //   setSelectedRows && setSelectedRows((previewState: any[]) => [...previewState, row]);
-    //             // } else {
-    //             //   setSelectedRows && setSelectedRows((previewState: any[]) => previewState.splice(indexRow, 1));
-    //             // }
-    //             // }
-    //             //  row.toggleRowSelected(e.target.checked);
-    //           }}
-    //           // checked={selectedRows.filter((selectedRow: any) => selectedRow.id === row.id).length > 0 ? true : false}
-    //           // checked={Object.keys(initialState?.selectedRowIds).filter((element) => row.id === element).length > 0}
-    //           // onChange={(e: any) => {
-    //           //   // setSelectedRowId(row.id);
-    //           //   row.toggleRowSelected();
-    //           // }}
-    //           // {...row.getToggleRowSelectedProps()}
-    //         />
-    //       </div>
-    //     );
-    //   },
-    // },
     ...columns,
   ]);
 };
@@ -333,7 +277,7 @@ export function Table<T extends Record<string, unknown>>({
   let localHooks = hooks;
 
   if (canSelect) {
-    localHooks.push(selectionHook as any);
+    customSelect ? localHooks.push(customSelectionHook as any) : localHooks.push(selectionHook as any);
   }
   if (actionColumn !== undefined) {
     localHooks.push(customHooks as any);
@@ -352,7 +296,6 @@ export function Table<T extends Record<string, unknown>>({
 
       initialState: { ...initialState, customSelectedRows: [] },
       stateReducer: (newState, action, prevState) => {
-        console.log({ prevState }, { action }, { newState }, newState.customSelectedRows);
         switch (action.type) {
           case 'customSelectRow':
             return {
@@ -363,6 +306,18 @@ export function Table<T extends Record<string, unknown>>({
             return {
               ...newState,
               customSelectedRows: [...newState.customSelectedRows.filter((elm: any) => elm.id !== action.payload)],
+            };
+          case 'unSelectedNestedRows':
+            const filteredRows = filterByReference(newState.customSelectedRows, action.payload, false);
+            console.log('🚀 ~ file: Table.tsx ~ line 308 ~ test', action.payload, filteredRows);
+            return {
+              ...newState,
+              customSelectedRows: filteredRows,
+            };
+          case 'selectedNestedRows':
+            return {
+              ...newState,
+              customSelectedRows: [...newState.customSelectedRows, ...action.payload],
             };
           case 'customSelectAll':
             return {
@@ -400,14 +355,39 @@ export function Table<T extends Record<string, unknown>>({
       customSelectedRows,
     });
 
+    // if (setSelectedRows !== undefined) {
+    //   if (instance.isAllRowsSelected) {
+    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+    //     // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
+    //   } else if (customSelect !== undefined) {
+    //     setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+    //   } else {
+    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+    //   }
+    // }
+
     if (setSelectedRows !== undefined) {
       if (instance.isAllRowsSelected) {
-        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-        // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
+        setSelectedRows!(
+          instance.flatRows.map((row: any) => ({
+            ...row.original,
+            depth: row.depth,
+          }))
+        );
       } else if (customSelect !== undefined) {
-        setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+        setSelectedRows!(
+          state.customSelectedRows.map((row: any) => ({
+            ...row.original,
+            depth: row.depth,
+          }))
+        );
       } else {
-        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+        setSelectedRows!(
+          selectedFlatRows.map((row: any) => ({
+            ...row.original,
+            depth: row.depth,
+          }))
+        );
       }
     }
 
@@ -415,17 +395,16 @@ export function Table<T extends Record<string, unknown>>({
   }, [setInitialState, debouncedState, state.customSelectedRows]);
 
   React.useEffect(() => {
-    if (setSelectedRows !== undefined) {
-      if (instance.isAllRowsSelected) {
-        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-        // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
-      } else if (customSelect !== undefined) {
-        setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-      } else {
-        setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-      }
-    }
-
+    // if (setSelectedRows !== undefined) {
+    //   if (instance.isAllRowsSelected) {
+    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+    //     // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
+    //   } else if (customSelect !== undefined) {
+    //     setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+    //   } else {
+    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
+    //   }
+    // }
     // eslint-disable-next-line
   }, [state.customSelectedRows]);
 
@@ -442,6 +421,7 @@ export function Table<T extends Record<string, unknown>>({
             display: 'grid',
             gridTemplateColumns: filterActive ? '2fr 1fr ' : 'auto',
             gridColumnGap: '4px',
+            fontFamily: 'Segoe UI, -apple-system, Helvetica Neue, Arial',
           }}
         >
           <Card style={{ border: '0px' }}>
@@ -515,7 +495,9 @@ export function Table<T extends Record<string, unknown>>({
                                 ...getHeaderProps
                               } = column.getHeaderProps(headerProps);
                               const { title: groupTitle = '', ...columnGroupByProps } = column.getGroupByToggleProps();
-                              const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps();
+                              const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps({
+                                title: 'Trier',
+                              });
 
                               return (
                                 <TableHeadCell key={headerKey} {...getHeaderProps}>
@@ -717,6 +699,7 @@ export function Table<T extends Record<string, unknown>>({
               padding: 0,
               paddingTop: '4px ',
               minHeight: '100vh',
+              fontFamily: 'Segoe UI, -apple-system, Helvetica Neue, Arial',
             }}
           >
             <CollapsibleTable props={instance} />

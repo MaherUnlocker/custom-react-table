@@ -20,6 +20,7 @@ export const useStyles = makeStyles({
     border: '1px solid rgba(224, 224, 224, 1)',
     width: '100%',
     borderTop: '0',
+    fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
     // minHeight: '100vh',
     // marginTop: 5,
   },
@@ -52,7 +53,7 @@ export const useStyles = makeStyles({
     verticalAlign: 'inherit',
     justifyContent: 'center !important',
     display: 'flex',
-    // color: theme.palette.text.primary,
+    fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
     fontWeight: '700 !important',
     lineHeight: '1.5rem',
     borderRight: '1px solid rgba(224, 224, 224, 1)',
@@ -61,12 +62,15 @@ export const useStyles = makeStyles({
     },
     // borderBottom: '1px solid #555B6D',
   },
-  tableBody: {},
+  tableBody: {
+    fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
+  },
 
   tableRow: {
     color: 'inherit',
     maxHeight: 60,
     outline: 0,
+    fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
     verticalAlign: 'middle',
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.07)',
@@ -92,6 +96,7 @@ export const useStyles = makeStyles({
   tableLabel: {},
   tableCell: {
     padding: '8px 16px',
+    fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
     fontSize: '0.875rem',
     textAlign: 'center',
     fontWeight: 300,
@@ -173,8 +178,7 @@ export const useStyles = makeStyles({
     paddingLeft: '0 !important',
     paddingTop: '0 !important',
     height: '45px !important',
-    backgroundColor:
-      ' var(--unnamed-color-ffffff) 0% 0% no-repeat padding-box ',
+    backgroundColor: ' var(--unnamed-color-ffffff) 0% 0% no-repeat padding-box ',
     alignItems: 'center',
     minHeight: '64px',
   },
@@ -206,16 +210,11 @@ export const useStyles = makeStyles({
 });
 
 const areEqual = (prevProps: any, nextProps: any) =>
-  prevProps.checked === nextProps.checked &&
-  prevProps.indeterminate === nextProps.indeterminate;
+  prevProps.checked === nextProps.checked && prevProps.indeterminate === nextProps.indeterminate;
 
 type CN = { className?: string; style?: React.CSSProperties };
 
-export const RawTable: React.FC<Partial<TableTypeMap> & CN> = ({
-  children,
-  className,
-  ...rest
-}) => {
+export const RawTable: React.FC<Partial<TableTypeMap> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
     <MuiTableTable className={cx(className, classes.rawTable)} {...rest}>
@@ -224,11 +223,7 @@ export const RawTable: React.FC<Partial<TableTypeMap> & CN> = ({
   );
 };
 
-export const TableBody: React.FC<Partial<TableBodyTypeMap> & CN> = ({
-  children,
-  className,
-  ...rest
-}) => {
+export const TableBody: React.FC<Partial<TableBodyTypeMap> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
     <MuiTableBody className={cx(className, classes.tableBody)} {...rest}>
@@ -237,11 +232,7 @@ export const TableBody: React.FC<Partial<TableBodyTypeMap> & CN> = ({
   );
 };
 
-export const TableHead: React.FC<Partial<TableHeadTypeMap> & CN> = ({
-  children,
-  className,
-  ...rest
-}) => {
+export const TableHead: React.FC<Partial<TableHeadTypeMap> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
     <MuiTableHead className={cx(className, classes.tableHead)} {...rest}>
@@ -250,11 +241,7 @@ export const TableHead: React.FC<Partial<TableHeadTypeMap> & CN> = ({
   );
 };
 
-export const TableHeadRow: React.FC<Partial<TableRowTypeMap> & CN> = ({
-  children,
-  className,
-  ...rest
-}) => {
+export const TableHeadRow: React.FC<Partial<TableRowTypeMap> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
     <MuiTableRow className={cx(className, classes.tableHeadRow)} {...rest}>
@@ -263,11 +250,7 @@ export const TableHeadRow: React.FC<Partial<TableRowTypeMap> & CN> = ({
   );
 };
 
-export const TableHeadCell: React.FC<Partial<TableCellProps> & CN> = ({
-  children,
-  className,
-  ...rest
-}) => {
+export const TableHeadCell: React.FC<Partial<TableCellProps> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
     <MuiTableCell className={cx(className, classes.tableHeadCell)} {...rest}>
@@ -276,11 +259,7 @@ export const TableHeadCell: React.FC<Partial<TableCellProps> & CN> = ({
   );
 };
 
-export const TableRow: React.FC<Partial<TableRowTypeMap> & CN> = ({
-  children,
-  className,
-  ...rest
-}) => {
+export const TableRow: React.FC<Partial<TableRowTypeMap> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
     <MuiTableRow className={cx(className, classes.tableRow)} {...rest}>
@@ -289,11 +268,7 @@ export const TableRow: React.FC<Partial<TableRowTypeMap> & CN> = ({
   );
 };
 
-export const TableCell: React.FC<Partial<TableCellProps> & CN> = ({
-  children,
-  className,
-  ...rest
-}) => {
+export const TableCell: React.FC<Partial<TableCellProps> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
     <MuiTableCell className={cx(className, classes.tableCell)} {...rest}>

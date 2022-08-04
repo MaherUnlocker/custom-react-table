@@ -191,7 +191,7 @@ export function DynamicTable({
           // Build our expander column
           id: 'expander', // Make sure it has an ID
           Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }: any) => (
-            <span {...getToggleAllRowsExpandedProps()}>
+            <span {...getToggleAllRowsExpandedProps({ title: 'b ' })}>
               {isAllRowsExpanded ? (
                 <AngleSmallRightIcon height={25} width={25} className={classes.iconDirectionAsc} />
               ) : (
@@ -208,6 +208,7 @@ export function DynamicTable({
           Cell: ({ row }: any) =>
             // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
             // to build the toggle for expanding a row
+
             row.canExpand ? (
               <span
                 {...row.getToggleRowExpandedProps({
@@ -217,6 +218,7 @@ export function DynamicTable({
                     // of the row
                     paddingLeft: `${row.depth * 2}rem`,
                   },
+                  title: '',
                 })}
               >
                 {row.isExpanded ? (

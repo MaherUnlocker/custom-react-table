@@ -43,6 +43,7 @@ import {
   UseSortByInstanceProps,
   UseSortByOptions,
   UseSortByState,
+  TableDispatch
 } from 'react-table'
 
 declare module 'react-table' {
@@ -114,6 +115,7 @@ declare module 'react-table' {
 
   export interface Cell<D extends Record<string, unknown> = Record<string, unknown>> extends UseGroupByCellProps<D> { }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   export interface Row<D extends object = {}>
     extends UseExpandedRowProps<D>,
     UseGroupByRowProps<D>,
@@ -152,7 +154,17 @@ export type DynamicTablePropsType = {
   ActionColumnComponent: JSX.Element;
 };
 
-
+export type ControlledCheckboxPropsType = {
+  isHeader: boolean;
+  indeterminate: boolean;
+  row: any;
+  dispatchSelectedRows: TableDispatch<any>;
+  selectedRows: any[];
+  allRows?: any[];
+  selectedFlatRows: any[];
+  isAllRowsSelected: boolean;
+  toggleAllRowsSelected?: any;
+};
 
 
 export type TableMouseEventHandler = (instance: TableInstance<T>) => MouseEventHandler

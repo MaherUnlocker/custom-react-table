@@ -1,37 +1,31 @@
-import * as React from 'react';
+import React from 'react';
 
-import Checkbox from '@mui/material/Checkbox';
 import { useManyClickHandlers } from './useManyClickHandlers';
-import { TableDispatch } from 'react-table';
 import { RowCheckbox } from '../Table/TableStyle';
-type ControlledCheckboxPropsType = {
-  isHeader: boolean;
-  row: any;
-  //dispatchSelectedRows: any;
-  dispatchSelectedRows: TableDispatch<any>;
-  selectedRows: any[];
-  selectedFlatRows: any[];
-  isAllRowsSelected: boolean;
-  toggleAllRowsSelected?: any;
-};
+import { getNestedId } from '../utils/getNestedId';
+import { filterByReference } from '../utils';
+import { ControlledCheckboxPropsType } from '../../types/react-table-config';
 
 export default function ControlledCheckbox({
   isHeader,
   row,
   dispatchSelectedRows,
   selectedRows,
+  allRows,
   selectedFlatRows,
   isAllRowsSelected,
   toggleAllRowsSelected,
+  indeterminate,
 }: ControlledCheckboxPropsType): JSX.Element {
   const [checked, setChecked] = React.useState<boolean>(false);
+
   const handleClickHeader = () => {
     toggleAllRowsSelected();
     isAllRowsSelected
       ? dispatchSelectedRows({ type: 'customUnSelectAll', payload: selectedFlatRows })
       : dispatchSelectedRows({ type: 'customSelectAll', payload: selectedFlatRows });
   };
-  const handleClickRow = () => {
+  const handleSingleClick = () => {
     selectedRows?.filter((elm: any) => elm.id === row.id).length > 0
       ? dispatchSelectedRows({
           type: 'customUnSelectRow',
@@ -40,32 +34,57 @@ export default function ControlledCheckbox({
       : dispatchSelectedRows({ type: 'customSelectRow', payload: row });
   };
 
+  const handleDoubleClick = () => {
+    const nestedRowsId = getNestedId((x: any) => x.id)(row);
+
+    if (selectedRows?.filter((elm: any) => elm.id === row.id).length > 0) {
+      dispatchSelectedRows({
+        type: 'unSelectedNestedRows',
+        payload: nestedRowsId,
+      });
+    } else {
+      const RowsSelected = filterByReference(allRows, nestedRowsId, true);
+
+      dispatchSelectedRows({
+        type: 'selectedNestedRows',
+        payload: [...RowsSelected],
+      });
+    }
+  };
+
   const singleClickHandler = (e: React.UIEvent<HTMLElement>) => {
-    isHeader ? handleClickHeader() : handleClickRow();
+    isHeader ? handleClickHeader() : handleSingleClick();
     setChecked(!checked);
   };
 
   const doubleClickHandler = (e: React.UIEvent<HTMLElement>) => {
+    !isHeader && handleDoubleClick();
     setChecked(!checked);
   };
 
   const clickHandler = useManyClickHandlers(singleClickHandler, doubleClickHandler);
 
   React.useEffect(() => {
-    setChecked(
-      isAllRowsSelected
-        ? isAllRowsSelected
-        : row !== undefined && selectedRows?.filter((elm: any) => elm.id === row.id).length > 0
-    );
+    isHeader
+      ? setChecked(isAllRowsSelected || allRows?.length === selectedRows?.length ? true : false)
+      : setChecked(
+          isAllRowsSelected
+            ? true
+            : row !== undefined && selectedRows?.filter((elm: any) => elm.id === row.id).length > 0
+        );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAllRowsSelected, row, selectedRows]);
 
   return (
-    <RowCheckbox onClick={clickHandler} checked={checked} inputProps={{ 'aria-label': 'controlled' }} />
-    // <Checkbox
-    //   onClick={clickHandler}
-    //   checked={checked}
-    //   inputProps={{ 'aria-label': 'controlled' }}
-    //   // style={{ marginLeft: `${row?.depth * 2}rem` }}
-    // />
+    <RowCheckbox
+      onClick={clickHandler}
+      checked={checked}
+      title={
+        row?.subRows.length > 0
+          ? `Double-cliquer pour sélectionner l'élément et ses sous-éléments`
+          : 'sélectionner/Désélectionner'
+      }
+      indeterminate={indeterminate}
+    />
   );
 }

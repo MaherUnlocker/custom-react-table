@@ -238,21 +238,18 @@ export function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
-          Cell: (cell: any) => {
-            console.log(cell);
-            return (
-              <elm.customJsx
-                selectedRow={{
-                  ...cell.row.original,
-                  depth: cell.row.depth,
-                  selectedRows:
-                    cell.state.customSelectedRows.length > 0
-                      ? cell.state.customSelectedRows.map((select: any) => select.original)
-                      : [],
-                }}
-              />
-            );
-          },
+          Cell: (cell: any) => (
+            <elm.customJsx
+              selectedRow={{
+                ...cell.row.original,
+                depth: cell.row.depth,
+                selectedRows:
+                  cell.state.customSelectedRows.length > 0
+                    ? cell.state.customSelectedRows.map((select: any) => select.original)
+                    : [],
+              }}
+            />
+          ),
         })
       );
     }

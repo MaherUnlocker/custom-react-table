@@ -12,8 +12,6 @@ import ControlledCheckbox from './components/ControlledCheckbox';
 
 // eslint-disable-next-line
 function SelectAccountDropdown(original: any) {
-  console.log('🚀 ~ file: App.tsx ~ line 15 ~ SelectAccountDropdown ~ original', original);
-
   return null;
 }
 
@@ -39,8 +37,6 @@ const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any,
 export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
-
-  console.log('🚀 ~ file: App.tsx ~ line 40 ~ App ~ selectedRows', selectedRows);
 
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
 

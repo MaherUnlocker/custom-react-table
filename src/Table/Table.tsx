@@ -167,7 +167,7 @@ const customSelectionHook = (hooks: Hooks<any>) => {
           isAllRowsSelected={isAllRowsSelected}
           selectedRows={state.customSelectedRows}
           indeterminate={
-            isAllRowsSelected || flatRows.length === state.customSelectedRows.length
+            isAllRowsSelected || (flatRows.length > 0 && flatRows.length === state.customSelectedRows.length)
               ? false
               : state.customSelectedRows.length > 0
           }
@@ -225,6 +225,7 @@ export function Table<T extends Record<string, unknown>>({
   if (name === undefined || name === null) {
     name = 'mytable';
   }
+  const isMobile = IsMobileView();
   const [initialState, setInitialState] = useLocalStorage(`tableState2:${name}`, {});
 
   const customHooks = (hooks: Hooks<any>) => {
@@ -283,19 +284,35 @@ export function Table<T extends Record<string, unknown>>({
     localHooks.push(customHooks as any);
   }
   const filterOptions = { filteredIds: [] };
-
+  const [controlledPageIndex, setControlledPage] = React.useState(0);
   const instance = useTable<T>(
     {
       ...props,
       columns,
       filterTypes,
       defaultColumn,
-
+      // styledRows: [],
       getSubRows: (row: any) => row.subRows,
       globalFilter: (rows, columnIds, filterValue) => DefaultGlobalFilter(rows, columnIds, filterValue, filterOptions),
 
       initialState: { ...initialState, customSelectedRows: [] },
+      /*  in test mode wip */
+      useControlledState: (state) => {
+        console.log('🚀 ~ file: Table.tsx ~ line 300 ~ state', state);
+        return React.useMemo(
+          () => ({
+            ...state,
+
+            //  selectedRowIds: [...state.customSelectedRows.map((elm: any) => ({ [elm.id as Record<IdType<T> ]: true }))],
+            //  pageIndex: controlledPageIndex,
+          }),
+
+          [state, controlledPageIndex]
+        );
+      },
+
       stateReducer: (newState, action, prevState) => {
+        console.log('🚀 ~ file: Table.tsx ~ line 304 ~ newState', newState);
         switch (action.type) {
           case 'customSelectRow':
             return {
@@ -309,7 +326,6 @@ export function Table<T extends Record<string, unknown>>({
             };
           case 'unSelectedNestedRows':
             const filteredRows = filterByReference(newState.customSelectedRows, action.payload, false);
-            console.log('🚀 ~ file: Table.tsx ~ line 308 ~ test', action.payload, filteredRows);
             return {
               ...newState,
               customSelectedRows: filteredRows,
@@ -334,17 +350,21 @@ export function Table<T extends Record<string, unknown>>({
         }
       },
     },
+
     ...localHooks
   );
-  const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
+  console.log('🚀 ~ file: Table.tsx ~ line 341 ~ instance', instance);
 
-  console.log('customSelectedRows', state.customSelectedRows);
+  const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
 
   const debouncedState = useDebounce(state, 200);
 
+  const cellClickHandler = (cell: Cell<T>) => () => {
+    onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
+  };
+
   React.useEffect(() => {
-    const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds, customSelectedRows } =
-      debouncedState;
+    const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds } = debouncedState;
     setInitialState({
       sortBy,
       filters,
@@ -352,7 +372,6 @@ export function Table<T extends Record<string, unknown>>({
       columnResizing,
       hiddenColumns,
       selectedRowIds,
-      customSelectedRows,
     });
 
     // if (setSelectedRows !== undefined) {
@@ -392,27 +411,7 @@ export function Table<T extends Record<string, unknown>>({
     }
 
     // eslint-disable-next-line
-  }, [setInitialState, debouncedState, state.customSelectedRows]);
-
-  React.useEffect(() => {
-    // if (setSelectedRows !== undefined) {
-    //   if (instance.isAllRowsSelected) {
-    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-    //     // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
-    //   } else if (customSelect !== undefined) {
-    //     setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-    //   } else {
-    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-    //   }
-    // }
-    // eslint-disable-next-line
-  }, [state.customSelectedRows]);
-
-  const cellClickHandler = (cell: Cell<T>) => () => {
-    onClick && !cell.column.isGrouped && !cell.row.isGrouped && cell.column.id !== '_selector' && onClick(cell.row);
-  };
-
-  const isMobile = IsMobileView();
+  }, [setInitialState, state.customSelectedRows]);
   return (
     <>
       {!isMobile ? (
@@ -543,6 +542,7 @@ export function Table<T extends Record<string, unknown>>({
                         ? page.map((row: any) => {
                             prepareRow(row);
                             const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
+                            //  console.log('🚀 ~ file: Table.tsx ~ line 534 ~ ?page.map ~  row.getRowProps()', row);
 
                             return (
                               <TableRow

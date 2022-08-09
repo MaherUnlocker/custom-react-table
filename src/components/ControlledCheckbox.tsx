@@ -6,6 +6,17 @@ import { getNestedId } from '../utils/getNestedId';
 import { filterByReference } from '../utils';
 import { ControlledCheckboxPropsType } from '../../types/react-table-config';
 
+const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref: any) => {
+  const defaultRef = React.useRef();
+  const resolvedRef = ref || defaultRef;
+
+  React.useEffect(() => {
+    resolvedRef.current.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  return <input type='checkbox' ref={resolvedRef} {...rest} />;
+});
+
 export default function ControlledCheckbox({
   isHeader,
   row,
@@ -66,7 +77,11 @@ export default function ControlledCheckbox({
 
   React.useEffect(() => {
     isHeader
-      ? setChecked(isAllRowsSelected || allRows?.length === selectedRows?.length ? true : false)
+      ? setChecked(
+          isAllRowsSelected || (allRows && allRows?.length > 0 && allRows?.length === selectedRows?.length)
+            ? true
+            : false
+        )
       : setChecked(
           isAllRowsSelected
             ? true

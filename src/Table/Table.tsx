@@ -285,6 +285,7 @@ export function Table<T extends Record<string, unknown>>({
   }
   const filterOptions = { filteredIds: [] };
   const [controlledPageIndex, setControlledPage] = React.useState(0);
+  const [tata, setTata] = React.useState([]);
   const instance = useTable<T>(
     {
       ...props,
@@ -297,24 +298,22 @@ export function Table<T extends Record<string, unknown>>({
 
       initialState: { ...initialState, customSelectedRows: [] },
       /*  in test mode wip */
-      useControlledState: (state) => {
-        console.log('🚀 ~ file: Table.tsx ~ line 300 ~ state', state);
-        return React.useMemo(
+      useControlledState: (state) =>
+        React.useMemo(
           () => ({
             ...state,
-
+            selectedFlatRows: tata,
             //  selectedRowIds: [...state.customSelectedRows.map((elm: any) => ({ [elm.id as Record<IdType<T> ]: true }))],
             //  pageIndex: controlledPageIndex,
           }),
 
-          [state, controlledPageIndex]
-        );
-      },
+          [state]
+        ),
 
       stateReducer: (newState, action, prevState) => {
-        console.log('🚀 ~ file: Table.tsx ~ line 304 ~ newState', newState);
         switch (action.type) {
           case 'customSelectRow':
+            setTata([...(newState.customSelectedRows as never), action.payload as never]);
             return {
               ...newState,
               customSelectedRows: [...newState.customSelectedRows, action.payload],
@@ -346,14 +345,18 @@ export function Table<T extends Record<string, unknown>>({
               customSelectedRows: [],
             };
           default:
-            return newState;
+            return {
+              ...newState,
+              customSelectedRows: [],
+            };
         }
       },
     },
 
     ...localHooks
   );
-  console.log('🚀 ~ file: Table.tsx ~ line 341 ~ instance', instance);
+  console.log('🚀 ~ file: Table.tsx ~ line 306 ~ tata', tata);
+  console.log('🚀 ~ file: Table.tsx ~ line 354 ~ instance', instance);
 
   const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
 
@@ -542,7 +545,6 @@ export function Table<T extends Record<string, unknown>>({
                         ? page.map((row: any) => {
                             prepareRow(row);
                             const { key: rowKey, role: rowRole, ...getRowProps } = row.getRowProps();
-                            //  console.log('🚀 ~ file: Table.tsx ~ line 534 ~ ?page.map ~  row.getRowProps()', row);
 
                             return (
                               <TableRow

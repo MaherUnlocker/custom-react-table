@@ -38,6 +38,8 @@ export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
 
+  const [data, setData] = React.useState<any[]>([]);
+  console.log('🚀 ~ file: App.tsx ~ line 42 ~ App ~ data', data);
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
 
   const [disableElment, setDesableElment] = React.useState(false);
@@ -94,20 +96,14 @@ export default function App(): JSX.Element {
   return (
     // <React.Suspense fallback={null}>
     <I18nextProvider i18n={i18next}>
-      <button
-        onClick={() => {
-          setDataIsUpdated(true);
-          setDesableElment(false);
-        }}
-      >
-        data
-      </button>
       <DynamicTable
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
         // url='http://192.168.2.14:4000/categories'
         url='http://192.168.2.14:4000/client'
         // url='http://192.168.2.14:4000/products'
+
+        setData={setData}
         //optionnal props
         // --->here for add cusom component in the end of table
         actionColumn={() => null}

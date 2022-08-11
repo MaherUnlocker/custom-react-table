@@ -37,6 +37,7 @@ export interface DynamicTableProps {
   canSelect?: boolean;
   setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>;
   selectedRows?: any[];
+  setData?: React.Dispatch<React.SetStateAction<any[]>>;
   canResize?: boolean;
   showGlobalFilter?: boolean;
   showFilter?: boolean;
@@ -101,6 +102,7 @@ export function DynamicTable({
   minHeight,
   maxHeight,
   requestHeader,
+  setData,
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = React.useState<apiResultProps>();
 
@@ -119,6 +121,7 @@ export function DynamicTable({
       })
       .then((response: { data: apiResultProps }) => {
         setApiResult(response.data);
+        setData!(data);
       })
       .catch((err: any) => {
         setError(err);
@@ -191,7 +194,7 @@ export function DynamicTable({
           // Build our expander column
           id: 'expander', // Make sure it has an ID
           Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }: any) => (
-            <span {...getToggleAllRowsExpandedProps({ title: 'b ' })}>
+            <span {...getToggleAllRowsExpandedProps({ title: 'expand all' })}>
               {isAllRowsExpanded ? (
                 <AngleSmallRightIcon height={25} width={25} className={classes.iconDirectionAsc} />
               ) : (

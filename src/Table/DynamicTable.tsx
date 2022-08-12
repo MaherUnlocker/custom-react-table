@@ -121,9 +121,11 @@ export function DynamicTable({
       })
       .then((response: { data: apiResultProps }) => {
         setApiResult(response.data);
-        setData!(data);
+        setData !== undefined && setData(data);
       })
       .catch((err: any) => {
+        console.log('🚀 ~ file: DynamicTable.tsx ~ line 127 ~ fetchData ~ err', err);
+        alert('error');
         setError(err);
       })
       .finally(() => {

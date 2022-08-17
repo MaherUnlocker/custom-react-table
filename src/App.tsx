@@ -100,11 +100,10 @@ export default function App(): JSX.Element {
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
         // url='http://192.168.2.14:4000/categories'
-        // url='http://192.168.2.14:4000/client'
-        url='http://localhost:8080/api_etk_article_bd/v1//cards/franchise_mohamed_2022/19a14aa6-eae3-cffb-15bd-080bd7bf38ea/categories'
+        url='http://192.168.2.14:4000/client'
         // url='http://192.168.2.14:4000/products'
 
-        // setData={setData}
+        setData={setData}
         //optionnal props
         // --->here for add cusom component in the end of table
         actionColumn={() => null}

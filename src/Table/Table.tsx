@@ -344,11 +344,9 @@ export function Table<T extends Record<string, unknown>>({
               ...newState,
               customSelectedRows: [],
             };
+
           default:
-            return {
-              ...newState,
-              customSelectedRows: [],
-            };
+            return newState;
         }
       },
     },
@@ -367,7 +365,8 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   React.useEffect(() => {
-    const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds } = debouncedState;
+    const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds, customSelectedRows } =
+      debouncedState;
     setInitialState({
       sortBy,
       filters,
@@ -375,6 +374,7 @@ export function Table<T extends Record<string, unknown>>({
       columnResizing,
       hiddenColumns,
       selectedRowIds,
+      customSelectedRows,
     });
 
     // if (setSelectedRows !== undefined) {

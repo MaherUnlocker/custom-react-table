@@ -35,6 +35,7 @@ export interface DynamicTableProps {
   canGroupBy?: boolean;
   canSort?: boolean;
   canSelect?: boolean;
+  canMovedCheckboxLeftOnExpand?: boolean;
   setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>;
   selectedRows?: any[];
   setData?: React.Dispatch<React.SetStateAction<any[]>>;
@@ -103,7 +104,10 @@ export function DynamicTable({
   maxHeight,
   requestHeader,
   setData,
+  canMovedCheckboxLeftOnExpand,
 }: DynamicTableProps): React.ReactElement {
+  console.log('🚀 ~ file: DynamicTable.tsx ~ line 108 ~ canMovedCheckboxLeftOnExpand', canMovedCheckboxLeftOnExpand);
+
   const [apiResult, setApiResult] = React.useState<apiResultProps>();
 
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -326,6 +330,7 @@ export function DynamicTable({
         minHeight={minHeight}
         maxHeight={maxHeight}
         customSelect={customSelect}
+        canMovedCheckboxLeftOnExpand={canMovedCheckboxLeftOnExpand}
       />
     </DynamicTableContext.Provider>
     // </I18nextProvider>

@@ -3,7 +3,7 @@ import React from 'react';
 
 import { TableInstance } from 'react-table';
 import { createStyles, makeStyles } from '@mui/styles';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 
 import { DiskIcon } from '../components/assets/DiskIcon';

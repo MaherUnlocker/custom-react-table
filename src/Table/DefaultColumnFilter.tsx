@@ -1,6 +1,7 @@
 import React from 'react';
+
 import _uniqby from 'lodash.uniqby';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { FilterProps } from 'react-table';
 
 import { findFirstColumn } from './Table';
@@ -14,7 +15,7 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   rows,
   prepareRow,
 }: FilterProps<T>): React.ReactElement {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const { filterValue, setFilter, render } = column;
   const [, setValue] = React.useState(filterValue || '');
 
@@ -30,10 +31,7 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
         .filter((cel: any) => {
           const { key: cellKey } = cel.getCellProps();
           // eslint-disable-next-line
-          return (
-            (cellKey as string).replace(/([^\_]*\_){2}/, '') ===
-            (column.id as string)
-          );
+          return (cellKey as string).replace(/([^\_]*\_){2}/, '') === (column.id as string);
         })
         // eslint-disable-next-line
         .map((cell: any) => {
@@ -64,8 +62,8 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
     <React.Fragment>
       <StyledLabel htmlFor={column.id}>{render('Header')}</StyledLabel>
       <StyledSelectInput
-        menuPlacement="auto"
-        menuPosition="fixed"
+        menuPlacement='auto'
+        menuPosition='fixed'
         id={column.id}
         name={column.id}
         options={unique}

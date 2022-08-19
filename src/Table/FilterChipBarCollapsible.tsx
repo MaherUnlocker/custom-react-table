@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Chip, Collapse } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
 import { createStyles, makeStyles } from '@mui/styles';
 
@@ -54,7 +54,7 @@ export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
   showMore,
   setDesignationFilter,
 }: FilterChipBarProps<T>): React.ReactElement | null {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const classes = useStyles({});
   const {
     allColumns,

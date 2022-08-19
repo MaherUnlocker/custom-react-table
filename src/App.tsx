@@ -1,19 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DynamicTable } from './Table/DynamicTable';
 
 //import { DynamicTable } from '@maherunlocker/custom-react-table';
 import React from 'react';
-import { stringify } from 'querystring';
-import VerticalDotsIcon from './components/assets/VerticalDotsIcon';
 import { I18nextProvider } from 'react-i18next';
 import i18next from './i18n';
 import './index.css';
-import { useManyClickHandlers } from './components/useManyClickHandlers';
-import ControlledCheckbox from './components/ControlledCheckbox';
 
 // eslint-disable-next-line
-function SelectAccountDropdown(original: any) {
-  return null;
-}
 
 interface customColumnProps {
   indexOFColumn: number;
@@ -21,26 +15,16 @@ interface customColumnProps {
   customJsx: React.ReactNode;
 }
 
-// eslint-disable-next-line
-
-const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref: any) => {
-  const defaultRef = React.useRef();
-  const resolvedRef = ref || defaultRef;
-
-  React.useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
-
-  return <input type='checkbox' ref={resolvedRef} {...rest} />;
-});
-
 export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
 
   const [data, setData] = React.useState<any[]>([]);
-  console.log('🚀 ~ file: App.tsx ~ line 42 ~ App ~ data', data);
+
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
+  function SelectAccountDropdown(original: any) {
+    return <button onClick={() => setDataIsUpdated(true)}>maher</button>;
+  }
 
   const [disableElment, setDesableElment] = React.useState(false);
 
@@ -87,7 +71,7 @@ export default function App(): JSX.Element {
     );
   }
 
-  let arrayOfCustomColumns: customColumnProps[] = [];
+  const arrayOfCustomColumns: customColumnProps[] = [];
   arrayOfCustomColumns.push(
     // { indexOFColumn: 0, columnName: 'checkbox', customJsx: IndeterminateCheckbox },
     { indexOFColumn: 1, columnName: '_', customJsx: SelectAccountDropdown }
@@ -122,6 +106,8 @@ export default function App(): JSX.Element {
         // --->here showing checkbox in the begin of RowTable with return you the checked rows
         canSelect
         customSelect
+        //----> the props for decaling checkbox on expand mode
+        canMovedCheckboxLeftOnExpand
         setSelectedRows={setSelectedRows}
         selectedRows={selectedRows}
         // --->here showing golobal filter input on the top of table

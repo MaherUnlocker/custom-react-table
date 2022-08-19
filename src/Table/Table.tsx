@@ -3,7 +3,7 @@ import React from 'react';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Box, Grid, TableContainer, TableSortLabel, Tooltip } from '@mui/material';
-import { Card, CardBody, CardFooter, CardHeader, Row } from 'reactstrap';
+import { Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
 import cx from 'classnames';
 import {
   Cell,
@@ -106,16 +106,6 @@ const filterTypes: any = {
   fuzzyText: fuzzyTextFilter,
   numeric: numericTextFilter,
 };
-const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref: any) => {
-  const defaultRef = React.useRef();
-  const resolvedRef = ref || defaultRef;
-
-  React.useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
-
-  return <input type='checkbox' ref={resolvedRef} {...rest} />;
-});
 
 const selectionHook = (hooks: Hooks<any>) => {
   hooks.allColumns.push((columns) => [
@@ -190,6 +180,55 @@ const customSelectionHook = (hooks: Hooks<any>) => {
     ...columns,
   ]);
 };
+const customSelectionHookWithMoveleft = (hooks: Hooks<any>) => {
+  hooks.allColumns.push((columns) => [
+    // Let's make a column for selection
+
+    {
+      id: '_selector',
+      disableResizing: true,
+      disableGroupBy: true,
+      minWidth: 45,
+      width: 45,
+      maxWidth: 45,
+      Aggregated: undefined,
+      // The header can use the table's getToggleAllRowsSelectedProps method
+      // to render a checkbox
+      Header: ({ row, dispatch, flatRows, isAllRowsSelected, state, toggleAllRowsSelected }: any) => (
+        <ControlledCheckbox
+          isHeader={true}
+          toggleAllRowsSelected={toggleAllRowsSelected}
+          row={row}
+          allRows={flatRows}
+          dispatchSelectedRows={dispatch}
+          selectedFlatRows={flatRows}
+          isAllRowsSelected={isAllRowsSelected}
+          selectedRows={state.customSelectedRows}
+          indeterminate={
+            isAllRowsSelected || (flatRows.length > 0 && flatRows.length === state.customSelectedRows.length)
+              ? false
+              : state.customSelectedRows.length > 0
+          }
+        />
+      ),
+
+      Cell: ({ row, dispatch, flatRows, isAllRowsSelected, state, toggleAllRowsSelected, selectedFlatRows }: any) => (
+        <ControlledCheckbox
+          isHeader={false}
+          row={row}
+          allRows={flatRows}
+          dispatchSelectedRows={dispatch}
+          selectedFlatRows={selectedFlatRows}
+          isAllRowsSelected={isAllRowsSelected}
+          selectedRows={state.customSelectedRows}
+          indeterminate={false}
+          movedLeft={true}
+        />
+      ),
+    },
+    ...columns,
+  ]);
+};
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const headerProps = <T extends Record<string, unknown>>(
@@ -200,6 +239,7 @@ export const headerProps = <T extends Record<string, unknown>>(
 export function Table<T extends Record<string, unknown>>({
   name,
   columns,
+  canMovedCheckboxLeftOnExpand,
   onClick,
   canGroupBy,
   canSort,
@@ -278,13 +318,19 @@ export function Table<T extends Record<string, unknown>>({
   let localHooks = hooks;
 
   if (canSelect) {
-    customSelect ? localHooks.push(customSelectionHook as any) : localHooks.push(selectionHook as any);
+    if (customSelect) {
+      canMovedCheckboxLeftOnExpand !== undefined && canMovedCheckboxLeftOnExpand
+        ? localHooks.push(customSelectionHookWithMoveleft as any)
+        : localHooks.push(customSelectionHook as any);
+    } else {
+      localHooks.push(selectionHook as any);
+    }
   }
   if (actionColumn !== undefined) {
     localHooks.push(customHooks as any);
   }
+
   const filterOptions = { filteredIds: [] };
-  const [controlledPageIndex, setControlledPage] = React.useState(0);
   const [tata, setTata] = React.useState([]);
   const instance = useTable<T>(
     {
@@ -353,8 +399,6 @@ export function Table<T extends Record<string, unknown>>({
 
     ...localHooks
   );
-  console.log('🚀 ~ file: Table.tsx ~ line 306 ~ tata', tata);
-  console.log('🚀 ~ file: Table.tsx ~ line 354 ~ instance', instance);
 
   const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
 
@@ -365,8 +409,7 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   React.useEffect(() => {
-    const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds, customSelectedRows } =
-      debouncedState;
+    const { sortBy, filters, pageSize, columnResizing, hiddenColumns, selectedRowIds } = debouncedState;
     setInitialState({
       sortBy,
       filters,
@@ -374,20 +417,7 @@ export function Table<T extends Record<string, unknown>>({
       columnResizing,
       hiddenColumns,
       selectedRowIds,
-      customSelectedRows,
     });
-
-    // if (setSelectedRows !== undefined) {
-    //   if (instance.isAllRowsSelected) {
-    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-    //     // instance.dispatch({ type: 'customSelectAll', payload: selectedFlatRows });
-    //   } else if (customSelect !== undefined) {
-    //     setSelectedRows!(state.customSelectedRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-    //   } else {
-    //     setSelectedRows!(selectedFlatRows.map((row: any) => ({ ...row.original, depth: row.depth })));
-    //   }
-    // }
-
     if (setSelectedRows !== undefined) {
       if (instance.isAllRowsSelected) {
         setSelectedRows!(
@@ -415,6 +445,12 @@ export function Table<T extends Record<string, unknown>>({
 
     // eslint-disable-next-line
   }, [setInitialState, state.customSelectedRows]);
+  React.useEffect(() => {
+    instance.dispatch({ type: 'customUnSelectAll', payload: [] });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instance.data]);
+
   return (
     <>
       {!isMobile ? (

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 
 import { FilterIcon } from '../components/assets/FilterIcon';
@@ -23,7 +23,7 @@ export default function FilterModalMobile({
   setLocalFilterActive,
   tableName,
 }: FilterModalMobileProps): JSX.Element {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const classes = useStyles();
   return (
     <Modal

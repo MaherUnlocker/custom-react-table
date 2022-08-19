@@ -164,6 +164,7 @@ export type ControlledCheckboxPropsType = {
   selectedFlatRows: any[];
   isAllRowsSelected: boolean;
   toggleAllRowsSelected?: any;
+  movedLeft?: boolean
 };
 
 

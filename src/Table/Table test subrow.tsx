@@ -208,7 +208,6 @@ export function Table<T extends Record<string, unknown>>({
   if (selectedRowId) {
     selectedRowIds.push(selectedRowId);
   }
-  console.log('🚀 ~ file: Table.tsx ~ line 210 ~ selectedRowIds', selectedRowIds);
 
   const selectionHook = (hooks: any) => {
     hooks.allColumns.push((columns: any) => [
@@ -231,16 +230,12 @@ export function Table<T extends Record<string, unknown>>({
               toggleRowSelected(row.id, event.currentTarget.checked);
             });
           };
-          // const checked =
-          //   (isAllPageRowsSelected || selectableRowsInCurrentPage === selectedRowsInCurrentPage) && !disabled;
 
           return (
             <div>
               <IndeterminateCheckbox onChange={modifiedOnChange} />
             </div>
           );
-
-          // <HeaderCheckbox {...getToggleAllRowsSelectedProps()} />
         },
         // The cell can use the individual row's getToggleRowSelectedProps method
         // to the render a checkbox
@@ -251,24 +246,15 @@ export function Table<T extends Record<string, unknown>>({
             <div>
               <IndeterminateCheckbox
                 name={row.original.id}
-                // onClick={() => row.toggleRowSelected()}
-                // onClick={alert(row.id)}
                 {...row.getToggleRowSelectedProps()}
                 indeterminate={true}
                 onChange={() => {
-                  // setSelectedRowId(row.id);
                   row.toggleRowSelected();
-                  // if (toggleRowSelected.rows.find((elm: any) => (elm.id = row.id))) {
-                  //   // row.getToggleRowSelectedProps(!row.isSelected);
-                  // }
-                  // row.getToggleRowSelectedProps(row.isSelected === undefined ? false : !row.isSelected);
                 }}
-                // checked={instance.isAllPageRowsSelected ? true : row.isSelected}
               />
             </div>
           );
         },
-        // <RowCheckbox {...row.getToggleRowSelectedProps()} />,
       },
       ...columns,
     ]);
@@ -296,8 +282,7 @@ export function Table<T extends Record<string, unknown>>({
     ...localHooks
   );
   const { headerGroups, getTableBodyProps, page, prepareRow, state, selectedFlatRows } = instance;
-  console.log('🚀 ~ file: Table test subrow.tsx ~ line 244 ~ selectionHook ~ instance', instance);
-  console.log('🚀 ~ file: Table.tsx ~ line 257 ~ selectedFlatRows', selectedFlatRows);
+
   const debouncedState = useDebounce(state, 200);
 
   React.useEffect(() => {

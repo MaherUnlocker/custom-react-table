@@ -202,7 +202,7 @@ const customSelectionHookWithMoveleft = (hooks: Hooks<any>) => {
           allRows={flatRows}
           dispatchSelectedRows={dispatch}
           selectedFlatRows={flatRows}
-          isAllRowsSelected={isAllRowsSelected}
+          isAllRowsSelected={flatRows.length > 0 && flatRows.length === state.customSelectedRows.length}
           selectedRows={state.customSelectedRows}
           indeterminate={
             isAllRowsSelected || (flatRows.length > 0 && flatRows.length === state.customSelectedRows.length)
@@ -254,7 +254,7 @@ export function Table<T extends Record<string, unknown>>({
   filterActive,
   setLocalFilterActive,
   customJsxSideFilterButton,
-  selectedRows,
+
   elevationTable,
   minHeight,
   maxHeight,
@@ -344,17 +344,17 @@ export function Table<T extends Record<string, unknown>>({
 
       initialState: { ...initialState, customSelectedRows: [] },
       /*  in test mode wip */
-      useControlledState: (state) =>
-        React.useMemo(
-          () => ({
-            ...state,
-            selectedFlatRows: tata,
-            //  selectedRowIds: [...state.customSelectedRows.map((elm: any) => ({ [elm.id as Record<IdType<T> ]: true }))],
-            //  pageIndex: controlledPageIndex,
-          }),
+      // useControlledState: (state) =>
+      //   React.useMemo(
+      //     () => ({
+      //       ...state,
+      //       selectedFlatRows: tata,
+      //       //  selectedRowIds: [...state.customSelectedRows.map((elm: any) => ({ [elm.id as Record<IdType<T> ]: true }))],
+      //       //  pageIndex: controlledPageIndex,
+      //     }),
 
-          [state]
-        ),
+      //     [state]
+      //   ),
 
       stateReducer: (newState, action, prevState) => {
         switch (action.type) {
@@ -445,11 +445,18 @@ export function Table<T extends Record<string, unknown>>({
 
     // eslint-disable-next-line
   }, [setInitialState, state.customSelectedRows]);
+
+  React.useEffect(() => {
+    !instance.isAllRowsSelected && instance.dispatch({ type: 'customUnSelectAll', payload: [] });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instance.isAllRowsSelected]);
+
   React.useEffect(() => {
     instance.dispatch({ type: 'customUnSelectAll', payload: [] });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instance.data]);
+  }, [instance.data, instance]);
 
   return (
     <>

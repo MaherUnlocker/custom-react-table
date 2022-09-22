@@ -85,6 +85,7 @@ export default function App(): JSX.Element {
         // name="'mah'"
         // url='http://192.168.2.14:4000/categories'
         url='http://192.168.2.14:4000/client'
+        //url='https://my-json-server.typicode.com/MaherUnlocker/jsonserver/client'
         // url='http://192.168.2.14:4000/products'
 
         setData={setData}
@@ -109,7 +110,6 @@ export default function App(): JSX.Element {
         //----> the props for decaling checkbox on expand mode
         canMovedCheckboxLeftOnExpand
         setSelectedRows={setSelectedRows}
-        selectedRows={selectedRows}
         // --->here showing golobal filter input on the top of table
         showGlobalFilter
         // --->here showing  filter button  on the top of table

@@ -21,7 +21,7 @@ export default function ControlledCheckbox({
   const [checked, setChecked] = React.useState<boolean>(false);
 
   const handleClickHeader = () => {
-    toggleAllRowsSelected();
+    //toggleAllRowsSelected();
     isAllRowsSelected
       ? dispatchSelectedRows({ type: 'customUnSelectAll', payload: selectedFlatRows })
       : dispatchSelectedRows({ type: 'customSelectAll', payload: selectedFlatRows });
@@ -67,18 +67,14 @@ export default function ControlledCheckbox({
 
   React.useEffect(() => {
     isHeader
-      ? setChecked(
-          isAllRowsSelected || (allRows && allRows?.length > 0 && allRows?.length === selectedRows?.length)
-            ? true
-            : false
-        )
+      ? setChecked(allRows && allRows?.length > 0 && allRows?.length === selectedRows?.length ? true : false)
       : setChecked(
-          isAllRowsSelected
+          allRows && allRows?.length > 0 && allRows?.length === selectedRows?.length
             ? true
             : row !== undefined && selectedRows?.filter((elm: any) => elm.id === row.id).length > 0
         );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAllRowsSelected, row, selectedRows]);
+  }, [row, selectedRows, allRows]);
 
   return (
     <RowCheckbox

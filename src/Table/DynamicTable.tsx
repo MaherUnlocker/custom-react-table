@@ -37,7 +37,7 @@ export interface DynamicTableProps {
   canSelect?: boolean;
   canMovedCheckboxLeftOnExpand?: boolean;
   setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>;
-  selectedRows?: any[];
+
   setData?: React.Dispatch<React.SetStateAction<any[]>>;
   canResize?: boolean;
   showGlobalFilter?: boolean;
@@ -97,7 +97,6 @@ export function DynamicTable({
   onClick,
   elevationTable,
   setSelectedRows,
-  selectedRows,
   setDataIsUpdated,
   dataIsUpdated,
   minHeight,
@@ -106,8 +105,6 @@ export function DynamicTable({
   setData,
   canMovedCheckboxLeftOnExpand,
 }: DynamicTableProps): React.ReactElement {
-  console.log('🚀 ~ file: DynamicTable.tsx ~ line 108 ~ canMovedCheckboxLeftOnExpand', canMovedCheckboxLeftOnExpand);
-
   const [apiResult, setApiResult] = React.useState<apiResultProps>();
 
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -128,8 +125,6 @@ export function DynamicTable({
         setData !== undefined && setData(response.data.data);
       })
       .catch((err: any) => {
-        console.log('🚀 ~ file: DynamicTable.tsx ~ line 127 ~ fetchData ~ err', err);
-        alert('error');
         setError(err);
       })
       .finally(() => {
@@ -159,8 +154,17 @@ export function DynamicTable({
                   Header: key,
                   accessor: key,
                   disableFilters: true,
+                  disableResizing: true,
                   canFilter: false,
-                  Cell: (value: any) => <img src={value.cell.value} style={{ height: '50px' }} alt='' />,
+                  width: 120,
+                  //minWidth: 120,
+                  Cell: (value: any) => (
+                    <img
+                      src={value.cell.value}
+                      style={{ height: '50px', width: '100px', objectFit: 'contain' }}
+                      alt=''
+                    />
+                  ),
                 };
               }
 
@@ -312,7 +316,6 @@ export function DynamicTable({
         name={name}
         columns={columns}
         setSelectedRows={setSelectedRows}
-        selectedRows={selectedRows}
         data={data as any}
         canGroupBy={canGroupBy}
         canSort={canSort}

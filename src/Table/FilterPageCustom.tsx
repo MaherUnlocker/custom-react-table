@@ -83,7 +83,6 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
     setAllFilters,
     state: { filters },
   } = instance;
-  console.log('🚀 ~ file: FilterPageCustom.tsx ~ line 86 ~ filters', filters);
 
   const heightRef = React.useRef(null);
   // eslint-disable-next-line

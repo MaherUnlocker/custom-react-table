@@ -64,10 +64,6 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   const [, setSelectedValueState] = React.useState<any[]>([]);
 
   function handleSelectOnChangeEvent(selectedOption: any) {
-    console.log(
-      '🚀 ~ file: DefaultColumnFilter.tsx ~ line 65 ~ handleSelectOnChangeEvent ~ selectedOption',
-      selectedOption
-    );
     if (selectedOption) {
       setSelectedValueState(selectedOption);
 

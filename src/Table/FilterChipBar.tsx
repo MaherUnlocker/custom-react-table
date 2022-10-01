@@ -59,8 +59,20 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   } = instance;
 
   const handleDelete = React.useCallback(
-    (id: string | number) => {
-      setFilter(id as IdType<T>, undefined);
+    (id: string | number, selectedFilterValue: string | number) => {
+      const filtered = filters.find((f) => f.id === id);
+      const newValues = filtered !== undefined && filtered?.value.filter((f: any) => f == selectedFilterValue);
+      console.log(
+        '🚀 ~ file: FilterChipBar.tsx ~ line 64 ~ filtered',
+        { selectedFilterValue },
+        { filters },
+        { idd: id },
+        { filteredddd: filtered },
+        { newValues: newValues }
+      );
+
+      //  setFilter(id as IdType<T>, newValues?.length > 0 ? newValues : undefined);
+      //stFilter(id as IdType<T>, 'undefined');
     },
     [setFilter]
   );
@@ -87,23 +99,26 @@ export function FilterChipBar<T extends Record<string, unknown>>({
         allColumns.map((column) => {
           const filter = filters.find((f) => f.id === column.id);
 
-          const value = filter && filter.value;
+          const values = filter && filter.value;
+          console.log('🚀 ~ file: FilterChipBar.tsx ~ line 92 ~ allColumns.map ~ value', values);
+
           return (
-            value && (
+            values &&
+            values.map((Filtervalue: any) => (
               <Chip
                 className={classes.filterChip}
-                key={column.id}
+                key={Filtervalue}
                 deleteIcon={<CrossIcon height={10} width={10} fill='#2B2828' />}
                 label={
                   <React.Fragment>
                     <span className={classes.chipLabel}>{column.render('Header')}: </span>
-                    <span className={classes.chipLabel}>{getFilterValue(column, value)} </span>
+                    <span className={classes.chipLabel}>{Filtervalue} </span>
                   </React.Fragment>
                 }
-                onDelete={() => handleDelete(column.id)}
+                onDelete={() => handleDelete(column.id, Filtervalue)}
                 variant='outlined'
               />
-            )
+            ))
           );
         })}
     </div>

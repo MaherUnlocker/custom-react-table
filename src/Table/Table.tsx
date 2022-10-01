@@ -110,7 +110,6 @@ const filterTypes: any = {
   fuzzyText: fuzzyTextFilter,
   numeric: numericTextFilter,
   multiSelect: (rows: any, id: any, filterValues: any) => {
-    console.log('🚀 ~ file: Table.tsx ~ line 112 ~ filterValues', filterValues);
     if (filterValues.length === 0) return rows;
     return rows.filter((r: any) => filterValues.includes(r.values[id]));
   },

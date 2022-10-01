@@ -61,20 +61,20 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   const handleDelete = React.useCallback(
     (id: string | number, selectedFilterValue: string | number) => {
       const filtered = filters.find((f) => f.id === id);
-      const newValues = filtered !== undefined && filtered?.value.filter((f: any) => f == selectedFilterValue);
+      const newValues = filtered !== undefined && filtered?.value.filter((f: any) => f !== selectedFilterValue);
       console.log(
         '🚀 ~ file: FilterChipBar.tsx ~ line 64 ~ filtered',
-        { selectedFilterValue },
         { filters },
+        { selectedFilterValue },
         { idd: id },
         { filteredddd: filtered },
         { newValues: newValues }
       );
 
-      //  setFilter(id as IdType<T>, newValues?.length > 0 ? newValues : undefined);
+      setFilter(id as IdType<T>, newValues?.length > 0 ? newValues : undefined);
       //stFilter(id as IdType<T>, 'undefined');
     },
-    [setFilter]
+    [setFilter, filters]
   );
 
   const resetFilters = React.useCallback(() => {

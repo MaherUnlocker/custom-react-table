@@ -61,6 +61,7 @@ import { TableToolbar } from './TableToolbar';
 import { TooltipCellRenderer } from './TooltipCell';
 import DefaultColumnFilter from './DefaultColumnFilter';
 import ControlledCheckbox from '../components/ControlledCheckbox';
+import MultiSelectColumnFilter from './MultipleSelectCo';
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T>, DynamicTableProps {
   onAdd?: (instance: TableInstance<T>) => React.MouseEventHandler;
@@ -92,7 +93,10 @@ const getStyles = (props: any, disableResizing = false, align = 'left') => [
 const cellProps = <T extends Record<string, unknown>>(props: any, { cell }: Meta<T, { cell: Cell<T> }>) =>
   getStyles(props, cell.column && cell.column.disableResizing, cell.column && cell.column.align);
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
+
 const defaultColumn = {
+  //Filter: MultiSelectColumnFilter,
   Filter: DefaultColumnFilter,
   Cell: TooltipCellRenderer,
   Header: DefaultHeader,
@@ -105,6 +109,11 @@ const defaultColumn = {
 const filterTypes: any = {
   fuzzyText: fuzzyTextFilter,
   numeric: numericTextFilter,
+  multiSelect: (rows: any, id: any, filterValues: any) => {
+    console.log('🚀 ~ file: Table.tsx ~ line 112 ~ filterValues', filterValues);
+    if (filterValues.length === 0) return rows;
+    return rows.filter((r: any) => filterValues.includes(r.values[id]));
+  },
 };
 
 const selectionHook = (hooks: Hooks<any>) => {
@@ -331,7 +340,6 @@ export function Table<T extends Record<string, unknown>>({
   }
 
   const filterOptions = { filteredIds: [] };
-  const [tata, setTata] = React.useState([]);
   const instance = useTable<T>(
     {
       ...props,
@@ -359,7 +367,6 @@ export function Table<T extends Record<string, unknown>>({
       stateReducer: (newState, action, prevState) => {
         switch (action.type) {
           case 'customSelectRow':
-            setTata([...(newState.customSelectedRows as never), action.payload as never]);
             return {
               ...newState,
               customSelectedRows: [...newState.customSelectedRows, action.payload],
@@ -457,7 +464,6 @@ export function Table<T extends Record<string, unknown>>({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instance.data, instance]);
-
   return (
     <>
       {!isMobile ? (

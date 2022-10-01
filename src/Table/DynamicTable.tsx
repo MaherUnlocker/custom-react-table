@@ -135,6 +135,7 @@ export function DynamicTable({
   if (elevationTable === undefined) {
     elevationTable = 0;
   }
+
   const apiResultColumns = React.useMemo(
     () =>
       apiResult !== undefined && apiResult.structure !== undefined && Array.isArray(apiResult?.structure)
@@ -157,6 +158,7 @@ export function DynamicTable({
                   disableResizing: true,
                   canFilter: false,
                   width: 120,
+
                   //minWidth: 120,
                   Cell: (value: any) => (
                     <img
@@ -175,6 +177,7 @@ export function DynamicTable({
                 aggregate: 'count',
                 primary: false,
                 canFilter: true,
+                filter: 'multiSelect',
                 Aggregated: ({ cell: { value } }: any) => `${value} `,
               };
             })

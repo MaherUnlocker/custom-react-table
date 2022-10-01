@@ -8,6 +8,7 @@ import { findFirstColumn } from './Table';
 import { StyledLabel } from '../components/assets/StyledLabel';
 import { StyledSelectInput } from '../components/assets/StyledSelectInput';
 import NoOptionsMessage from './NoOptionsMessage';
+import { OptionProps } from 'react-select';
 
 export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   columns,
@@ -16,8 +17,20 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   prepareRow,
 }: FilterProps<T>): React.ReactElement {
   // const { t } = useTranslation();
-  const { filterValue, setFilter, render } = column;
+  const { filterValue, setFilter, render, filter, preFilteredRows, id } = column;
   const [, setValue] = React.useState(filterValue || '');
+
+  const listOptions = React.useMemo(() => {
+    const options = new Set();
+
+    preFilteredRows.forEach((row: any) => {
+      row.values[id] !== undefined &&
+        row.values[id] !== '' &&
+        row.values[id] !== null &&
+        options.add({ value: row.values[id], label: row.values[id] });
+    });
+    return [...options.values()];
+  }, [id, preFilteredRows]);
 
   // ensure that reset loads the new value
   React.useEffect(() => {
@@ -41,7 +54,7 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   });
 
   // his uniquby from lodash for get unique array of object
-  const unique: any = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
+  const unique: any = _uniqby(listOptions, 'label'); //using lodash function to filter and get unique opjects
 
   // this uniquby from lodash for get unique array of object
   // FilterArray = _uniqby(FilterArray, 'label'); //using lodash function to filter and get unique opjects
@@ -50,11 +63,19 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   const isFirstColumn = findFirstColumn(columns) === column;
   const [, setSelectedValueState] = React.useState<any[]>([]);
 
-  function handleSelectOnChangeEvent(selectedValue: any) {
-    if (selectedValue) {
-      setSelectedValueState(selectedValue);
-      //  add selected filter
-      setFilter(selectedValue.value);
+  function handleSelectOnChangeEvent(selectedOption: any) {
+    console.log(
+      '🚀 ~ file: DefaultColumnFilter.tsx ~ line 65 ~ handleSelectOnChangeEvent ~ selectedOption',
+      selectedOption
+    );
+    if (selectedOption) {
+      setSelectedValueState(selectedOption);
+
+      setFilter((prevState: any) => {
+        console.log('🚀 ~ file: DefaultColumnFilter.tsx ~ line 59 ~ setFilter ~ prevState', prevState);
+        return selectedOption.map((elm: any) => elm.value);
+      });
+      //setFilter(selectedValue.value);
     }
   }
 
@@ -64,10 +85,12 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
       <StyledSelectInput
         menuPlacement='auto'
         menuPosition='fixed'
+        isMulti
+        closeMenuOnSelect={false}
         id={column.id}
         name={column.id}
         options={unique}
-        placeholder={unique.length > 0 ? 'Sélectionner...' : 'Aucune'}
+        placeholder={listOptions.length > 0 ? 'Sélectionner...' : 'Aucune'}
         onChange={handleSelectOnChangeEvent}
         // onInputChange={handleSelectOnChangeEvent}
         autoFocus={isFirstColumn}

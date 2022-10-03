@@ -8,7 +8,6 @@ import { findFirstColumn } from './Table';
 import { StyledLabel } from '../components/assets/StyledLabel';
 import { StyledSelectInput } from '../components/assets/StyledSelectInput';
 import NoOptionsMessage from './NoOptionsMessage';
-import { OptionProps } from 'react-select';
 
 export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   columns,
@@ -17,7 +16,7 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   prepareRow,
 }: FilterProps<T>): React.ReactElement {
   // const { t } = useTranslation();
-  const { filterValue, setFilter, render, filter, preFilteredRows, id } = column;
+  const { filterValue, setFilter, render, preFilteredRows, id } = column;
   const [, setValue] = React.useState(filterValue || '');
 
   const listOptions = React.useMemo(() => {
@@ -32,27 +31,6 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
     return [...options.values()];
   }, [id, preFilteredRows]);
 
-  // ensure that reset loads the new value
-  React.useEffect(() => {
-    setValue(filterValue || '');
-  }, [filterValue]);
-
-  const FilterArray: any[] = rows.map((row: any) => {
-    prepareRow(row);
-    return (
-      row.cells
-        .filter((cel: any) => {
-          const { key: cellKey } = cel.getCellProps();
-          // eslint-disable-next-line
-          return (cellKey as string).replace(/([^\_]*\_){2}/, '') === (column.id as string);
-        })
-        // eslint-disable-next-line
-        .map((cell: any) => {
-          return { label: String(cell.value), value: String(cell.value) };
-        })[0]
-    );
-  });
-
   // his uniquby from lodash for get unique array of object
   const unique: any = _uniqby(listOptions, 'label'); //using lodash function to filter and get unique opjects
 
@@ -61,20 +39,23 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   // let unique: any = [...new Set(_without(FilterArray, undefined, null, 'null', 'undefined'))]; // FilterArray.filter((v, i, a) => a.indexOf(v) === i);
 
   const isFirstColumn = findFirstColumn(columns) === column;
-  const [, setSelectedValueState] = React.useState<any[]>([]);
+  const [selecteFiltersColumn, setSelectedValueState] = React.useState<any[]>([]);
+  console.log('🚀 ~ file: DefaultColumnFilter.tsx ~ line 51 ~ selecteFiltersColumn', { filterValue });
 
-  function handleSelectOnChangeEvent(selectedOption: any) {
+  function handleSelectOnChangeEvent(selectedOption: any, action: any) {
     if (selectedOption) {
       setSelectedValueState(selectedOption);
-
-      setFilter((prevState: any) => {
-        console.log('🚀 ~ file: DefaultColumnFilter.tsx ~ line 59 ~ setFilter ~ prevState', prevState);
-        return selectedOption.map((elm: any) => elm.value);
-      });
-      //setFilter(selectedValue.value);
+      // setFilter((prevState: any) => selectedOption.map((elm: any) => elm.value));
     }
   }
+  React.useEffect(() => {
+    setFilter((prevState: any) => selecteFiltersColumn.map((elm: any) => elm.value));
+  }, [selecteFiltersColumn]);
 
+  // ensure that reset loads the new value
+  React.useEffect(() => {
+    setValue(filterValue || '');
+  }, [filterValue]);
   return (
     <React.Fragment>
       <StyledLabel htmlFor={column.id}>{render('Header')}</StyledLabel>
@@ -83,6 +64,7 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
         menuPosition='fixed'
         isMulti
         closeMenuOnSelect={false}
+        value={selecteFiltersColumn}
         id={column.id}
         name={column.id}
         options={unique}

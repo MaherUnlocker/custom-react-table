@@ -194,10 +194,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
       </StyledLabel>
       <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ width: ' 100%', marginTop: 10 }}>
-          <StyledLabel htmlFor='savedFilter'>
-            {/* {t('Select a filter')} */}
-            Sélectionner un filtre
-          </StyledLabel>
+          {/* <StyledLabel htmlFor='savedFilter'>{t('Select a filter')}</StyledLabel> */}
           <div
             style={{
               display: 'grid',

@@ -36,15 +36,16 @@ type FilterChipBarProps<T extends Record<string, unknown>> = {
   instance: TableInstance<T>;
 };
 
-const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
-  switch (column.filter) {
-    case 'between':
-      const min = filterValue[0];
-      const max = filterValue[1];
-      return min ? (max ? `${min}-${max}` : `>=${min}`) : `<=${max}`;
-  }
-  return filterValue;
-};
+// between filter to be used in next level inchallah
+// const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
+//   switch (column.filter) {
+//     case 'between':
+//       const min = filterValue[0];
+//       const max = filterValue[1];
+//       return min ? (max ? `${min}-${max}` : `>=${min}`) : `<=${max}`;
+//   }
+//   return filterValue;
+// };
 
 export function FilterChipBar<T extends Record<string, unknown>>({
   instance,
@@ -90,7 +91,6 @@ export function FilterChipBar<T extends Record<string, unknown>>({
           const filter = filters.find((f) => f.id === column.id);
 
           const values = filter && filter.value;
-          console.log('🚀 ~ file: FilterChipBar.tsx ~ line 92 ~ allColumns.map ~ value', values);
 
           return (
             values &&

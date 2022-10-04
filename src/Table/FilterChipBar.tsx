@@ -51,6 +51,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   instance,
 }: FilterChipBarProps<T>): React.ReactElement | null {
   // const { t } = useTranslation();
+  const [renderFilters, setRenderFilters] = React.useState(false);
   const classes = useStyles({});
   const {
     allColumns,
@@ -63,7 +64,7 @@ export function FilterChipBar<T extends Record<string, unknown>>({
     (id: string | number, selectedFilterValue: string | number) => {
       const filtered = filters.find((f) => f.id === id);
       const newValues = filtered !== undefined && filtered?.value.filter((f: any) => f !== selectedFilterValue);
-      setFilter(id as IdType<T>, newValues?.length > 0 ? newValues : undefined);
+      setFilter(id as IdType<T>, newValues?.length > 0 ? newValues : []);
     },
     [setFilter, filters]
   );
@@ -71,8 +72,12 @@ export function FilterChipBar<T extends Record<string, unknown>>({
   const resetFilters = React.useCallback(() => {
     setAllFilters([]);
   }, [setAllFilters]);
+  React.useEffect(() => {
+    setRenderFilters(filters.some((filterValue: any) => filterValue.value.length > 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
-  return Object.keys(filters).length > 0 ? (
+  return renderFilters ? (
     <div className={classes.chipZone}>
       <span
         className={classes.filtersActiveLabel}

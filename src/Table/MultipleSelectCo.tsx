@@ -4,11 +4,6 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function MultiSelectColumnFilter({ column: { filterValue, setFilter, preFilteredRows, id } }: any) {
-  console.log(
-    '🚀 ~ file: MultipleSelectCo.tsx ~ line 5 ~ MultiSelectColumnFilter ~ filterValue',
-    filterValue,
-    preFilteredRows
-  );
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = React.useMemo(() => {
@@ -22,14 +17,6 @@ export default function MultiSelectColumnFilter({ column: { filterValue, setFilt
   // Render a multi-select box
   return (
     <div>
-      {/* <Select
-        closeMenuOnSelect={false}
-        components={animatedComponents}
-        defaultValue={[colourOptions[4], colourOptions[5]]}
-        isMulti
-        options={colourOptions}
-      /> */}
-
       <select
         multiple // this prop for multiselect
         value={filterValue}

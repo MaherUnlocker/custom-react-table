@@ -2,7 +2,7 @@ import React from 'react';
 
 import _uniqby from 'lodash.uniqby';
 // import { useTranslation } from 'react-i18next';
-import { FilterProps } from 'react-table';
+import { FilterProps, IdType } from 'react-table';
 
 import { findFirstColumn } from './Table';
 import { StyledLabel } from '../components/assets/StyledLabel';
@@ -12,11 +12,12 @@ import NoOptionsMessage from './NoOptionsMessage';
 export default function DefaultColumnFilter<T extends Record<string, unknown>>({
   columns,
   column,
-  rows,
+  setFilter,
   prepareRow,
+  state: { filters },
 }: FilterProps<T>): React.ReactElement {
   // const { t } = useTranslation();
-  const { filterValue, setFilter, render, preFilteredRows, id } = column;
+  const { filterValue, render, preFilteredRows, id } = column;
   const [, setValue] = React.useState(filterValue || '');
 
   const listOptions = React.useMemo(() => {
@@ -40,22 +41,24 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
 
   const isFirstColumn = findFirstColumn(columns) === column;
   const [selecteFiltersColumn, setSelectedValueState] = React.useState<any[]>([]);
-  console.log('🚀 ~ file: DefaultColumnFilter.tsx ~ line 51 ~ selecteFiltersColumn', { filterValue });
 
   function handleSelectOnChangeEvent(selectedOption: any, action: any) {
-    if (selectedOption) {
-      setSelectedValueState(selectedOption);
-      // setFilter((prevState: any) => selectedOption.map((elm: any) => elm.value));
-    }
+    //setFilter((prevState: any) => selectedOption.map((elm: any) => elm.value));
+    setFilter(id as IdType<T>, selectedOption.length > 0 ? selectedOption.map((elm: any) => elm.value) : []);
+    setSelectedValueState(selectedOption);
   }
-  React.useEffect(() => {
-    setFilter((prevState: any) => selecteFiltersColumn.map((elm: any) => elm.value));
-  }, [selecteFiltersColumn]);
-
   // ensure that reset loads the new value
   React.useEffect(() => {
     setValue(filterValue || '');
+    setSelectedValueState((prev: any[]) => {
+      let newState = [];
+      if (filterValue && filterValue.length > 0) {
+        newState = filterValue.map((elm: any) => ({ label: elm, value: elm }));
+      }
+      return newState;
+    });
   }, [filterValue]);
+
   return (
     <React.Fragment>
       <StyledLabel htmlFor={column.id}>{render('Header')}</StyledLabel>

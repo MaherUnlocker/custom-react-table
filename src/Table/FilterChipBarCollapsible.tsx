@@ -121,7 +121,7 @@ export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
     );
   }
 
-  return Object.keys(filters).length > 0 ? (
+  return filters.some((filterValue: any) => filterValue.value.length > 0) ? (
     <div className={classes.chipZone}>
       <span
         className={classes.filtersActiveLabel}

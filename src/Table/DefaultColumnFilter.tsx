@@ -76,6 +76,7 @@ export default function DefaultColumnFilter<T extends Record<string, unknown>>({
         // onInputChange={handleSelectOnChangeEvent}
         autoFocus={isFirstColumn}
         components={{ NoOptionsMessage }}
+        menuShouldBlockScroll
       />
     </React.Fragment>
   );

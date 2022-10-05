@@ -53,7 +53,7 @@ export function FilterPage<T extends Record<string, unknown>>({
   show,
 }: FilterPageProps<T>): React.ReactElement {
   const classes = useStyles({});
-  const { allColumns, setAllFilters } = instance;
+  const { allColumns } = instance;
 
   const onSubmit = React.useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,7 +90,7 @@ export function FilterPage<T extends Record<string, unknown>>({
 
               .filter((it) => it.canFilter)
               .map((column) => (
-                <div key={column.id} className="d-flex mt-2">
+                <div key={column.id} className='d-flex mt-2'>
                   {column.render('Filter')}
                 </div>
               ))}

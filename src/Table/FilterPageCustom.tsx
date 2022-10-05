@@ -289,7 +289,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
         {/* {t('Filter')} */}
       </StyledLabel>
       {Object.keys(instance.state.filters).length > 0 ? (
-        <Box id='maher' component='div' ref={heightRef}>
+        <Box id='FilterChipBar' component='div' ref={heightRef}>
           <FilterChipBarCollapsible
             instance={instance}
             showMore={showMore}

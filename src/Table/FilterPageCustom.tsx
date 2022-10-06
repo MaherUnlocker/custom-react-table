@@ -3,7 +3,7 @@ import React from 'react';
 
 import { TableInstance } from 'react-table';
 import { createStyles, makeStyles } from '@mui/styles';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 
 import { DiskIcon } from '../components/assets/DiskIcon';
@@ -75,7 +75,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   setLocalFilterActive,
   tableName,
 }: FilterPageCustomProps<T>): React.ReactElement {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles({});
   const isMobile = IsMobileView();
   const {
@@ -99,7 +99,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
 
   const handleSaveFiltersClick = React.useCallback(() => {
     if (designationFilter === null || designationFilter === undefined || designationFilter === '') {
-      ErrorToast('Merci de saisir une designation pour votre filtre');
+      ErrorToast('Merci de saisir une désignation pour votre filtre.');
       return;
     }
     if (Object.keys(instance.state.filters).length === 0) {
@@ -155,7 +155,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
 
   function handleDeleteFilter() {
     if (designationFilter === null || designationFilter === undefined || designationFilter === '') {
-      ErrorToast('Merci de selectionner un filtre pour la suppression');
+      ErrorToast('Merci de sélectionner un filtre pour la suppression');
       return;
     }
     const found = savedFilters.find((f: any) => f.label === designationFilter);
@@ -298,7 +298,7 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
           />
         </Box>
       ) : (
-        <StyledButton rounded variant='light' style={{ width: '100%' }}>
+        <StyledButton rounded variant='light' style={{ width: '100%', color: '#000' }}>
           Aucun filtre actif
           {/* {t('No active filter')} */}
         </StyledButton>

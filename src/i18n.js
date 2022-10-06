@@ -14,11 +14,12 @@ const resources = {
 };
 const initLanguage = localStorage.getItem('i18nextLng');
 const lng = initLanguage?.slice(0, 2);
+console.log('🚀 ~ file: i18n.js ~ line 17 ~ lng', lng);
 
 // Note that we are using createInstance here
-const i18n = i18next.createInstance(
+const i18nConfig = i18next.createInstance(
   {
-    lng,
+    lng: 'en',
     fallbackLng: 'fr',
     keySeparator: false,
     ns: ['translation'],
@@ -33,4 +34,4 @@ const i18n = i18next.createInstance(
   }
 );
 
-export default i18n;
+export default i18nConfig;

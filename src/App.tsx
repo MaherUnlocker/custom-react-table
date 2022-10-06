@@ -1,19 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DynamicTable } from './Table/DynamicTable';
-
+import { customColumnProps } from 'react-table';
 //import { DynamicTable } from '@maherunlocker/custom-react-table';
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
-import i18next from './i18n';
 import './index.css';
-
-// eslint-disable-next-line
-
-interface customColumnProps {
-  indexOFColumn: number;
-  columnName: string;
-  customJsx: React.ReactNode;
-}
+import './i18n';
 
 export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
@@ -74,12 +66,12 @@ export default function App(): JSX.Element {
   const arrayOfCustomColumns: customColumnProps[] = [];
   arrayOfCustomColumns.push(
     // { indexOFColumn: 0, columnName: 'checkbox', customJsx: IndeterminateCheckbox },
-    { indexOFColumn: 1, columnName: '_', customJsx: SelectAccountDropdown }
+    { indexOFColumn: 1, columnName: 'maher', customJsx: SelectAccountDropdown, filterName: 'id' }
   );
 
   return (
     // <React.Suspense fallback={null}>
-    <I18nextProvider i18n={i18next}>
+    <>
       <DynamicTable
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
@@ -144,7 +136,7 @@ export default function App(): JSX.Element {
           )}
         </code>
       </pre>
-    </I18nextProvider>
+    </>
     // </React.Suspense>
   );
 }

@@ -138,6 +138,8 @@ declare module 'react-table' {
     indexOFColumn: number;
     columnName: string;
     customJsx: React.ReactNode;
+    filterName?: string;
+    disableFilter?: boolean = false;
   }
 }
 export type canSelectProps =

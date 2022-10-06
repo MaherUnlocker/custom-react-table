@@ -3,17 +3,18 @@ import React from 'react';
 
 import axios from 'axios';
 import { FilterValue, IdType, Row, customColumnProps } from 'react-table';
+import { I18nextProvider } from 'react-i18next';
 
 import { AngleSmallRightIcon } from '../components/assets/AngleSmallRightIcon';
 import { DuplicateIcon } from '../components/assets/DuplicateIcon';
 import LoadingDataAnimation from '../components/LoadingDataAnimation';
 import LoadingErrorAnimation from '../components/LoadingDataAnimation/LoadingErrorAnimation';
-// import { Table } from './Table test subrow';
 import { Table } from './Table';
 import { TrashIcon } from '../components/assets/TrashIcon';
 import { useStyles } from './TableStyle';
 
 import 'react-toastify/dist/ReactToastify.css';
+import i18nConfig from '../i18n';
 
 type DynamicTableContextType = {
   setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>;
@@ -206,15 +207,16 @@ export function DynamicTable({
         {
           // Build our expander column
           id: 'expander', // Make sure it has an ID
-          Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }: any) => (
-            <span {...getToggleAllRowsExpandedProps({ title: 'expand all' })}>
-              {isAllRowsExpanded ? (
-                <AngleSmallRightIcon height={25} width={25} className={classes.iconDirectionAsc} />
-              ) : (
-                <AngleSmallRightIcon height={25} width={25} />
-              )}
-            </span>
-          ),
+          Header: '',
+          // Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }: any) => (
+          //   <span {...getToggleAllRowsExpandedProps({ title: 'expand all' })}>
+          //     {isAllRowsExpanded ? (
+          //       <AngleSmallRightIcon height={25} width={25} className={classes.iconDirectionAsc} />
+          //     ) : (
+          //       <AngleSmallRightIcon height={25} width={25} />
+          //     )}
+          //   </span>
+          // ),
           minWidth: 30,
           // width: 60,
           // disableResizing: true,
@@ -254,6 +256,10 @@ export function DynamicTable({
         modifiedColumns.splice(elm.indexOFColumn, 0, {
           id: elm.columnName,
           Header: elm.columnName,
+          accessor: elm.filterName,
+          aggregate: 'count',
+          disableFilters: elm.disableFilter === undefined ? false : elm.disableFilter,
+          filter: 'multiSelect',
           Cell: (cell: any) => (
             <elm.customJsx
               selectedRow={{
@@ -312,33 +318,32 @@ export function DynamicTable({
     return <LoadingErrorAnimation />;
 
   return (
-    // <I18nextProvider i18n={i18nConfig}>
-
-    <DynamicTableContext.Provider value={defaultContext}>
-      <Table
-        name={name}
-        columns={columns}
-        setSelectedRows={setSelectedRows}
-        data={data as any}
-        canGroupBy={canGroupBy}
-        canSort={canSort}
-        canSelect={canSelect}
-        canResize={canResize}
-        actionColumn={actionColumn}
-        showGlobalFilter={showGlobalFilter}
-        showFilter={showFilter}
-        showColumnIcon={showColumnIcon}
-        filterActive={filterActive}
-        setLocalFilterActive={setLocalFilterActive}
-        customJsxSideFilterButton={customJsxSideFilterButton}
-        onClick={onClick}
-        elevationTable={elevationTable}
-        minHeight={minHeight}
-        maxHeight={maxHeight}
-        customSelect={customSelect}
-        canMovedCheckboxLeftOnExpand={canMovedCheckboxLeftOnExpand}
-      />
-    </DynamicTableContext.Provider>
-    // </I18nextProvider>
+    <I18nextProvider i18n={i18nConfig}>
+      <DynamicTableContext.Provider value={defaultContext}>
+        <Table
+          name={name}
+          columns={columns}
+          setSelectedRows={setSelectedRows}
+          data={data as any}
+          canGroupBy={canGroupBy}
+          canSort={canSort}
+          canSelect={canSelect}
+          canResize={canResize}
+          actionColumn={actionColumn}
+          showGlobalFilter={showGlobalFilter}
+          showFilter={showFilter}
+          showColumnIcon={showColumnIcon}
+          filterActive={filterActive}
+          setLocalFilterActive={setLocalFilterActive}
+          customJsxSideFilterButton={customJsxSideFilterButton}
+          onClick={onClick}
+          elevationTable={elevationTable}
+          minHeight={minHeight}
+          maxHeight={maxHeight}
+          customSelect={customSelect}
+          canMovedCheckboxLeftOnExpand={canMovedCheckboxLeftOnExpand}
+        />
+      </DynamicTableContext.Provider>
+    </I18nextProvider>
   );
 }

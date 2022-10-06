@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Chip, Collapse } from '@mui/material';
 // import { useTranslation } from 'react-i18next';
-import { ColumnInstance, FilterValue, IdType, TableInstance } from 'react-table';
+import { ColumnInstance, IdType, TableInstance } from 'react-table';
 import { createStyles, makeStyles } from '@mui/styles';
 
 import { CrossIcon } from '../components/assets/CrossIcon';
@@ -39,15 +39,15 @@ type FilterChipBarProps<T extends Record<string, unknown>> = {
   setDesignationFilter: any;
 };
 
-const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
-  switch (column.filter) {
-    case 'between':
-      const min = filterValue[0];
-      const max = filterValue[1];
-      return min ? (max ? `${min}-${max}` : `>=${min}`) : `<=${max}`;
-  }
-  return filterValue;
-};
+// const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
+//   switch (column.filter) {
+//     case 'between':
+//       const min = filterValue[0];
+//       const max = filterValue[1];
+//       return min ? (max ? `${min}-${max}` : `>=${min}`) : `<=${max}`;
+//   }
+//   return filterValue;
+// };
 
 export function FilterChipBarCollapsible<T extends Record<string, unknown>>({
   instance,

@@ -85,7 +85,7 @@ export const InstanceSmallIconActionButton = <T extends Record<string, unknown>>
 }: InstanceActionButton<T>): React.ReactElement => {
   const classes = useStyles({});
   return (
-    <Tooltip title={label !== '' ? label : ' '} aria-label={label}>
+    <Tooltip title={label !== undefined && label !== '' ? label : ' '} aria-label={label}>
       <span>
         <IconButton
           className={classnames({
@@ -112,7 +112,7 @@ export const SmallIconActionButton = ({
 }: ActionButton): React.ReactElement => {
   const classes = useStyles({});
   return (
-    <Tooltip title={label === '' ? label : ' '} aria-label={label}>
+    <Tooltip title={label !== undefined && label === '' ? label : ' '} aria-label={label}>
       <span>
         <IconButton
           className={classnames({

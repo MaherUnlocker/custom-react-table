@@ -27,7 +27,7 @@ export const TooltipCell: React.FC<TooltipProps> = ({ text, tooltip = text, alig
     <>
       {tooltip !== null && tooltip !== '' && (
         <MuiTooltip
-          title={tooltip !== null ? tooltip : ' '}
+          title={tooltip !== undefined && tooltip !== null ? tooltip : ' '}
           className={classes.truncated}
           arrow
           style={{ textAlign: align } as CSSProperties}

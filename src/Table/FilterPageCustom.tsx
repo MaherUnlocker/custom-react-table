@@ -3,7 +3,7 @@ import React from 'react';
 
 import { TableInstance } from 'react-table';
 import { createStyles, makeStyles } from '@mui/styles';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 
 import { DiskIcon } from '../components/assets/DiskIcon';
@@ -75,14 +75,10 @@ export function FilterPageCustom<T extends Record<string, unknown>>({
   setLocalFilterActive,
   tableName,
 }: FilterPageCustomProps<T>): React.ReactElement {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const classes = useStyles({});
   const isMobile = IsMobileView();
-  const {
-    allColumns,
-    setAllFilters,
-    state: { filters },
-  } = instance;
+  const { allColumns, setAllFilters } = instance;
 
   const heightRef = React.useRef(null);
   // eslint-disable-next-line

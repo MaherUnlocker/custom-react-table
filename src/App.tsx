@@ -11,7 +11,8 @@ export default function App(): JSX.Element {
   const [filterActive, setLocalFilterActive] = React.useState<boolean>(false);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
 
-  const [data, setData] = React.useState<any[]>([]);
+  const [data, setData] = React.useState<any>(null);
+  console.log('🚀 ~ file: App.tsx ~ line 15 ~ App ~ data', data);
 
   const [dataIsUpdated, setDataIsUpdated] = React.useState<boolean | number>(false);
   function SelectAccountDropdown(original: any) {

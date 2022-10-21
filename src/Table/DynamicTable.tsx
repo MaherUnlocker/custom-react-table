@@ -39,7 +39,7 @@ export interface DynamicTableProps {
   canMovedCheckboxLeftOnExpand?: boolean;
   setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>;
 
-  setData?: React.Dispatch<React.SetStateAction<any[]>>;
+  setData?: React.Dispatch<React.SetStateAction<any>>;
   canResize?: boolean;
   showGlobalFilter?: boolean;
   showFilter?: boolean;
@@ -62,6 +62,7 @@ type DataType = {
 export type apiResultProps = {
   structure: string[];
   data: DataType[];
+  othersData?: any;
 };
 
 function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
@@ -123,7 +124,7 @@ export function DynamicTable({
       })
       .then((response: { data: apiResultProps }) => {
         setApiResult(response.data);
-        setData !== undefined && setData(response.data.data);
+        setData !== undefined && setData({ data: response.data.data, others: 'response.data.othersData' });
       })
       .catch((err: any) => {
         setError(err);

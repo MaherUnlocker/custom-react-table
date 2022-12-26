@@ -13,12 +13,14 @@ import { TableRowTypeMap } from '@mui/material/TableRow/TableRow';
 import { TableTypeMap } from '@mui/material/Table/Table';
 import cx from 'classnames';
 import { makeStyles } from '@mui/styles';
+import { important } from '../utils/important';
 
 export const useStyles = makeStyles({
   rawTable: {
     borderSpacing: 0,
     border: '1px solid rgba(224, 224, 224, 1)',
-    width: '100%',
+    maxWidth: '800px',
+
     borderTop: '0',
     fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
     // minHeight: '100vh',
@@ -32,6 +34,13 @@ export const useStyles = makeStyles({
     marginTop: '0',
     marginBottom: '2',
     paddingTop: '0',
+  },
+
+  sticky: {
+    position: important('sticky'),
+    right: important(0),
+    // background: 'white',
+    boxShadow: '5px 2px 5px grey',
   },
   tableHeadRow: {
     // backgroundColor: 'red',
@@ -48,7 +57,7 @@ export const useStyles = makeStyles({
   tableHeadCell: {
     padding: '16px 1px 16px 16px',
     fontSize: '0.875rem',
-    // textAlign: 'center',
+    textAlign: 'center',
     maxHeight: 45,
     verticalAlign: 'inherit',
     justifyContent: 'center !important',
@@ -289,6 +298,7 @@ export const TableLabel: React.FC<CN> = ({ children, className, ...rest }) => {
 export const HeaderCheckbox = React.memo(
   styled(Checkbox)({
     fontSize: '1rem',
+    color: 'red',
     margin: '-8px 0 -8px -15px',
     padding: '8px 9px',
     '& svg': {
@@ -305,6 +315,7 @@ export const HeaderCheckbox = React.memo(
 export const RowCheckbox = React.memo(
   styled(Checkbox)({
     fontSize: '14px',
+    color: 'red',
     margin: '-9px 0 -8px -15px',
     padding: '5px 9px',
     '&:hover': {

@@ -77,7 +77,7 @@ export default function App(): JSX.Element {
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
         // url='http://192.168.2.14:4000/categories'
-        url='http://192.168.2.14:4000/client'
+        url='https://my-json-server.typicode.com/MaherUnlocker/jsonserver/client'
         //url='https://my-json-server.typicode.com/MaherUnlocker/jsonserver/client'
         // url='http://192.168.2.14:4000/products'
 
@@ -123,6 +123,7 @@ export default function App(): JSX.Element {
         minHeight='70vh'
         maxHeight='80vh'
         requestHeader={{ 'Accept-Language': 'es' }}
+        defaultHiddenColumns={["maher","id"]}
       />
 
       <p>Selected Rows: {selectedRows.length}</p>

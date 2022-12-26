@@ -262,6 +262,7 @@ export function Table<T extends Record<string, unknown>>({
   filterActive,
   setLocalFilterActive,
   customJsxSideFilterButton,
+  defaultHiddenColumns,
 
   elevationTable,
   minHeight,
@@ -349,7 +350,7 @@ export function Table<T extends Record<string, unknown>>({
       getSubRows: (row: any) => row.subRows,
       globalFilter: (rows, columnIds, filterValue) => DefaultGlobalFilter(rows, columnIds, filterValue, filterOptions),
 
-      initialState: { ...initialState, customSelectedRows: [] },
+      initialState: { ...initialState, customSelectedRows: [] ,hiddenColumns: defaultHiddenColumns},
       /*  in test mode wip */
       // useControlledState: (state) =>
       //   React.useMemo(
@@ -527,6 +528,8 @@ export function Table<T extends Record<string, unknown>>({
                   <RawTable>
                     <TableHead>
                       {headerGroups.map((headerGroup: any) => {
+                        console.log('🚀 ~ file: Table.tsx:590 ~ {headerGroups.map ~ headerGroup', headerGroup);
+
                         const {
                           key: headerGroupKey,
                           title: headerGroupTitle,
@@ -537,7 +540,7 @@ export function Table<T extends Record<string, unknown>>({
                           <TableHeadRow key={headerGroupKey} {...getHeaderGroupProps}>
                             {headerGroup.headers.map((column: any) => {
                               const style = {
-                                textAlign: column.align ? column.align : 'left ',
+                                textAlign: column.align ? column.align : 'center ',
                               } as React.CSSProperties;
                               const {
                                 key: headerKey,
@@ -548,9 +551,14 @@ export function Table<T extends Record<string, unknown>>({
                               const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps({
                                 title: 'Trier',
                               });
-
+                              console.log(getHeaderProps);
                               return (
-                                <TableHeadCell key={headerKey} {...getHeaderProps}>
+                                <TableHeadCell
+                                  key={headerKey}
+                                  {...getHeaderProps}
+                                 
+                                  className={column.id.toLowerCase().includes('action') ? classes.sticky : 'mmm'}
+                                >
                                   {canGroupBy
                                     ? column.canGroupBy && (
                                         <Tooltip title={groupTitle}>
@@ -610,8 +618,14 @@ export function Table<T extends Record<string, unknown>>({
                                     ...getCellProps
                                   } = cell.getCellProps(cellProps);
 
+
                                   return (
-                                    <TableCell key={cellKey} {...getCellProps} onClick={cellClickHandler(cell)}>
+                                    <TableCell
+                                      key={cellKey}
+                                      {...getCellProps}
+                                      onClick={cellClickHandler(cell)}
+                                      className={cellKey.toLowerCase().includes('action') ? classes.sticky : 'mmm'}
+                                    >
                                       {cell.isGrouped ? (
                                         <>
                                           <TableSortLabel

@@ -53,6 +53,7 @@ export interface DynamicTableProps {
   arrayOfCustomColumns?: customColumnProps[] | undefined;
   setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>>;
   requestHeader?: Record<string, string>;
+  defaultHiddenColumns?:string[]
 }
 
 type DataType = {
@@ -105,7 +106,7 @@ export function DynamicTable({
   maxHeight,
   requestHeader,
   setData,
-  canMovedCheckboxLeftOnExpand,
+  canMovedCheckboxLeftOnExpand,defaultHiddenColumns
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = React.useState<apiResultProps>();
 
@@ -342,6 +343,7 @@ export function DynamicTable({
           minHeight={minHeight}
           maxHeight={maxHeight}
           customSelect={customSelect}
+          defaultHiddenColumns={defaultHiddenColumns}
           canMovedCheckboxLeftOnExpand={canMovedCheckboxLeftOnExpand}
         />
       </DynamicTableContext.Provider>

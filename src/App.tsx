@@ -70,6 +70,13 @@ export default function App(): JSX.Element {
     { indexOFColumn: 1, columnName: 'maher', customJsx: SelectAccountDropdown, filterName: 'id' }
   );
 
+  // ! 1-nbre de ligne par page
+  // ! max height 50 ok
+  //! fixe column ok
+  //! selected row color #65B6ED in process
+  //! rest change arrow with folder for expand
+  //! filter subrow not work in  filter per column
+
   return (
     // <React.Suspense fallback={null}>
     <>
@@ -77,7 +84,8 @@ export default function App(): JSX.Element {
         //put your backed api url it's obligation  to get your date from api
         // name="'mah'"
         // url='http://192.168.2.14:4000/categories'
-        url='https://my-json-server.typicode.com/MaherUnlocker/jsonserver/client'
+        url='https://dev-catalogue-api.aureskonnect.com/api_etk_article_bd/v1//cards/franchise_demo_50/5b65f320-47bd-ab93-a22e-9684417362fa/items'
+        // url='https://my-json-server.typicode.com/MaherUnlocker/jsonserver/client'
         //url='https://my-json-server.typicode.com/MaherUnlocker/jsonserver/client'
         // url='http://192.168.2.14:4000/products'
 
@@ -123,7 +131,7 @@ export default function App(): JSX.Element {
         minHeight='70vh'
         maxHeight='80vh'
         requestHeader={{ 'Accept-Language': 'es' }}
-        defaultHiddenColumns={["maher","id"]}
+        defaultHiddenColumns={['maher', 'id', 'Ordre']}
       />
 
       <p>Selected Rows: {selectedRows.length}</p>

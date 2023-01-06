@@ -19,7 +19,7 @@ export const useStyles = makeStyles({
   rawTable: {
     borderSpacing: 0,
     border: '1px solid rgba(224, 224, 224, 1)',
-    maxWidth: '800px',
+    maxWidth: '100%',
 
     borderTop: '0',
     fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
@@ -39,8 +39,8 @@ export const useStyles = makeStyles({
   sticky: {
     position: important('sticky'),
     right: important(0),
-    // background: 'white',
-    boxShadow: '5px 2px 5px grey',
+    background: 'white',
+    //boxShadow: '5px 2px 5px grey',
   },
   tableHeadRow: {
     // backgroundColor: 'red',
@@ -77,10 +77,12 @@ export const useStyles = makeStyles({
 
   tableRow: {
     color: 'inherit',
-    maxHeight: 60,
+    maxHeight: 50,
     outline: 0,
     fontFamily: `"Segoe UI", "-apple-system", "Helvetica Neue", "Arial"`,
     verticalAlign: 'middle',
+    backgroundColor: 'white',
+    border: 'none',
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.07)',
     },

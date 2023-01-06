@@ -1,22 +1,21 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Paper from '@mui/material/Paper';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import React from 'react';
+import SvgNoData from '../components/assets/SvgNoData';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { motion } from 'framer-motion/dist/framer-motion';
-// import { useTranslation } from 'react-i18next';
-
-import { useStyles } from './TableStyle';
 import { headerProps } from './Table';
-import SvgNoData from '../components/assets/SvgNoData';
+import { useStyles } from './TableStyle';
+// import { motion } from 'framer-motion/dist/framer-motion';
+// import { useTranslation } from 'react-i18next';
 
 const variants = {
   open: { opacity: 1, height: 'auto' },
@@ -66,15 +65,15 @@ function MobileRow(props: any): React.ReactElement {
       <TableRow style={{ marginTop: '2px' }}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 0 }} colSpan={6}>
           <Collapse in={open} timeout='auto' unmountOnExit>
-            <motion.div
-              initial='collapsed'
-              animate='open'
-              exit='collapsed'
-              variants={variants}
-              transition={{
-                duration: 0.5,
-                cubicbezier: [0.29, 1.01, 1, -0.68],
-              }} //good for mobile
+            <div
+              // initial='collapsed'
+              // animate='open'
+              // exit='collapsed'
+              // variants={variants}
+              // transition={{
+              //   duration: 0.5,
+              //   cubicbezier: [0.29, 1.01, 1, -0.68],
+              // }} //good for mobile
               style={{ marginLeft: 0, marginRight: 0 }}
             >
               <Table aria-label={row.id}>
@@ -123,7 +122,7 @@ function MobileRow(props: any): React.ReactElement {
                     })}
                 </TableBody>
               </Table>
-            </motion.div>
+            </div>
           </Collapse>
         </TableCell>
       </TableRow>

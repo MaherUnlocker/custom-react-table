@@ -36,7 +36,13 @@ export const useStyles = makeStyles({
     paddingTop: '0',
   },
 
-  sticky: {
+  stickyCol: {
+    position: important('sticky'),
+    right: important('45px'),
+    background: 'white',
+    //boxShadow: '5px 2px 5px grey',
+  },
+  hide_colomns_sticky: {
     position: important('sticky'),
     right: important(0),
     background: 'white',
@@ -95,7 +101,8 @@ export const useStyles = makeStyles({
       borderBottom: 'none',
     },
     '&.rowSelected': {
-      backgroundColor: 'rgba(0, 0, 0, 0.04)',
+      backgroundColor: 'rgba(195, 55, 55, 0.04)',
+      // backgroundColor: 'rgba(0, 0, 0, 0.04)',
       '&:hover': {
         backgroundColor: 'rgba(0, 0, 0, 0.07)',
       },
@@ -278,7 +285,7 @@ export const TableRow: React.FC<Partial<TableRowTypeMap> & CN> = ({ children, cl
     </MuiTableRow>
   );
 };
-
+// export const TableRow = React.memo(TableRow_, areEqual);
 export const TableCell: React.FC<Partial<TableCellProps> & CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
@@ -287,7 +294,7 @@ export const TableCell: React.FC<Partial<TableCellProps> & CN> = ({ children, cl
     </MuiTableCell>
   );
 };
-
+// export const TableCell = React.memo(TableCell_, areEqual);
 export const TableLabel: React.FC<CN> = ({ children, className, ...rest }) => {
   const classes = useStyles();
   return (
@@ -300,7 +307,7 @@ export const TableLabel: React.FC<CN> = ({ children, className, ...rest }) => {
 export const HeaderCheckbox = React.memo(
   styled(Checkbox)({
     fontSize: '1rem',
-    color: 'red',
+
     margin: '-8px 0 -8px -15px',
     padding: '8px 9px',
     '& svg': {
@@ -317,7 +324,6 @@ export const HeaderCheckbox = React.memo(
 export const RowCheckbox = React.memo(
   styled(Checkbox)({
     fontSize: '14px',
-    color: 'red',
     margin: '-9px 0 -8px -15px',
     padding: '5px 9px',
     '&:hover': {

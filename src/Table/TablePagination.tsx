@@ -17,8 +17,10 @@ interface TablePaginationActionsProps {
 
 export function TablePagination<T extends Record<string, unknown>>({
   instance,
+  defaultPaginationValues,
 }: React.PropsWithChildren<{
   instance: TableInstance<T>;
+  defaultPaginationValues: number[];
 }>): React.ReactElement | null {
   const {
     state: { pageIndex, pageSize, rowCount = instance.rows.length },
@@ -62,6 +64,7 @@ export function TablePagination<T extends Record<string, unknown>>({
     const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
     };
+    const paginationValues = defaultPaginationValues?.length > 0 ? defaultPaginationValues : [10, 20, 30, 40, 50, 250];
 
     return (
       <div className='d-flex justify-content-end  pagination'>
@@ -74,7 +77,7 @@ export function TablePagination<T extends Record<string, unknown>>({
             }}
             style={{ marginRight: '32px', marginLeft: '8px' }}
           >
-            {[10, 20, 30, 40, 50, 250].map((pageSize) => (
+            {paginationValues.map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 {pageSize}
               </option>

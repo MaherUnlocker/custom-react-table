@@ -263,6 +263,7 @@ export function Table<T extends Record<string, unknown>>({
   setLocalFilterActive,
   customJsxSideFilterButton,
   defaultHiddenColumns,
+  defaultPaginationValues,
 
   elevationTable,
   minHeight,
@@ -350,7 +351,7 @@ export function Table<T extends Record<string, unknown>>({
       getSubRows: (row: any) => row.subRows,
       globalFilter: (rows, columnIds, filterValue) => DefaultGlobalFilter(rows, columnIds, filterValue, filterOptions),
 
-      initialState: { ...initialState, customSelectedRows: [] ,hiddenColumns: defaultHiddenColumns},
+      initialState: { ...initialState, customSelectedRows: [], hiddenColumns: defaultHiddenColumns },
       /*  in test mode wip */
       // useControlledState: (state) =>
       //   React.useMemo(
@@ -528,8 +529,6 @@ export function Table<T extends Record<string, unknown>>({
                   <RawTable>
                     <TableHead>
                       {headerGroups.map((headerGroup: any) => {
-                        console.log('🚀 ~ file: Table.tsx:590 ~ {headerGroups.map ~ headerGroup', headerGroup);
-
                         const {
                           key: headerGroupKey,
                           title: headerGroupTitle,
@@ -551,13 +550,14 @@ export function Table<T extends Record<string, unknown>>({
                               const { title: sortTitle = '', ...columnSortByProps } = column.getSortByToggleProps({
                                 title: 'Trier',
                               });
-                              console.log(getHeaderProps);
+
                               return (
                                 <TableHeadCell
                                   key={headerKey}
                                   {...getHeaderProps}
-                                 
-                                  className={column.id.toLowerCase().includes('action') ? classes.sticky : 'mmm'}
+                                  className={`${column.id.toLowerCase().includes('action') && classes.stickyCol}  ${
+                                    column.id.toLowerCase().includes('hidecolumns') && classes.hide_colomns_sticky
+                                  }`}
                                 >
                                   {canGroupBy
                                     ? column.canGroupBy && (
@@ -618,13 +618,14 @@ export function Table<T extends Record<string, unknown>>({
                                     ...getCellProps
                                   } = cell.getCellProps(cellProps);
 
-
                                   return (
                                     <TableCell
                                       key={cellKey}
                                       {...getCellProps}
                                       onClick={cellClickHandler(cell)}
-                                      className={cellKey.toLowerCase().includes('action') ? classes.sticky : 'mmm'}
+                                      className={`${cellKey.toLowerCase().includes('action') && classes.stickyCol}  ${
+                                        cellKey.toLowerCase().includes('hidecolumns') && classes.hide_colomns_sticky
+                                      }`}
                                     >
                                       {cell.isGrouped ? (
                                         <>
@@ -673,7 +674,10 @@ export function Table<T extends Record<string, unknown>>({
                 borderRadius: '0px 0px 12px 12px',
               }}
             >
-              <TablePagination<T> instance={instance} />
+              <TablePagination<T>
+                instance={instance}
+                defaultPaginationValues={defaultPaginationValues ? defaultPaginationValues : []}
+              />
             </CardFooter>
           </Card>
           {/* here the filter component is always in the right place*/}
@@ -769,7 +773,10 @@ export function Table<T extends Record<string, unknown>>({
             <CollapsibleTable props={instance} />
           </CardBody>
           <CardFooter id='TablePagination' style={{ backgroundColor: 'white', padding: '0' }}>
-            <TablePagination<T> instance={instance} />
+            <TablePagination<T>
+              instance={instance}
+              defaultPaginationValues={defaultPaginationValues ? defaultPaginationValues : []}
+            />
           </CardFooter>
           {filterActive ? (
             <FilterModalMobile

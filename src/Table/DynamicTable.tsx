@@ -53,7 +53,8 @@ export interface DynamicTableProps {
   arrayOfCustomColumns?: customColumnProps[] | undefined;
   setLocalFilterActive?: React.Dispatch<React.SetStateAction<boolean>>;
   requestHeader?: Record<string, string>;
-  defaultHiddenColumns?:string[]
+  defaultHiddenColumns?: string[];
+  defaultPaginationValues?: number[];
 }
 
 type DataType = {
@@ -106,7 +107,9 @@ export function DynamicTable({
   maxHeight,
   requestHeader,
   setData,
-  canMovedCheckboxLeftOnExpand,defaultHiddenColumns
+  canMovedCheckboxLeftOnExpand,
+  defaultHiddenColumns,
+  defaultPaginationValues,
 }: DynamicTableProps): React.ReactElement {
   const [apiResult, setApiResult] = React.useState<apiResultProps>();
 
@@ -261,6 +264,7 @@ export function DynamicTable({
           accessor: elm.filterName,
           aggregate: 'count',
           disableFilters: elm.disableFilter === undefined ? false : elm.disableFilter,
+          disableResizing: false,
           filter: 'multiSelect',
           Cell: (cell: any) => (
             <elm.customJsx
@@ -344,6 +348,7 @@ export function DynamicTable({
           maxHeight={maxHeight}
           customSelect={customSelect}
           defaultHiddenColumns={defaultHiddenColumns}
+          defaultPaginationValues={defaultPaginationValues}
           canMovedCheckboxLeftOnExpand={canMovedCheckboxLeftOnExpand}
         />
       </DynamicTableContext.Provider>
